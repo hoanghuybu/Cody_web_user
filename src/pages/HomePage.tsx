@@ -1,10 +1,9 @@
-import React from 'react';
-import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Award, Heart, Leaf, Star, ChevronRight, Instagram, Play } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { featuredProducts } from '../data/products';
 import { useLanguage } from '../context/LanguageContext';
+import { featuredProducts } from '../data/products';
 
 const HomePage = () => {
   const { t } = useLanguage();
@@ -34,18 +33,22 @@ const HomePage = () => {
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
       const maxScroll = scrollWidth - clientWidth;
+
 
       // Calculate actual scroll progress (0-100%)
       let progress = 0;
       if (maxScroll > 0) {
         progress = (scrollLeft / maxScroll) * 100;
         // Ensure we can reach 100% when scrolled to the end
-        if (scrollLeft >= maxScroll - 1) { // Account for sub-pixel rounding
+        if (scrollLeft >= maxScroll - 1) {
+          // Account for sub-pixel rounding
           progress = 100;
         }
       }
+
 
       setScrollProgress(progress);
     }
@@ -74,6 +77,7 @@ const HomePage = () => {
   // Scrollbar logic
   const scrollToPosition = (clientX: number) => {
     if (!trackRef.current || !scrollContainerRef.current) return;
+
 
     const trackRect = trackRef.current.getBoundingClientRect();
     const trackWidth = trackRect.width;
@@ -144,6 +148,7 @@ const HomePage = () => {
     }
   }, [isDragging]);
 
+
   const instagramPosts = [
     'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
     'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=400',
@@ -194,6 +199,7 @@ const HomePage = () => {
           </div>
         </div>
 
+
         {/* Bottom Section */}
         <div className="relative bg-gradient-to-r from-light-green to-primary-green py-16">
           <div className="max-w-4xl mx-auto text-center">
@@ -203,6 +209,7 @@ const HomePage = () => {
               Here, tradition, craftsmanship, and local stories blend into a truly immersive<br />
               experience.
             </p>
+
 
             <Link
               to="/brand-story"
@@ -229,6 +236,7 @@ const HomePage = () => {
                 {t('products.subtitle')}
               </h2>
             </div>
+
 
             {/* Product Categories Navigation */}
             <div className="mb-6">
@@ -267,11 +275,13 @@ const HomePage = () => {
             </div>
           </div>
 
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+
 
           <div className="text-center">
             <button className="bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors">
@@ -294,6 +304,7 @@ const HomePage = () => {
             </p>
           </div>
 
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Corporate Gifts */}
             <div className="relative overflow-hidden group">
@@ -305,6 +316,7 @@ const HomePage = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
+
 
                 {/* Title and Button Below Image */}
                 <div className="bg-primary-green text-white p-8 text-center">
@@ -328,6 +340,7 @@ const HomePage = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
+
 
                 {/* Title and Button Below Image */}
                 <div className="bg-accent-green text-white p-8 text-center">
@@ -357,14 +370,17 @@ const HomePage = () => {
                   </h3>
                 </div>
 
+
                 <div className="space-y-6 mb-12">
                   <p className="text-base leading-relaxed font-inter whitespace-pre-line">
                     {t('workshop.description1')}
                   </p>
 
+
                   <p className="text-base leading-relaxed font-inter whitespace-pre-line">
                     {t('workshop.description2')}
                   </p>
+
 
                   <p className="text-base leading-relaxed font-inter whitespace-pre-line">
                     {t('workshop.description3')}
@@ -382,6 +398,7 @@ const HomePage = () => {
               </div>
             </div>
 
+
             {/* Image Section */}
             <div className="aspect-square lg:aspect-auto">
               <img
@@ -391,6 +408,7 @@ const HomePage = () => {
               />
             </div>
           </div>
+
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Team Image Section */}
@@ -402,12 +420,14 @@ const HomePage = () => {
               />
             </div>
 
+
             {/* About Section */}
             <div className="relative">
               <div className="bg-light-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
                 <h3 className="text-3xl md:text-4xl font-black font-montserrat mb-8 tracking-tight leading-tight whitespace-pre-line">
                   {t('about.title')}
                 </h3>
+
 
                 <p className="text-base leading-relaxed font-inter mb-12 whitespace-pre-line">
                   {t('about.description')}
@@ -445,6 +465,7 @@ const HomePage = () => {
               FIND US ON INSTAGRAM & SHARE OUR CODY ADVENTURE
             </p>
           </div>
+
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {instagramPosts.map((image, index) => (
@@ -549,7 +570,6 @@ const HomePage = () => {
           )}
         </div>
       </section>
-
     </div>
   );
 };
