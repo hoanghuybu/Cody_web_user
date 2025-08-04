@@ -81,8 +81,7 @@ const scrollRight = () => {
     setSelectedPost(index);
     document.body.style.overflow = 'hidden';
   };
-
-  // Hàm để đóng modal
+  
   const closeModal = () => {
     setSelectedPost(null);
     document.body.style.overflow = 'auto';

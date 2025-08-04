@@ -18,7 +18,7 @@ const Header = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 769);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -66,7 +66,7 @@ const Header = () => {
       </div>
 
       {/* Main Header - Consistent Cody design on both desktop and mobile */}
-      <header 
+      <header
         className={`sticky z-40 transition-all duration-300 bg-white ${showBanner ? 'top-8' : 'top-0'}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -154,13 +154,13 @@ const Header = () => {
                 <h1 className="text-xl font-bold text-primary-green font-montserrat tracking-wider">CODY</h1>
               </div>
             </Link>
-            
+
             {/* Icons for Mobile */}
             <div className="flex items-center space-x-2">
               <button className="p-2 text-warm-brown hover:text-primary-green transition-colors">
                 <Search className="h-5 w-5" />
               </button>
-              
+
               <Link to="/cart" className="relative p-2 text-warm-brown hover:text-primary-green transition-colors">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
@@ -169,7 +169,7 @@ const Header = () => {
                   </span>
                 )}
               </Link>
-              
+
               <button
                 className="p-2 text-warm-brown hover:text-primary-green transition-colors"
                 onClick={toggleMenu}
@@ -191,14 +191,18 @@ const Header = () => {
             ></div>
 
             {/* Right Sidebar */}
-            <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300">
-              {/* Close button */}
-              <div className="p-4 flex justify-end">
-                <button onClick={toggleMenu} className="text-warm-brown hover:text-primary-green">
+            <div className="pt-2 fixed right-0 top-0 h-full w-64 bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300">
+              {/* Menu header with adjusted close button */}
+              <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
+                <h2 className="font-bold text-lg text-primary-green">Menu</h2>
+                <button
+                  onClick={toggleMenu}
+                  className="w-9 h-9 flex items-center justify-center rounded-full text-warm-brown transition-colors"
+                >
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              
+
               {/* Menu content */}
               <div className="flex flex-col px-4 pt-2 pb-8">
                 {/* Main navigation */}
@@ -207,18 +211,17 @@ const Header = () => {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`text-base font-medium tracking-wider transition-colors hover:text-primary-green ${
-                        isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'
-                      }`}
+                      className={`text-base font-medium tracking-wider transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'
+                        }`}
                       onClick={toggleMenu}
                     >
                       {item.name}
                     </Link>
                   ))}
                 </nav>
-                
+
                 <div className="border-t border-gray-200 my-6"></div>
-                
+
                 {/* User actions */}
                 <div className="flex flex-col space-y-4">
                   <Link
