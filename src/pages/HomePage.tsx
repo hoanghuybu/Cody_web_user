@@ -16,6 +16,29 @@ const HomePage = () => {
   const [initialScrollLeft, setInitialScrollLeft] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const checkMobile = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+  
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+}, []);
+
+const scrollLeft = () => {
+  if (scrollContainerRef.current) {
+    scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+  }
+};
+
+const scrollRight = () => {
+  if (scrollContainerRef.current) {
+    scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+  }
+};
 
 
   const categories = [
@@ -137,6 +160,7 @@ const HomePage = () => {
     setIsDragging(false);
   };
 
+
   useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -161,59 +185,57 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="bg-white">
+    <div className="bg-white overflow-x-hidden">
       {/* Hero Section - Bold & Minimal */}
       <section className="relative overflow-hidden flex flex-col">
         {/* Coconut and Traditional Sweets Background */}
-        <div className="relative h-screen flex items-center">
+        <div className="relative min-h-[500px] h-[100svh] flex items-center">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: 'url("https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")'
+              backgroundImage: 'url("https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+              backgroundSize: 'cover'
             }}
           >
             {/* Overlay for text readability and brand color */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary-green/80 via-accent-green/70 to-light-green/60"></div>
           </div>
 
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 flex flex-col items-center">
             {/* Hero Title */}
-            <div className="text-center mb-20">
-              <h1 className="text-6xl md:text-8xl font-black text-white font-montserrat mb-4 leading-none tracking-tight">
+            <div className="text-center mb-10 sm:mb-20">
+              <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white font-montserrat mb-2 sm:mb-4 leading-none tracking-tight">
                 CODY
               </h1>
-              <p className="text-3xl md:text-4xl font-light text-cream font-inter italic">
+              <p className="text-base sm:text-3xl md:text-4xl font-light text-cream font-inter italic">
                 Coconut Candy
               </p>
             </div>
 
-            {/* Explore Button */}
+            {/* Responsive button */}
             <div className="text-center">
               <Link
                 to="/products"
-                className="inline-flex items-center px-12 py-4 bg-white text-primary-green font-bold text-lg tracking-wider rounded-full hover:bg-cream transition-all duration-300 group shadow-lg"
+                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-full hover:bg-cream transition-all duration-300 group shadow-lg"
               >
                 {t('hero.explore')}
               </Link>
             </div>
           </div>
         </div>
-
-
         {/* Bottom Section */}
-        <div className="relative bg-gradient-to-r from-light-green to-primary-green py-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="text-white text-lg md:text-xl font-medium mb-8 leading-relaxed uppercase">
-              Cody is a journey that connects the world to the cultural essence of Ben Tre.<br />
-              through handcrafted coconut candy – the iconic sweet of Vietnam's riverlands.<br />
-              Here, tradition, craftsmanship, and local stories blend into a truly immersive<br />
+        <div className="relative bg-gradient-to-r from-light-green to-primary-green py-10 sm:py-16">
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6">
+            <p className="text-white text-base sm:text-lg md:text-xl font-medium mb-6 sm:mb-8 leading-relaxed lg:leading-loose uppercase px-1">
+              Cody is a journey that connects the world to the cultural essence of Ben Tre
+              through handcrafted coconut candy – the iconic sweet of Vietnam's riverlands.
+              Here, tradition, craftsmanship, and local stories blend into a truly immersive
               experience.
             </p>
 
-
             <Link
               to="/brand-story"
-              className="inline-block bg-white text-primary-green px-8 py-3 font-bold text-lg tracking-wider rounded-full hover:bg-cream transition-colors"
+              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-full hover:bg-cream transition-colors"
             >
               SPEND A DAY WITH US
             </Link>
@@ -221,7 +243,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Featured Products Section - Clean Grid */}
+      {/* Featured Products Section */}
       <section className="py-20 bg-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
@@ -236,53 +258,56 @@ const HomePage = () => {
                 {t('products.subtitle')}
               </h2>
             </div>
-
-
             {/* Product Categories Navigation */}
-            <div className="mb-6">
-              <div
-                ref={scrollContainerRef}
-                className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 px-4 max-w-4xl mx-auto"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                {categories.map((category, index) => (
-                  <button
-                    key={category.key}
-                    className="text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10"
-                  >
-                    {category.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Native-like Horizontal Scrollbar */}
-              <div className="w-full max-w-4xl mx-auto mt-4">
+            <div className="mb-4 sm:mb-6 max-w-full mx-auto overflow-hidden">
+              <div className="px-2 sm:px-4">
                 <div
-                  ref={trackRef}
-                  className="w-full h-4 bg-gray-200 rounded-sm cursor-pointer relative select-none"
-                  onMouseDown={handleTrackMouseDown}
+                  ref={scrollContainerRef}
+                  className="flex gap-4 sm:gap-8 overflow-x-auto scrollbar-hide pb-4 max-w-full"
+                  style={{
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                    WebkitOverflowScrolling: 'touch'
+                  }}
                 >
+                  {categories.map((category) => (
+                    <button
+                      key={category.key}
+                      className="text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10"
+                    >
+                      {category.label}
+                    </button>
+                  ))}
+                </div>
+                {/* Scrollbar */}
+                <div className="w-full mt-4">
                   <div
-                    ref={thumbRef}
-                    className="h-4 bg-primary-green rounded-sm absolute top-0 transition-none"
-                    style={{
-                      left: `${scrollProgress * (100 - 20) / 100}%`,
-                      width: '20%'
+                    ref={trackRef}
+                    className="w-full h-4 bg-gray-200 rounded-sm cursor-pointer relative select-none"
+                    onMouseDown={handleTrackMouseDown}
+                    onTouchStart={(e) => {
+                      const touch = e.touches[0];
+                      handleTrackMouseDown({ clientX: touch.clientX } as React.MouseEvent);
                     }}
-                  />
+                  >
+                    <div
+                      ref={thumbRef}
+                      className="h-4 bg-primary-green rounded-sm absolute top-0 transition-none"
+                      style={{
+                        left: `${scrollProgress * (100 - 20) / 100}%`,
+                        width: '20%'
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-
-
           <div className="text-center">
             <button className="bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors">
               {t('products.shopFull')}
@@ -313,14 +338,18 @@ const HomePage = () => {
                   <img
                     src="https://images.pexels.com/photos/6697264/pexels-photo-6697264.jpeg?auto=compress&cs=tinysrgb&w=600"
                     alt="Corporate Gifts"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
+                    loading="lazy"
+                    width="800"
+                    height="600"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
 
 
                 {/* Title and Button Below Image */}
-                <div className="bg-primary-green text-white p-8 text-center">
-                  <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight">
+                <div className="bg-primary-green text-white p-6 sm:p-8 text-center">
+                  <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight drop-shadow-sm">
                     {t('custom.personalizedGift')}
                   </h3>
                   <button className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors">
@@ -337,7 +366,10 @@ const HomePage = () => {
                   <img
                     src="https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=600"
                     alt="Celebration Cakes"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
+                    loading="lazy"
+                    width="800"
+                    height="600"
                   />
                 </div>
 
@@ -358,8 +390,8 @@ const HomePage = () => {
       </section>
 
       {/* Workshop Experience Section */}
-      <section className="py-0 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Workshop Section */}
             <div className="relative">
@@ -405,6 +437,9 @@ const HomePage = () => {
                 src="https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=800"
                 alt="Workshop Experience"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                width="800"
+                height="600"
               />
             </div>
           </div>
@@ -412,17 +447,20 @@ const HomePage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Team Image Section */}
-            <div className="aspect-square lg:aspect-auto">
+            <div className="order-2 lg:order-1 aspect-square lg:aspect-auto">
               <img
                 src="https://images.pexels.com/photos/11406167/pexels-photo-11406167.jpeg?auto=compress&cs=tinysrgb&w=800"
                 alt="CODY Team"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                width="800"
+                height="600"
               />
             </div>
 
 
             {/* About Section */}
-            <div className="relative">
+            <div className="order-1 lg:order-2 relative">
               <div className="bg-light-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
                 <h3 className="text-3xl md:text-4xl font-black font-montserrat mb-8 tracking-tight leading-tight whitespace-pre-line">
                   {t('about.title')}
@@ -451,12 +489,12 @@ const HomePage = () => {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-2">
+            <div className="flex items-center justify-center mb-2 px-2">
               <a
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-4xl md:text-5xl font-bold text-primary-green font-montserrat tracking-tight hover:text-accent-green transition-colors"
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-green font-montserrat tracking-tight hover:text-accent-green transition-colors break-words sm:break-normal"
               >
                 @CODY_COCONUT_CANDY
               </a>
@@ -477,7 +515,10 @@ const HomePage = () => {
                 <img
                   src={image}
                   alt={`Instagram post ${index + 1}`}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  width="800"
+                  height="600"
                 />
               </div>
             ))}
@@ -486,15 +527,15 @@ const HomePage = () => {
           {/* Instagram Modal */}
           {selectedPost !== null && (
             <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-0"
               onClick={closeModal}
             >
               {/* Close button */}
               <button
-                className="fixed top-6 right-6 z-[60] text-white hover:text-gray-300"
+                className="fixed top-3 sm:top-6 right-3 sm:right-6 z-[60] text-white hover:text-gray-300"
                 onClick={closeModal}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -503,45 +544,48 @@ const HomePage = () => {
               {/* Previous button */}
               {selectedPost > 0 && (
                 <button
-                  className="fixed left-6 top-1/2 -translate-y-1/2 z-[60] text-white opacity-75 hover:opacity-100"
+                  className="fixed left-2 sm:left-6 top-1/2 -translate-y-1/2 z-[60] text-white opacity-75 hover:opacity-100"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedPost(selectedPost - 1);
                   }}
                 >
-                  <ChevronRight className="w-10 h-10 transform rotate-180" />
+                  <ChevronRight className="w-8 sm:w-10 h-8 sm:h-10 transform rotate-180" />
                 </button>
               )}
 
               {/* Next button */}
               {selectedPost < instagramPosts.length - 1 && (
                 <button
-                  className="fixed right-6 top-1/2 -translate-y-1/2 z-[60] text-white opacity-75 hover:opacity-100"
+                  className="fixed right-2 sm:right-6 top-1/2 -translate-y-1/2 z-[60] text-white opacity-75 hover:opacity-100"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedPost(selectedPost + 1);
                   }}
                 >
-                  <ChevronRight className="w-10 h-10" />
+                  <ChevronRight className="w-8 sm:w-10 h-8 sm:h-10" />
                 </button>
               )}
 
               <div
-                className="relative max-w-6xl w-full max-h-[90vh] flex bg-white overflow-hidden"
+                className="relative max-w-6xl w-[95%] md:w-full max-h-[90vh] flex flex-col md:flex-row bg-white overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Left side */}
-                <div className="w-3/5 bg-black flex items-center justify-center relative">
+                {/* Left side - full width on mobile */}
+                <div className="w-full md:w-3/5 bg-black flex items-center justify-center relative">
                   <img
                     src={instagramPosts[selectedPost]}
                     alt={`Instagram post ${selectedPost + 1}`}
-                    className="w-full h-auto max-h-[90vh] object-contain"
+                    className="w-full h-auto max-h-[50vh] md:max-h-[90vh] object-contain"
+                    loading="lazy"
+                    width="800"
+                    height="800"
                   />
                 </div>
 
 
                 {/* Right side*/}
-                <div className="w-2/5 flex flex-col bg-white h-[90vh] overflow-y-auto">
+                <div className="w-full md:w-2/5 flex flex-col bg-white h-auto max-h-[40vh] md:h-[90vh] md:max-h-[90vh] overflow-y-auto">
                   {/* Header */}
                   <div className="flex items-center p-4 border-b">
                     <div className="h-8 w-8 bg-gray-200 overflow-hidden mr-3">
