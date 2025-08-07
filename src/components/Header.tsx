@@ -192,7 +192,6 @@ const Header = () => {
 
             {/* Right Sidebar */}
             <div className="pt-2 fixed right-0 top-0 h-full w-64 bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300">
-              {/* Menu header with adjusted close button */}
               <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
                 <h2 className="font-bold text-lg text-primary-green">Menu</h2>
                 <button
