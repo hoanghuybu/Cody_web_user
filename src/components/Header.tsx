@@ -47,10 +47,16 @@ const Header = () => {
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden';
+    const newMenuState = !isMenuOpen;
+    setIsMenuOpen(newMenuState);
+    
+    if (isMobile) {
+      setTimeout(() => {
+      }, 50);
+    }
   };
 
+  
   return (
     <>
       {/* Discount Banner */}
@@ -190,9 +196,14 @@ const Header = () => {
               onClick={toggleMenu}
             ></div>
 
-            {/* Right Sidebar */}
-            <div className="pt-2 fixed right-0 top-0 h-full w-64 bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300">
-              <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
+            {/* Right Sidebar - Dynamic positioning based on banner visibility */}
+            <div
+              className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
+                  ? 'top-[55px] h-[calc(100%-55px)]'
+                  : 'top-0 h-full'
+                }`}
+            >
+              <div className="pt-2 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
                 <h2 className="font-bold text-lg text-primary-green">Menu</h2>
                 <button
                   onClick={toggleMenu}
@@ -202,9 +213,9 @@ const Header = () => {
                 </button>
               </div>
 
-              {/* Menu content */}
+              {/* Menu content remains the same */}
               <div className="flex flex-col px-4 pt-2 pb-8">
-                {/* Main navigation */}
+                {/* Navigation and user actions remain unchanged */}
                 <nav className="flex flex-col space-y-6">
                   {navigation.map((item) => (
                     <Link
@@ -221,7 +232,6 @@ const Header = () => {
 
                 <div className="border-t border-gray-200 my-6"></div>
 
-                {/* User actions */}
                 <div className="flex flex-col space-y-4">
                   <Link
                     to="/cart"
@@ -237,7 +247,6 @@ const Header = () => {
                     <span className="text-base font-medium">Account</span>
                   </button>
 
-                  {/* Language toggle */}
                   <button
                     onClick={() => setLanguage(language === 'en' ? 'vn' : 'en')}
                     className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"
