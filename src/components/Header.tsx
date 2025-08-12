@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingCart, Search, User, Globe, Leaf } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -9,7 +9,7 @@ const Header = () => {
   const [showBanner, setShowBanner] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
-  const { items } = useCart();
+  const { items, openCart } = useCart();
   const { language, setLanguage, t } = useLanguage();
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -47,10 +47,16 @@ const Header = () => {
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden';
+    const newMenuState = !isMenuOpen;
+    setIsMenuOpen(newMenuState);
+    
+    if (isMobile) {
+      setTimeout(() => {
+      }, 50);
+    }
   };
 
+  
   return (
     <>
       {/* Discount Banner */}
@@ -65,20 +71,20 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Main Header - Consistent Cody design on both desktop and mobile */}
+      {/* Main Header */}
       <header
         className={`sticky z-40 transition-all duration-300 bg-white ${showBanner ? 'top-8' : 'top-0'}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Desktop Header */}
-          <div className="hidden md:flex justify-between items-center h-20">
+          <div className="hidden md:flex justify-between items-center h-16 lg:h-20">
             {/* Left Navigation */}
-            <nav className="flex items-center space-x-12 flex-1 justify-start">
+    <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-start">
               {navigation.slice(0, 2).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`text-sm font-medium tracking-wider transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
+      className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
                 >
                   {item.name}
                 </Link>
@@ -87,35 +93,35 @@ const Header = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-              <div className="w-12 h-12 bg-primary-green rounded-full flex items-center justify-center">
-                <Leaf className="h-7 w-7 text-white" />
+              <div className="w-10 h-10 lg:w-12 lg:h-12 bg-primary-green rounded-full flex items-center justify-center">
+                <Leaf className="h-6 w-6 lg:h-7 lg:w-7 text-white" />
               </div>
               <div className="text-center">
-                <h1 className="text-3xl font-bold text-primary-green font-montserrat tracking-wider">CODY</h1>
-                <p className="text-xs text-warm-brown -mt-1 tracking-widest">COCONUT CANDY</p>
+                <h1 className="text-2xl lg:text-3xl font-bold text-primary-green font-montserrat tracking-normal lg:tracking-wider">CODY</h1>
+                <p className="text-[11px] lg:text-xs text-warm-brown -mt-1 tracking-wide lg:tracking-widest">COCONUT CANDY</p>
               </div>
             </Link>
 
             {/* Right Navigation */}
-            <nav className="flex items-center space-x-12 flex-1 justify-end">
+    <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-end">
               {navigation.slice(2, 3).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`text-sm font-medium tracking-wider transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
+      className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
                 >
                   {item.name}
                 </Link>
               ))}
 
               {/* Icons */}
-              <div className="flex items-center space-x-4 ml-8">
+              <div className="flex items-center space-x-2 lg:space-x-4 ml-2 lg:ml-8">
                 <button className="p-2 text-warm-brown hover:text-primary-green transition-colors">
                   <Search className="h-5 w-5" />
                 </button>
 
-                <Link
-                  to="/cart"
+                <button
+                  onClick={openCart}
                   className="relative p-2 text-warm-brown hover:text-primary-green transition-colors"
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -124,7 +130,7 @@ const Header = () => {
                       {totalItems}
                     </span>
                   )}
-                </Link>
+                </button>
 
                 <button className="p-2 text-warm-brown hover:text-primary-green transition-colors">
                   <User className="h-5 w-5" />
@@ -161,14 +167,14 @@ const Header = () => {
                 <Search className="h-5 w-5" />
               </button>
 
-              <Link to="/cart" className="relative p-2 text-warm-brown hover:text-primary-green transition-colors">
+              <button onClick={openCart} className="relative p-2 text-warm-brown hover:text-primary-green transition-colors">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-accent-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
-              </Link>
+              </button>
 
               <button
                 className="p-2 text-warm-brown hover:text-primary-green transition-colors"
@@ -190,10 +196,14 @@ const Header = () => {
               onClick={toggleMenu}
             ></div>
 
-            {/* Right Sidebar */}
-            <div className="pt-2 fixed right-0 top-0 h-full w-64 bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300">
-              {/* Menu header with adjusted close button */}
-              <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
+            {/* Right Sidebar - Dynamic positioning based on banner visibility */}
+            <div
+              className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
+                  ? 'top-[35px] h-[calc(100%-35px)]'
+                  : 'top-0 h-full'
+                }`}
+            >
+              <div className="pt-4 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
                 <h2 className="font-bold text-lg text-primary-green">Menu</h2>
                 <button
                   onClick={toggleMenu}
@@ -203,9 +213,9 @@ const Header = () => {
                 </button>
               </div>
 
-              {/* Menu content */}
+              {/* Menu content remains the same */}
               <div className="flex flex-col px-4 pt-2 pb-8">
-                {/* Main navigation */}
+                {/* Navigation and user actions remain unchanged */}
                 <nav className="flex flex-col space-y-6">
                   {navigation.map((item) => (
                     <Link
@@ -222,23 +232,20 @@ const Header = () => {
 
                 <div className="border-t border-gray-200 my-6"></div>
 
-                {/* User actions */}
                 <div className="flex flex-col space-y-4">
-                  <Link
-                    to="/cart"
+                  <button
+                    onClick={() => { toggleMenu(); openCart(); }}
                     className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"
-                    onClick={toggleMenu}
                   >
                     <ShoppingCart className="h-5 w-5" />
                     <span className="text-base font-medium">Cart ({totalItems})</span>
-                  </Link>
+                  </button>
 
                   <button className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors">
                     <User className="h-5 w-5" />
                     <span className="text-base font-medium">Account</span>
                   </button>
 
-                  {/* Language toggle */}
                   <button
                     onClick={() => setLanguage(language === 'en' ? 'vn' : 'en')}
                     className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"

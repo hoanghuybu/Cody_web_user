@@ -18,27 +18,27 @@ const HomePage = () => {
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-useEffect(() => {
-  const checkMobile = () => {
-    setIsMobile(window.innerWidth < 768);
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
   };
-  
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
-  return () => window.removeEventListener('resize', checkMobile);
-}, []);
 
-const scrollLeft = () => {
-  if (scrollContainerRef.current) {
-    scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-  }
-};
-
-const scrollRight = () => {
-  if (scrollContainerRef.current) {
-    scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-  }
-};
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
 
 
   const categories = [
@@ -79,12 +79,10 @@ const scrollRight = () => {
 
   const openModal = (index: number) => {
     setSelectedPost(index);
-    document.body.style.overflow = 'hidden';
   };
-  
+
   const closeModal = () => {
     setSelectedPost(null);
-    document.body.style.overflow = 'auto';
   };
 
 
@@ -456,16 +454,12 @@ const scrollRight = () => {
                 height="600"
               />
             </div>
-
-
             {/* About Section */}
             <div className="order-1 lg:order-2 relative">
               <div className="bg-light-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
                 <h3 className="text-3xl md:text-4xl font-black font-montserrat mb-8 tracking-tight leading-tight whitespace-pre-line">
                   {t('about.title')}
                 </h3>
-
-
                 <p className="text-base leading-relaxed font-inter mb-12 whitespace-pre-line">
                   {t('about.description')}
                 </p>
@@ -493,18 +487,22 @@ const scrollRight = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-green font-montserrat tracking-tight hover:text-accent-green transition-colors break-words sm:break-normal"
+                className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-primary-green font-montserrat tracking-tight hover:text-accent-green transition-colors break-all sm:break-normal overflow-hidden"
+                style={{
+                  wordBreak: 'break-all',
+                  overflowWrap: 'break-word',
+                  hyphens: 'auto'
+                }}
               >
                 @CODY_COCONUT_CANDY
               </a>
             </div>
-            <p className="text-sm uppercase tracking-widest font-medium text-gray-700 font-inter">
+            <p className="text-xs sm:text-sm uppercase tracking-widest font-medium text-gray-700 font-inter px-2">
               FIND US ON INSTAGRAM & SHARE OUR CODY ADVENTURE
             </p>
           </div>
 
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
             {instagramPosts.map((image, index) => (
               <div
                 key={index}

@@ -1,6 +1,6 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
+import CartDrawer from './components/CartDrawer';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
@@ -33,6 +33,7 @@ function App() {
               </Routes>
             </main>
             <Footer />
+            <CartDrawer />
             <Chatbot />
           </div>
         </Router>
