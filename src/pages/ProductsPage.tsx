@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Filter, Grid, List, Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
@@ -13,9 +13,10 @@ import {
   InputAdornment,
   Box,
   Chip,
-  Typography
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,12 @@ const theme = createTheme({
         },
       },
     },
+    // Disable scroll lock globally for all MUI modals/menus/popovers
+    MuiModal: {
+      defaultProps: {
+        disableScrollLock: true,
+      },
+    },
   },
 });
 
@@ -43,6 +50,8 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(category || 'all');
   const [sortBy, setSortBy] = useState('name');
   const [searchTerm, setSearchTerm] = useState('');
+  const muiTheme = useTheme();
+  const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
   const filteredProducts = allProducts
     .filter(product =>
@@ -95,18 +104,21 @@ const ProductsPage = () => {
                   ),
                 }}
                 variant="outlined"
-                size="small"
+                size={isSmall ? 'medium' : 'small'}
               />
 
               {/* Filters - Using MUI Select */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
                 {/* Category Filter */}
-                <FormControl size="small" sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
+                <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
                   <InputLabel>Danh mục</InputLabel>
                   <Select
                     value={selectedCategory}
                     label="Danh mục"
                     onChange={(e) => setSelectedCategory(e.target.value)}
+                    MenuProps={{
+                      disableScrollLock: true,
+                    }}
                   >
                     <MenuItem value="all">Tất cả danh mục</MenuItem>
                     {categories.map(cat => (
@@ -116,12 +128,15 @@ const ProductsPage = () => {
                 </FormControl>
 
                 {/* Sort Filter */}
-                <FormControl size="small" sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
+                <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
                   <InputLabel>Sắp xếp</InputLabel>
                   <Select
                     value={sortBy}
                     label="Sắp xếp"
                     onChange={(e) => setSortBy(e.target.value)}
+                    MenuProps={{
+                      disableScrollLock: true,
+                    }}
                   >
                     <MenuItem value="name">Sắp xếp theo tên</MenuItem>
                     <MenuItem value="price-low">Giá: Thấp đến cao</MenuItem>
@@ -130,7 +145,7 @@ const ProductsPage = () => {
                 </FormControl>
 
                 {/* View Mode - Giữ nguyên Tailwind buttons */}
-                <div className="inline-flex self-start sm:self-auto sm:ml-auto rounded-md shadow-sm isolate" role="group">
+                <div className="inline-flex self-start sm:self-start rounded-md shadow-sm isolate" role="group">
                   <button
                     onClick={() => setViewMode('grid')}
                     type="button"

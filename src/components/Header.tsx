@@ -199,11 +199,11 @@ const Header = () => {
             {/* Right Sidebar - Dynamic positioning based on banner visibility */}
             <div
               className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
-                  ? 'top-[55px] h-[calc(100%-55px)]'
+                  ? 'top-[35px] h-[calc(100%-35px)]'
                   : 'top-0 h-full'
                 }`}
             >
-              <div className="pt-2 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
+              <div className="pt-4 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
                 <h2 className="font-bold text-lg text-primary-green">Menu</h2>
                 <button
                   onClick={toggleMenu}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -63,19 +62,19 @@ const CartPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="xl:col-span-2 space-y-4">
             {items.map((item) => (
-              <div key={item.id} className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center space-x-4">
+              <div key={item.id} className="bg-white rounded-xl p-4 sm:p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-20 h-20 object-cover rounded-lg"
+                    className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg mx-auto sm:mx-0"
                   />
                   
-                  <div className="flex-1">
+                  <div className="flex-1 text-center sm:text-left">
                     <h3 className="font-semibold text-warm-brown mb-1">
                       {item.name}
                     </h3>
@@ -87,7 +86,7 @@ const CartPage = () => {
                     </p>
                   </div>
                   
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
                     <div className="flex items-center border border-gray-300 rounded-full">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -129,8 +128,8 @@ const CartPage = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl p-6 shadow-sm sticky top-8">
+          <div className="xl:col-span-1">
+            <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm sticky top-8">
               <h2 className="text-xl font-bold text-warm-brown font-playfair mb-6">
                 Tóm tắt đơn hàng
               </h2>
