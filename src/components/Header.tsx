@@ -16,7 +16,7 @@ const Header = () => {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 769);
+      setIsMobile(window.innerWidth < 1280);
     };
 
     checkMobile();
@@ -49,14 +49,14 @@ const Header = () => {
   const toggleMenu = () => {
     const newMenuState = !isMenuOpen;
     setIsMenuOpen(newMenuState);
-    
+
     if (isMobile) {
       setTimeout(() => {
       }, 50);
     }
   };
 
-  
+
   return (
     <>
       {/* Discount Banner */}
@@ -77,14 +77,14 @@ const Header = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Desktop Header */}
-          <div className="hidden md:flex justify-between items-center h-16 lg:h-20">
+          <div className="hidden xl:flex justify-between items-center h-16 lg:h-20">
             {/* Left Navigation */}
-    <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-start">
+            <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-start">
               {navigation.slice(0, 2).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-      className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
+                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
                 >
                   {item.name}
                 </Link>
@@ -103,12 +103,12 @@ const Header = () => {
             </Link>
 
             {/* Right Navigation */}
-    <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-end">
+            <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-end">
               {navigation.slice(2, 3).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-      className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
+                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
                 >
                   {item.name}
                 </Link>
@@ -150,38 +150,43 @@ const Header = () => {
           </div>
 
           {/* Mobile Header */}
-          <div className="md:hidden flex justify-between items-center h-16">
+          <div className="xl:hidden flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
-              <div className="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center">
-                <Leaf className="h-5 w-5 text-white" />
+            <Link to="/" className="flex items-center space-x-2 flex-shrink-0 min-w-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary-green rounded-full flex items-center justify-center">
+                <Leaf className="h-3 w-3 sm:h-5 sm:w-5 text-white" />
               </div>
-              <div className="text-center">
-                <h1 className="text-xl font-bold text-primary-green font-montserrat tracking-wider">CODY</h1>
+              <div className="text-center min-w-0">
+                <h1 className="text-sm sm:text-xl font-bold text-primary-green font-montserrat tracking-wider truncate">
+                  CODY
+                </h1>
               </div>
             </Link>
 
-            {/* Icons for Mobile */}
-            <div className="flex items-center space-x-2">
-              <button className="p-2 text-warm-brown hover:text-primary-green transition-colors">
-                <Search className="h-5 w-5" />
+            {/* Icons for Mobile - Improved spacing */}
+            <div className="flex items-center space-x-1 flex-shrink-0">
+              <button className="p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors">
+                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
-              <button onClick={openCart} className="relative p-2 text-warm-brown hover:text-primary-green transition-colors">
-                <ShoppingCart className="h-5 w-5" />
+              <button
+                onClick={openCart}
+                className="relative p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors"
+              >
+                <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-accent-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-accent-green text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs">
                     {totalItems}
                   </span>
                 )}
               </button>
 
               <button
-                className="p-2 text-warm-brown hover:text-primary-green transition-colors"
+                className="p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors"
                 onClick={toggleMenu}
                 aria-label="Toggle menu"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
           </div>
@@ -189,7 +194,7 @@ const Header = () => {
 
         {/* Mobile Navigation Sidebar */}
         {isMenuOpen && isMobile && (
-          <div className="fixed inset-0 z-50 md:hidden">
+          <div className="fixed inset-0 z-50 xl:hidden">
             {/* Dark overlay */}
             <div
               className="fixed inset-0 bg-black/30 transition-opacity"
@@ -199,11 +204,11 @@ const Header = () => {
             {/* Right Sidebar - Dynamic positioning based on banner visibility */}
             <div
               className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
-                  ? 'top-[35px] h-[calc(100%-35px)]'
+                  ? 'top-[72px] h-[calc(100%-72px)]'
                   : 'top-0 h-full'
                 }`}
             >
-              <div className="pt-4 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
+              <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
                 <h2 className="font-bold text-lg text-primary-green">Menu</h2>
                 <button
                   onClick={toggleMenu}
@@ -213,9 +218,9 @@ const Header = () => {
                 </button>
               </div>
 
-              {/* Menu content remains the same */}
+              {/* Menu content */}
               <div className="flex flex-col px-4 pt-2 pb-8">
-                {/* Navigation and user actions remain unchanged */}
+                {/* Navigation */}
                 <nav className="flex flex-col space-y-6">
                   {navigation.map((item) => (
                     <Link
@@ -232,6 +237,7 @@ const Header = () => {
 
                 <div className="border-t border-gray-200 my-6"></div>
 
+                {/* User actions */}
                 <div className="flex flex-col space-y-4">
                   <button
                     onClick={() => { toggleMenu(); openCart(); }}
