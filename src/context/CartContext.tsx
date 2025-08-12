@@ -4,6 +4,7 @@ import { Product, CartItem } from '../types/product';
 interface CartState {
   items: CartItem[];
   total: number;
+  isCartOpen: boolean;
 }
 
 interface CartContextType extends CartState {
@@ -11,19 +12,25 @@ interface CartContextType extends CartState {
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 }
 
 type CartAction =
   | { type: 'ADD_TO_CART'; payload: Product }
   | { type: 'REMOVE_FROM_CART'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLEAR_CART' }
+  | { type: 'OPEN_CART' }
+  | { type: 'CLOSE_CART' }
+  | { type: 'TOGGLE_CART' };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
-    case 'ADD_TO_CART': {
+  case 'ADD_TO_CART': {
       const existingItem = state.items.find(item => item.id === action.payload.id);
       
       if (existingItem) {
@@ -34,13 +41,15 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         );
         return {
           items: updatedItems,
-          total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+      isCartOpen: true,
         };
       } else {
         const newItems = [...state.items, { ...action.payload, quantity: 1 }];
         return {
           items: newItems,
-          total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+      isCartOpen: true,
         };
       }
     }
@@ -49,7 +58,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const newItems = state.items.filter(item => item.id !== action.payload);
       return {
         items: newItems,
-        total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        isCartOpen: state.isCartOpen,
       };
     }
     
@@ -62,12 +72,22 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       
       return {
         items: updatedItems,
-        total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        isCartOpen: state.isCartOpen,
       };
     }
     
     case 'CLEAR_CART':
-      return { items: [], total: 0 };
+      return { items: [], total: 0, isCartOpen: state.isCartOpen };
+
+    case 'OPEN_CART':
+      return { ...state, isCartOpen: true };
+
+    case 'CLOSE_CART':
+      return { ...state, isCartOpen: false };
+
+    case 'TOGGLE_CART':
+      return { ...state, isCartOpen: !state.isCartOpen };
     
     default:
       return state;
@@ -75,7 +95,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 };
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, { items: [], total: 0 });
+  const [state, dispatch] = useReducer(cartReducer, { items: [], total: 0, isCartOpen: false });
 
   const addToCart = (product: Product) => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
@@ -93,13 +113,20 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     dispatch({ type: 'CLEAR_CART' });
   };
 
+  const openCart = () => dispatch({ type: 'OPEN_CART' });
+  const closeCart = () => dispatch({ type: 'CLOSE_CART' });
+  const toggleCart = () => dispatch({ type: 'TOGGLE_CART' });
+
   return (
     <CartContext.Provider value={{
       ...state,
       addToCart,
       removeFromCart,
       updateQuantity,
-      clearCart
+  clearCart,
+  openCart,
+  closeCart,
+  toggleCart
     }}>
       {children}
     </CartContext.Provider>
