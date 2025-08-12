@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
 const CartPage = () => {
+  // Cart page with editable items and order summary
   const { items, total, updateQuantity, removeFromCart, clearCart } = useCart();
+
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [note, setNote] = useState('');
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -12,8 +17,7 @@ const CartPage = () => {
     }).format(price);
   };
 
-  const shippingFee = total >= 300000 ? 0 : 30000;
-  const finalTotal = total + shippingFee;
+  const FREE_SHIPPING_THRESHOLD = 300000;
 
   if (items.length === 0) {
     return (
@@ -46,7 +50,7 @@ const CartPage = () => {
     <div className="min-h-screen bg-cream py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Link
             to="/products"
             className="inline-flex items-center text-primary-green hover:text-primary-green/80 mb-4 group"
@@ -54,133 +58,184 @@ const CartPage = () => {
             <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             Tiếp tục mua sắm
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">
-            Giỏ hàng của bạn
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Có {items.length} sản phẩm trong giỏ hàng
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">Giỏ hàng của bạn</h1>
+          <p className="text-gray-600 mt-2 text-sm sm:text-base">Có {items.length} sản phẩm trong giỏ hàng</p>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="xl:col-span-2 space-y-4">
-            {items.map((item) => (
-              <div key={item.id} className="bg-white rounded-xl p-4 sm:p-6 shadow-sm">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg mx-auto sm:mx-0"
-                  />
-                  
-                  <div className="flex-1 text-center sm:text-left">
-                    <h3 className="font-semibold text-warm-brown mb-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-2">
-                      {item.weight}
-                    </p>
-                    <p className="text-lg font-bold text-primary-green">
-                      {formatPrice(item.price)}
-                    </p>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
-                    <div className="flex items-center border border-gray-300 rounded-full">
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-2 text-gray-600 hover:text-primary-green transition-colors"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <span className="px-4 py-2 font-semibold min-w-[3rem] text-center">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-2 text-gray-600 hover:text-primary-green transition-colors"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
-                    
+          {/* Items list */}
+          <div className="xl:col-span-2">
+            {/* Table header (desktop) */}
+            <div className="hidden md:grid grid-cols-[96px_1fr_120px_160px_140px_40px] px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div></div>
+              <div></div>
+              <div className="text-center">Giá</div>
+              <div className="text-center">Số lượng</div>
+              <div className="text-right">Tổng cộng</div>
+              <div></div>
+            </div>
+            <div className="space-y-4">
+              {items.map((item) => {
+                const lineTotal = item.price * item.quantity;
+                const canDecrement = item.quantity > 1;
+                return (
+                  <div key={item.id} className="relative bg-white rounded-xl border border-gray-100 max-md:border-amber-200 shadow-sm px-3 sm:px-4 md:px-6 max-[320px]:px-2 py-3 md:py-4">
+                    {/* Mobile delete (absolute) */}
                     <button
+                      aria-label="Xóa sản phẩm khỏi giỏ hàng"
                       onClick={() => removeFromCart(item.id)}
-                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                      className="md:hidden absolute top-2 right-2 inline-flex items-center p-2 max-[320px]:p-1.5 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
+                      title="Xóa"
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
+
+                    <div className="grid grid-cols-[64px_1fr] md:grid-cols-[96px_1fr_120px_160px_140px_40px] items-center gap-3 sm:gap-4">
+                      {/* Image */}
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 max-[320px]:w-14 max-[320px]:h-14 md:w-24 md:h-24 object-cover rounded-lg"
+                      />
+
+                      {/* Name and meta */}
+                      <div className="flex flex-col gap-1">
+                        <h3 className="font-playfair text-sm sm:text-base md:text-lg text-warm-brown leading-snug line-clamp-1 md:line-clamp-2 uppercase tracking-wide">{item.name}</h3>
+                        <div className="hidden md:flex items-center gap-2">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs">{item.weight}</span>
+                        </div>
+                        {/* Mobile inline price and total */}
+                        <div className="mt-2 flex md:hidden items-center justify-between max-[320px]:justify-start max-[320px]:gap-2">
+                          <span className="text-amber-600 font-semibold text-sm">{formatPrice(item.price)}</span>
+                          <span className="text-sm font-semibold max-[320px]:hidden">{formatPrice(lineTotal)}</span>
+                        </div>
+                      </div>
+
+                      {/* Price (desktop) */}
+                      <div className="hidden md:block text-center font-semibold text-amber-600">{formatPrice(item.price)}</div>
+
+                      {/* Quantity controls (desktop) */}
+                      <div className="hidden md:block col-start-3 md:col-start-auto justify-self-end self-center">
+                        <div className="flex items-center bg-white border border-gray-200 rounded-md overflow-hidden shadow-sm min-w-[160px] justify-between">
+                          <button
+                            aria-label="Giảm số lượng"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            disabled={!canDecrement}
+                            className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-primary-green disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </button>
+                          <span className="px-3 py-1.5 font-semibold min-w-[3rem] text-center select-none">{item.quantity}</span>
+                          <button
+                            aria-label="Tăng số lượng"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-primary-green focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Line total (desktop) */}
+                      <div className="hidden md:block text-right font-semibold">{formatPrice(lineTotal)}</div>
+
+                      {/* Remove (desktop) */}
+                      <button
+                        aria-label="Xóa sản phẩm khỏi giỏ hàng"
+                        onClick={() => removeFromCart(item.id)}
+                        className="col-start-3 md:col-start-auto justify-self-end hidden md:inline-flex items-center p-2 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
+                        title="Xóa"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+                    {/* Quantity controls (mobile bottom) */}
+                    <div className="md:hidden flex justify-end mt-2 border-t border-gray-100 pt-2">
+                      <div className="flex items-center bg-white border border-gray-200 rounded-md overflow-hidden shadow-sm min-w-[120px] max-[320px]:min-w-[112px] justify-between">
+                        <button
+                          aria-label="Giảm số lượng"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          disabled={!canDecrement}
+                          className="h-8 w-8 max-[320px]:h-7 max-[320px]:w-7 flex items-center justify-center text-gray-600 hover:text-primary-green disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        <span className="px-2 py-1.5 font-semibold min-w-[2.5rem] text-center select-none max-[320px]:text-sm">{item.quantity}</span>
+                        <button
+                          aria-label="Tăng số lượng"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="h-8 w-8 max-[320px]:h-7 max-[320px]:w-7 flex items-center justify-center text-gray-600 hover:text-primary-green focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
-            
-            {/* Clear Cart */}
-            <div className="pt-4">
-              <button
-                onClick={clearCart}
-                className="text-red-500 hover:text-red-600 text-sm font-medium"
-              >
-                Xóa tất cả sản phẩm
-              </button>
+                );
+              })}
+            </div>
+
+            {/* Clear cart */}
+            <div className="pt-4 border-t border-gray-200 mt-4">
+              <button onClick={clearCart} className="text-red-500 hover:text-red-600 text-sm font-medium">Xóa tất cả sản phẩm</button>
             </div>
           </div>
 
-          {/* Order Summary */}
-          <div className="xl:col-span-1">
-            <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm sticky top-8">
-              <h2 className="text-xl font-bold text-warm-brown font-playfair mb-6">
-                Tóm tắt đơn hàng
-              </h2>
-              
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tạm tính</span>
-                  <span className="font-semibold">{formatPrice(total)}</span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Phí vận chuyển</span>
-                  <span className="font-semibold">
-                    {shippingFee === 0 ? 'Miễn phí' : formatPrice(shippingFee)}
-                  </span>
-                </div>
-                
-                {total < 300000 && (
-                  <div className="text-sm text-accent-green bg-accent-green/10 p-3 rounded-lg">
-                    Thêm {formatPrice(300000 - total)} để được miễn phí vận chuyển
-                  </div>
-                )}
-                
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Tổng cộng</span>
-                    <span className="text-primary-green">{formatPrice(finalTotal)}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <button className="w-full bg-primary-green text-white font-semibold py-4 rounded-full hover:bg-primary-green/90 transition-colors mb-4">
-                Tiến hành thanh toán
+          {/* Sidebar */}
+          <div className="xl:col-span-1 space-y-4">
+            {/* Free shipping banner */}
+    <div className="rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200 px-3 py-2 text-sm">
+              {total < FREE_SHIPPING_THRESHOLD ? (
+                <span>
+      Còn <span className="font-semibold underline decoration-emerald-500">{formatPrice(FREE_SHIPPING_THRESHOLD - total)}</span> nữa bạn sẽ được <span className="font-semibold">MIỄN PHÍ</span> giao hàng! 🛵
+                </span>
+              ) : (
+                <span>Bạn đã đủ điều kiện <span className="font-semibold">MIỄN PHÍ</span> giao hàng! 🎉</span>
+              )}
+            </div>
+
+            {/* Notes collapsible */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setNoteOpen((v) => !v)}
+                aria-expanded={noteOpen}
+                className="w-full flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4"
+              >
+                <span className="font-semibold text-warm-brown">Thêm ghi chú</span>
+                <span
+                  className="inline-flex items-center justify-center h-6 w-6 rounded-full border border-gray-300 text-gray-600"
+                  aria-hidden
+                >
+                  {noteOpen ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                </span>
               </button>
-              
-              <div className="text-center">
-                <p className="text-sm text-gray-500 mb-2">
-                  Chúng tôi chấp nhận
-                </p>
-                <div className="flex justify-center space-x-2">
-                  <div className="w-8 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                    VISA
-                  </div>
-                  <div className="w-8 h-5 bg-red-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                    MC
-                  </div>
-                  <div className="w-8 h-5 bg-gray-800 rounded text-white text-xs flex items-center justify-center font-bold">
-                    COD
-                  </div>
+              {noteOpen && (
+                <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+                  <label htmlFor="order-note" className="sr-only">Ghi chú đơn hàng</label>
+                  <textarea
+                    id="order-note"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    rows={3}
+                    placeholder="Nội dung ghi chú (tùy chọn)"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/40"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">Ghi chú sẽ được gửi kèm đơn hàng.</p>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* Summary card */}
+      <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
+              <p className="text-sm text-gray-700 mb-4">
+                Đã bao gồm thuế. <span className="font-semibold">Phí vận chuyển</span> sẽ được tính khi thanh toán.
+              </p>
+              <button
+        className="w-full bg-[#1f2a44] text-white font-bold py-4 rounded-lg hover:brightness-110 transition-colors uppercase tracking-wide"
+              >
+                THANH TOÁN • {formatPrice(total)}
+              </button>
             </div>
           </div>
         </div>
