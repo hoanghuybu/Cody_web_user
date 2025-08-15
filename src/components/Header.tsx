@@ -204,7 +204,7 @@ const Header = () => {
             {/* Right Sidebar - Dynamic positioning based on banner visibility */}
             <div
               className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
-                  ? 'top-[72px] h-[calc(100%-72px)]'
+                  ? 'top-[37px] h-[calc(100%-37px)]'
                   : 'top-0 h-full'
                 }`}
             >
