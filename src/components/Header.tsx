@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingCart, Search, User, Globe, Leaf } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import AuthModal from './auth/AuthModal';
+import useLogin from "../hook/useLogin";
+import useRegister from "../hook/useRegister";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,6 +14,37 @@ const Header = () => {
   const location = useLocation();
   const { items, openCart } = useCart();
   const { language, setLanguage, t } = useLanguage();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const openAuth = (mode: "signin" | "signup" = "signin") => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const { mutateAsync: doLogin } = useLogin();
+  const { mutateAsync: doRegister } = useRegister();
+
+  const handleSignIn = async (d: { email: string; password: string }) => {
+    const r = await doLogin(d);
+    setAuthOpen(false);
+  };
+  const handleSignUp = async (d: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) => {
+    setAuthError(null);
+    try {
+      const res = await doRegister(d);
+      if ((res as any)?.token) localStorage.setItem("auth_token", (res as any).token);
+      setAuthOpen(false);
+    } catch (e: any) {
+      setAuthError(e.message || "Register failed");
+      console.error("Register error:", e);
+    }
+  };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -132,7 +166,10 @@ const Header = () => {
                   )}
                 </button>
 
-                <button className="p-2 text-warm-brown hover:text-primary-green transition-colors">
+                <button
+                  onClick={() => openAuth("signin")}
+                  className="p-2 text-warm-brown hover:text-primary-green transition-colors"
+                >
                   <User className="h-5 w-5" />
                 </button>
 
@@ -204,8 +241,8 @@ const Header = () => {
             {/* Right Sidebar - Dynamic positioning based on banner visibility */}
             <div
               className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
-                  ? 'top-[37px] h-[calc(100%-37px)]'
-                  : 'top-0 h-full'
+                ? 'top-[37px] h-[calc(100%-37px)]'
+                : 'top-0 h-full'
                 }`}
             >
               <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
@@ -247,7 +284,10 @@ const Header = () => {
                     <span className="text-base font-medium">Cart ({totalItems})</span>
                   </button>
 
-                  <button className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors">
+                  <button
+                    onClick={() => { toggleMenu(); openAuth("signin"); }}
+                    className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"
+                  >
                     <User className="h-5 w-5" />
                     <span className="text-base font-medium">Account</span>
                   </button>
@@ -267,6 +307,14 @@ const Header = () => {
           </div>
         )}
       </header>
+      <AuthModal
+        open={authOpen}
+        mode={authMode}
+        onClose={() => setAuthOpen(false)}
+        onSwitch={(m) => setAuthMode(m)}
+        onSignIn={handleSignIn}
+        onSignUp={handleSignUp}
+      />
     </>
   );
 };
