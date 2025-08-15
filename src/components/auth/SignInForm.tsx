@@ -93,9 +93,14 @@ const SignInForm: React.FC<SignInFormProps> = ({
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white font-semibold py-2.5 rounded-md transition"
+          className={`w-full ${
+            loading
+              ? "bg-green-300 text-white"
+              : "bg-green-700 hover:bg-green-600 text-white"
+          } font-semibold py-2.5 rounded-md transition shadow-sm border border-green-500/50 disabled:cursor-not-allowed disabled:opacity-90`}
         >
           {loading ? "Đang xử lý..." : "Đăng nhập"}
+
         </button>
 
         <div className="flex items-center gap-3 text-xs text-neutral-500">

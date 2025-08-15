@@ -10,9 +10,12 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Translation data
-const translations = {
+// Provide a broad index signature so we can safely access by dynamic string key
+type TranslationDict = Record<string, string>;
+const translations: Record<Language, TranslationDict> = {
   en: {
+  // Auth
+  'auth.login': 'LOGIN',
     // Header
     'nav.shop': 'SHOP',
     'nav.culture': 'EXPLORE CULTURE',
@@ -92,6 +95,8 @@ const translations = {
     'common.learnMore': 'Learn more',
   },
   vn: {
+  // Auth
+  'auth.login': 'ĐĂNG NHẬP',
     // Header
     'nav.shop': 'CỬA HÀNG',
     'nav.culture': 'KHÁM PHÁ VĂN HÓA',
@@ -175,9 +180,7 @@ const translations = {
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
 
-  const t = (key: string): string => {
-    return translations[language][key] || key;
-  };
+  const t = (key: string): string => translations[language][key] ?? key;
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
