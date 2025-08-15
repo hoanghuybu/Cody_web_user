@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingCart, Search, User, Globe, Leaf } from 'lucide-react';
+import { Menu, X, ShoppingCart, Search, User, Globe, Leaf, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import AuthModal from './auth/AuthModal';
@@ -20,13 +20,13 @@ const Header = () => {
     setAuthMode(mode);
     setAuthOpen(true);
   };
-  const [authError, setAuthError] = useState<string | null>(null);
+  // Auth error handling can be added later when surfacing errors in UI
 
   const { mutateAsync: doLogin } = useLogin();
   const { mutateAsync: doRegister } = useRegister();
 
   const handleSignIn = async (d: { email: string; password: string }) => {
-    const r = await doLogin(d);
+    await doLogin(d);
     setAuthOpen(false);
   };
   const handleSignUp = async (d: {
@@ -35,13 +35,12 @@ const Header = () => {
     email: string;
     password: string;
   }) => {
-    setAuthError(null);
     try {
       const res = await doRegister(d);
       if ((res as any)?.token) localStorage.setItem("auth_token", (res as any).token);
       setAuthOpen(false);
     } catch (e: any) {
-      setAuthError(e.message || "Register failed");
+      // TODO: surface registration error in UI
       console.error("Register error:", e);
     }
   };
@@ -107,7 +106,7 @@ const Header = () => {
 
       {/* Main Header */}
       <header
-        className={`sticky z-40 transition-all duration-300 bg-white ${showBanner ? 'top-8' : 'top-0'}`}
+        className={`sticky z-40 transition-all duration-300 bg-white ${showBanner ? 'top-8' : 'top-0'} relative`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Desktop Header */}
@@ -229,79 +228,51 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation Sidebar */}
+        {/* Mobile Dropdown Menu (non-fullscreen) */}
         {isMenuOpen && isMobile && (
-          <div className="fixed inset-0 z-50 xl:hidden">
-            {/* Dark overlay */}
-            <div
-              className="fixed inset-0 bg-black/30 transition-opacity"
-              onClick={toggleMenu}
-            ></div>
-
-            {/* Right Sidebar - Dynamic positioning based on banner visibility */}
-            <div
-              className={`pt-2 fixed right-0 w-[80vw] max-w-xs bg-white shadow-xl overflow-y-auto z-50 transform transition-all duration-300 ${showBanner
-                ? 'top-[37px] h-[calc(100%-37px)]'
-                : 'top-0 h-full'
-                }`}
-            >
-              <div className="pt-8 pb-4 px-4 flex items-center justify-between border-b border-gray-200">
-                <h2 className="font-bold text-lg text-primary-green">Menu</h2>
+          <div className="absolute left-0 right-0 top-full xl:hidden z-50">
+            <div className="mx-2 mt-1 rounded-xl border border-gray-200 shadow-lg bg-white overflow-hidden animate-dropdown origin-top">
+              {/* Header row inside dropdown (icons removed per request) */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <span className="text-xs font-semibold tracking-wider text-gray-500">MENU</span>
                 <button
                   onClick={toggleMenu}
-                  className="w-9 h-9 flex items-center justify-center rounded-full text-warm-brown transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 text-warm-brown hover:bg-gray-100 transition"
+                  aria-label="Close menu"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-4 w-4" />
                 </button>
               </div>
-
-              {/* Menu content */}
-              <div className="flex flex-col px-4 pt-2 pb-8">
-                {/* Navigation */}
-                <nav className="flex flex-col space-y-6">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className={`text-base font-medium tracking-wider transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'
-                        }`}
-                      onClick={toggleMenu}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </nav>
-
-                <div className="border-t border-gray-200 my-6"></div>
-
-                {/* User actions */}
-                <div className="flex flex-col space-y-4">
-                  <button
-                    onClick={() => { toggleMenu(); openCart(); }}
-                    className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"
+              <nav className="max-h-[70vh] overflow-y-auto divide-y divide-gray-100">
+                {navigation.map(item => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wider transition-colors
+                      ${isActive(item.href) ? 'bg-primary-green/5 text-primary-green' : 'text-warm-brown hover:bg-primary-green/5 hover:text-primary-green'}`}
                   >
-                    <ShoppingCart className="h-5 w-5" />
-                    <span className="text-base font-medium">Cart ({totalItems})</span>
-                  </button>
-
-                  <button
-                    onClick={() => { toggleMenu(); openAuth("signin"); }}
-                    className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"
-                  >
-                    <User className="h-5 w-5" />
-                    <span className="text-base font-medium">Account</span>
-                  </button>
-
-                  <button
-                    onClick={() => setLanguage(language === 'en' ? 'vn' : 'en')}
-                    className="flex items-center space-x-3 text-warm-brown hover:text-primary-green transition-colors"
-                  >
-                    <Globe className="h-5 w-5" />
-                    <span className="text-base font-medium">
-                      {language === 'en' ? 'Tiếng Việt' : 'English'}
-                    </span>
-                  </button>
-                </div>
+                    <span className="truncate">{item.name.toUpperCase()}</span>
+                    <ChevronRight className="h-4 w-4 opacity-60" />
+                  </Link>
+                ))}
+                <button
+                  onClick={() => { openAuth('signin'); setIsMenuOpen(false); }}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
+                >
+                  <span>{t('auth.login')}</span>
+                  <ChevronRight className="h-4 w-4 opacity-60" />
+                </button>
+                <button
+                  onClick={() => { setLanguage(language === 'en' ? 'vn' : 'en'); setIsMenuOpen(false); }}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
+                >
+                  <span>{language === 'en' ? 'TIẾNG VIỆT' : 'ENGLISH'}</span>
+                  <Globe className="h-4 w-4 opacity-60" />
+                </button>
+              </nav>
+              <div className="px-5 py-3 border-t border-gray-100 text-[11px] text-gray-500 tracking-wide bg-gray-50">
+                © {new Date().getFullYear()} CODY
               </div>
             </div>
           </div>
