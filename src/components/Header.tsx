@@ -89,6 +89,20 @@ const Header = () => {
     }
   };
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (!isMobile) return; // only lock on mobile
+    const originalOverflow = document.body.style.overflow;
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = originalOverflow || '';
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isMenuOpen, isMobile]);
+
 
   return (
     <>
@@ -228,10 +242,17 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu (non-fullscreen) */}
-        {isMenuOpen && isMobile && (
-          <div className="absolute left-0 right-0 top-full xl:hidden z-50">
-            <div className="mx-2 mt-1 rounded-xl border border-gray-200 shadow-lg bg-white overflow-hidden animate-dropdown origin-top">
+        {/* Mobile Dropdown Menu */}
+        {isMobile && (
+          <div
+            className={`absolute left-0 right-0 top-full xl:hidden z-50 transition-all duration-300 ease-out origin-top
+            ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none overflow-hidden'}`}
+            aria-hidden={!isMenuOpen}
+          >
+            <div
+              className={`mx-2 mt-1 rounded-xl border border-gray-200 shadow-lg bg-white overflow-hidden origin-top transform transition-[transform,opacity] duration-300 ease-out
+              ${isMenuOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+            >
               {/* Header row inside dropdown (icons removed per request) */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                 <span className="text-xs font-semibold tracking-wider text-gray-500">MENU</span>
