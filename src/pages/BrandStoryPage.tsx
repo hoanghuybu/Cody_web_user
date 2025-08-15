@@ -118,42 +118,89 @@ const BrandStoryPage = () => {
       {/* Timeline */}
       <section className="py-16 bg-cream/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
               Hành trình phát triển
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Từ những bước đi đầu tiên đến hiện tại, CODY luôn kiên định với sứ mệnh 
+            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+              Từ những bước đi đầu tiên đến hiện tại, CODY luôn kiên định với sứ mệnh
               mang đến sản phẩm chất lượng và phát triển bền vững.
             </p>
           </div>
 
-          <div className="space-y-12">
-            {milestones.map((milestone, index) => (
-              <div key={index} className={`flex flex-col lg:flex-row items-center gap-8 ${
-                index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-              }`}>
-                <div className="lg:w-1/2">
-                  <img
-                    src={milestone.image}
-                    alt={milestone.title}
-                    className="rounded-2xl shadow-lg w-full h-64 object-cover"
-                  />
-                </div>
-                
-                <div className="lg:w-1/2 text-center lg:text-left">
-                  <div className="inline-block bg-primary-green text-white px-4 py-2 rounded-full text-2xl font-bold mb-4">
-                    {milestone.year}
+          {/* Timeline list */}
+          <div className="relative">
+            {/* vertical line for mobile / tablet */}
+            <div className="absolute left-4 top-0 bottom-0 hidden sm:block lg:hidden">
+              <span className="block w-px h-full bg-gradient-to-b from-primary-green/40 via-primary-green/20 to-transparent" />
+            </div>
+
+            <div className="space-y-12 md:space-y-16 lg:space-y-20">
+              {milestones.map((m, i) => (
+                <div
+                  key={m.year}
+                  className="group"
+                >
+                  {/* Desktop (lg+) two-column alternating */}
+                  <div
+                    className={`hidden lg:grid grid-cols-2 gap-12 items-center ${
+                      i % 2 === 1 ? "direction-rtl lg:[direction:ltr]" : ""
+                    }`}
+                  >
+                    {/* Image */}
+                    <div
+                      className={`${
+                        i % 2 === 1 ? "lg:order-2" : ""
+                      } relative overflow-hidden rounded-2xl shadow-lg aspect-[4/3] xl:aspect-[5/3]`}
+                    >
+                      <img
+                        src={m.image}
+                        alt={m.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-primary-green/15 to-transparent" />
+                      <span className="absolute top-3 left-3 bg-primary-green text-white text-sm font-semibold px-3 py-1 rounded-full shadow">
+                        {m.year}
+                      </span>
+                    </div>
+
+                    {/* Content */}
+                    <div className={`${i % 2 === 1 ? "lg:order-1" : ""}`}>
+                      <h3 className="text-2xl font-bold text-warm-brown font-playfair mb-4">
+                        {m.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed text-lg">
+                        {m.description}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-warm-brown mb-4 font-playfair">
-                    {milestone.title}
-                  </h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">
-                    {milestone.description}
-                  </p>
+
+                  {/* Mobile / Tablet block */}
+                  <div className="lg:hidden relative pl-10 sm:pl-14">
+                    {/* dot */}
+                    <span className="absolute left-2 sm:left-3 top-2 w-3 h-3 rounded-full bg-primary-green shadow ring-4 ring-primary-green/15" />
+
+                    <div className="relative overflow-hidden rounded-xl shadow-md aspect-[4/3] mb-5">
+                      <img
+                        src={m.image}
+                        alt={m.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-primary-green/20 to-transparent" />
+                      <span className="absolute top-2 left-2 bg-primary-green text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                        {m.year}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-warm-brown font-playfair mb-3">
+                      {m.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {m.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
