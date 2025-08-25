@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingCart, Search, User, Globe, Leaf, ChevronRight } from 'lucide-react';
-import { LanguageFlag, FlagIcon } from './FlagIcon';
+import { FlagIcon } from './FlagIcon';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import AuthModal from './auth/AuthModal';
+import Toast from './Toast';
 import useLogin from "../hook/useLogin";
 import useRegister from "../hook/useRegister";
+import { AuthUtils } from '../utils/auth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,18 +19,73 @@ const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastType, setToastType] = useState<"success" | "error">("error");
+  const [toastTitle, setToastTitle] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  
+  const showToast = (type: "success" | "error", title: string, message: string) => {
+    setToastType(type);
+    setToastTitle(title);
+    setToastMessage(message);
+    setToastOpen(true);
+  };
+  
   const openAuth = (mode: "signin" | "signup" = "signin") => {
     setAuthMode(mode);
     setAuthOpen(true);
   };
-  // Auth error handling can be added later when surfacing errors in UI
 
   const { mutateAsync: doLogin } = useLogin();
   const { mutateAsync: doRegister } = useRegister();
 
+  const handleLogout = () => {
+    AuthUtils.clearAuthData();
+    showToast("success", t('auth.logoutSuccess'), t('auth.logoutSuccessMessage'));
+  };
+
   const handleSignIn = async (d: { email: string; password: string }) => {
-    await doLogin(d);
-    setAuthOpen(false);
+    try {
+      console.log('Login payload:', d); 
+      const res = await doLogin(d) as any;
+      console.log('Login response:', res); 
+      
+      if (res?.status === 200 && res?.data?.accessToken) {
+        AuthUtils.saveAuthData(
+          res.data.accessToken,
+          res.data.refreshToken,
+          res.data.user
+        );
+        
+        const userName = AuthUtils.getUserFullName();
+        if (userName) {
+          showToast("success", t('auth.loginSuccess'), `${t('auth.welcome')} ${userName}!`);
+        } else {
+          showToast("success", t('auth.loginSuccess'), t('auth.loginSuccessMessage'));
+        }
+        
+        setAuthOpen(false);
+      } else if (res?.status && res?.status !== 200) {
+        let errorMsg = res.error?.detail || res.message || t('auth.loginFailed');
+        if (errorMsg === "Người dùng không tồn tại") {
+          errorMsg = t('auth.userNotFound');
+        }
+        showToast("error", t('auth.loginFailed'), errorMsg);
+      } else {
+        console.warn('Unexpected response structure:', res);
+        showToast("error", t('auth.loginFailed'), t('auth.networkError'));
+      }
+    } catch (e: any) {
+      let errorMsg = e?.response?.data?.error?.detail || 
+                    e?.response?.data?.message || 
+                    e?.message || 
+                    t('auth.networkError');
+      if (errorMsg === "Người dùng không tồn tại") {
+        errorMsg = t('auth.userNotFound');
+      }
+      showToast("error", t('auth.loginFailed'), errorMsg);
+    }
   };
   const handleSignUp = async (d: {
     firstName: string;
@@ -37,12 +94,44 @@ const Header = () => {
     password: string;
   }) => {
     try {
-      const res = await doRegister(d);
-      if ((res as any)?.token) localStorage.setItem("auth_token", (res as any).token);
-      setAuthOpen(false);
+      const registerData = {
+        ...d,
+        confirmPassword: d.password
+      };
+      console.log('Register payload:', registerData); 
+      const res = await doRegister(registerData) as any; 
+      console.log('Register response:', res);
+      if (res?.status === 200) {
+        setAuthOpen(false);
+        const successMsg = res?.message || t('auth.registrationSuccessMessage');
+        showToast("success", t('auth.registrationSuccess'), successMsg);
+      } else if (res?.status && res?.status !== 200) {
+        let errorMsg = res.error?.detail || res.message || t('auth.registrationFailed');
+        if (errorMsg === "Email đã tồn tại") {
+          errorMsg = t('auth.emailExists');
+        } else if (errorMsg === "Mật khẩu quá yếu") {
+          errorMsg = t('auth.passwordTooWeak');
+        } else if (errorMsg === "Yêu cầu không hợp lệ") {
+          errorMsg = t('auth.invalidRequest');
+        }
+        showToast("error", t('auth.registrationFailed'), errorMsg);
+      } else {
+        console.warn('Unexpected registration response:', res);
+        showToast("error", t('auth.registrationFailed'), t('auth.networkError'));
+      }
     } catch (e: any) {
-      // TODO: surface registration error in UI
-      console.error("Register error:", e);
+      let errorMsg = e?.response?.data?.error?.detail || 
+                    e?.response?.data?.message || 
+                    e?.message || 
+                    t('auth.networkError');
+      if (errorMsg === "Email đã tồn tại") {
+        errorMsg = t('auth.emailExists');
+      } else if (errorMsg === "Mật khẩu quá yếu") {
+        errorMsg = t('auth.passwordTooWeak');
+      } else if (errorMsg === "Yêu cầu không hợp lệ") {
+        errorMsg = t('auth.invalidRequest');
+      }
+      showToast("error", t('auth.registrationFailed'), errorMsg);
     }
   };
 
@@ -289,8 +378,12 @@ const Header = () => {
                   onClick={() => { setLanguage(language === 'en' ? 'vn' : 'en'); setIsMenuOpen(false); }}
                   className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
                 >
-                  <span>{language === 'en' ? 'TIẾNG VIỆT' : 'ENGLISH'}</span>
-                  <Globe className="h-4 w-4 opacity-60" />
+                  <span className="flex items-center gap-2">
+                    {language === 'en' ? <><FlagIcon code="vn" className="w-6 h-4" /> TIẾNG VIỆT</> : <><FlagIcon code="us" className="w-6 h-4" /> ENGLISH</>}
+                  </span>
+                  <span className="text-lg" aria-hidden>
+                    {language === 'en' ? <FlagIcon code="vn" className="w-7 h-5" /> : <FlagIcon code="us" className="w-7 h-5" />}
+                  </span>
                 </button>
               </nav>
               <div className="px-5 py-3 border-t border-gray-100 text-[11px] text-gray-500 tracking-wide bg-gray-50">
@@ -307,6 +400,14 @@ const Header = () => {
         onSwitch={(m) => setAuthMode(m)}
         onSignIn={handleSignIn}
         onSignUp={handleSignUp}
+      />
+      
+      <Toast
+        open={toastOpen}
+        type={toastType}
+        title={toastTitle}
+        message={toastMessage}
+        onClose={() => setToastOpen(false)}
       />
     </>
   );

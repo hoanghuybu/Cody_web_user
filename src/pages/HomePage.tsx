@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
-import { featuredProducts } from '../data/products';
+import { useProductSearch } from '../hooks/useProducts';
+import { ProductUtils } from '../utils/product';
 
 const HomePage = () => {
   const { t } = useLanguage();
@@ -12,17 +13,20 @@ const HomePage = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
-  // Removed unused thumbStartX / initialScrollLeft
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
-  // Removed unused isMobile
+
+  const { data: productsData, isLoading: productsLoading } = useProductSearch({
+    page: 0,
+    size: 8,
+    sortBy: 'name',
+    sortDirection: 'ASC'
+  });
+
+  const featuredProducts = productsData?.data?.content?.map(ProductUtils.toLegacyFormat).slice(0, 4) || [];
 
   useEffect(() => {
-  // removed mobile check effect (unused)
   }, []);
-
-  // removed unused scrollLeft/scrollRight
-
 
   const categories = [
     { key: 'products.original', label: t('products.original') },
@@ -268,14 +272,36 @@ const HomePage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {productsLoading ? (
+              // Loading skeleton
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-gray-200"></div>
+                  <div className="p-6 space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                  </div>
+                </div>
+              ))
+            ) : featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              // No products available
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500">{t('common.loading')}</p>
+              </div>
+            )}
           </div>
           <div className="text-center">
-            <button className="bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors">
+            <Link
+              to="/products"
+              className="inline-block bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors"
+            >
               {t('products.shopFull')}
-            </button>
+            </Link>
           </div>
         </div>
       </section>

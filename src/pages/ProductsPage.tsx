@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Filter, Grid, List, Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { allProducts, categories } from '../data/products';
 import { useLanguage } from '../context/LanguageContext';
+import { useProductSearch, useCategories } from '../hooks/useProducts';
+import { ProductUtils } from '../utils/product';
+import { Product } from '../types/product';
 
 import {
   Select,
@@ -51,30 +53,59 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(category || 'all');
   const [sortBy, setSortBy] = useState('name');
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
   const muiTheme = useTheme();
   const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
   const { t } = useLanguage();
 
-  const filteredProducts = allProducts
-    .filter(product =>
-      selectedCategory === 'all' || product.category === selectedCategory
-    )
-    .filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'price-low':
-          return a.price - b.price;
-        case 'price-high':
-          return b.price - a.price;
-        case 'name':
-        default:
-          return a.name.localeCompare(b.name);
-      }
-    });
+  const { data: categoriesData } = useCategories();
+  const { data: productsData, isLoading: productsLoading, error: productsError } = useProductSearch({
+    page,
+    size: 20,
+    sortBy: sortBy === 'name' ? 'name' : 'price',
+    sortDirection: sortBy === 'price-high' ? 'DESC' : 'ASC',
+    search: searchTerm || undefined,
+    categoryId: selectedCategory !== 'all' ? selectedCategory : undefined
+  });
+
+  const products: Product[] = productsData?.data?.content?.map(ProductUtils.toLegacyFormat) || [];
+  const categories = categoriesData?.data?.content || [];
+
+  useEffect(() => {
+    setPage(0);
+  }, [selectedCategory, sortBy, searchTerm]);
+
+  if (productsLoading && page === 0) {
+    return (
+      <ThemeProvider theme={theme}>
+        <div className="min-h-screen bg-cream py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg text-gray-600">{t('common.loading')}</div>
+            </div>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  // Error state
+  if (productsError) {
+    return (
+      <ThemeProvider theme={theme}>
+        <div className="min-h-screen bg-cream py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg text-red-600">
+                {t('common.error')}: {productsError.message}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -120,8 +151,8 @@ const ProductsPage = () => {
                     }}
                   >
                     <MenuItem value="all">{t('products.allCategories')}</MenuItem>
-                    {categories.map(cat => (
-                      <MenuItem key={cat.id} value={cat.id}>{t(`categories.${cat.id}`)}</MenuItem>
+                    {categories.map((cat: any) => (
+                      <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -177,7 +208,7 @@ const ProductsPage = () => {
 
                   {selectedCategory !== 'all' && (
                     <Chip
-                      label={t(`categories.${selectedCategory}`)}
+                      label={categories.find((c: any) => c.id === selectedCategory)?.name || selectedCategory}
                       onDelete={() => setSelectedCategory('all')}
                       color="primary"
                       variant="outlined"
@@ -202,9 +233,9 @@ const ProductsPage = () => {
           {/* Results Count */}
           <div className="mb-6">
             <p className="text-gray-600">
-              {t('products.showing').replace('{count}', String(filteredProducts.length))}
-              {selectedCategory !== 'all' && (
-                <span> {t('products.inCategory').replace('{category}', t(`categories.${selectedCategory}`))}</span>
+              {t('products.showing').replace('{count}', String(products.length))}
+              {selectedCategory !== 'all' && productsData?.data?.content && (
+                <span> {t('products.inCategory').replace('{category}', categories.find((c: any) => c.id === selectedCategory)?.name || selectedCategory)}</span>
               )}
             </p>
           </div>
@@ -214,13 +245,13 @@ const ProductsPage = () => {
               ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
               : 'grid-cols-1'
             }`}>
-            {filteredProducts.map(product => (
+            {products.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
           {/* No Results */}
-          {filteredProducts.length === 0 && (
+          {products.length === 0 && (
             <div className="text-center py-16">
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Filter className="h-12 w-12 text-gray-400" />

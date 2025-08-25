@@ -10,13 +10,20 @@ export interface User {
   email: string;
 }
 export interface AuthResponse {
-
+  token?: string;
+  user?: User;
+  // Error response structure
+  status?: number;
+  message?: string;
+  error?: {
+    detail?: string;
+  };
 }
 
 const useLogin = () => {
   const { mutateAsync, data, error } = useMutation({
-    mutationFn: (variables: LoginDTO) =>
-      rootApi.post<LoginDTO, AuthResponse>(endpoints.login, variables)
+    mutationFn: async (variables: LoginDTO): Promise<AuthResponse> =>
+      rootApi.post(endpoints.login, variables) as Promise<AuthResponse>
   });
 
   return { mutateAsync, data, error };

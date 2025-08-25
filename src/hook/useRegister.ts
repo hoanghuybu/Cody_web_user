@@ -11,11 +11,13 @@ type RegisterPayload = Omit<RegisterDTO, "confirmPassword"> & {
 
 const useRegister = () => {
   const { mutateAsync, data, error } = useMutation({
-    mutationFn: (variables: RegisterPayload) =>
-      rootApi.post<RegisterPayload, AuthResponse>(
+    mutationFn: async (variables: RegisterPayload): Promise<AuthResponse> => {
+      const response = await rootApi.post<AuthResponse>(
         endpoints.register,
         variables
-      )
+      );
+      return response;
+    }
   });
 
   return { mutateAsync, data, error };

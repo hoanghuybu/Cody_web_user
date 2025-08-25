@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Heart, Share2, Truck, Shield, Award } from 'lucide-react';
-import { allProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import ProductCard from '../components/ProductCard';
+import { useProduct, useProductSearch } from '../hooks/useProducts';
+import { ProductUtils } from '../utils/product';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -13,9 +14,41 @@ const ProductDetailPage = () => {
   const [activeImage, setActiveImage] = useState(0);
 
   const { t } = useLanguage();
-  const product = allProducts.find(p => p.id === id);
   
-  if (!product) {
+  // Fetch product by ID from API
+  const { data: productResponse, isLoading: productLoading, error: productError } = useProduct(id || '');
+  
+  // Fetch related products (same category)
+  const { data: relatedProductsData } = useProductSearch({
+    page: 0,
+    size: 8,
+    sortBy: 'name',
+    sortDirection: 'ASC'
+  });
+
+  // Convert API product to legacy format
+  const product = productResponse?.data ? ProductUtils.toLegacyFormat(productResponse.data) : null;
+  
+  // Get related products (filter out current product and limit to 4)
+  const relatedProducts = relatedProductsData?.data?.content
+    ?.map(ProductUtils.toLegacyFormat)
+    .filter(p => p.id !== id)
+    .slice(0, 4) || [];
+
+  // Loading state
+  if (productLoading) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-green mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (productError || !product) {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center">
         <div className="text-center">
@@ -28,23 +61,14 @@ const ProductDetailPage = () => {
     );
   }
 
-  // Mock gallery images (in real app, these would come from product data)
-  const galleryImages = [
-    product.image,
-    product.image,
-    product.image,
-    product.image
-  ];
-
-  const relatedProducts = allProducts
-    .filter(p => p.id !== product.id && p.category === product.category)
-    .slice(0, 4);
+  // Get all gallery images from product
+  const galleryImages = ProductUtils.getAllImages(product);
+  
+  // Ensure we have at least one image (fallback to main image)
+  const displayImages = galleryImages.length > 0 ? galleryImages : [ProductUtils.getMainImage(product)];
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
+    return ProductUtils.formatPrice(price);
   };
 
   const handleAddToCart = () => {
@@ -87,7 +111,7 @@ const ProductDetailPage = () => {
           <div className="space-y-4">
             <div className="aspect-square overflow-hidden rounded-2xl bg-white">
               <img
-                src={galleryImages[activeImage]}
+                src={displayImages[activeImage]}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
@@ -95,7 +119,7 @@ const ProductDetailPage = () => {
             
             {/* Thumbnail Gallery */}
             <div className="grid grid-cols-4 gap-2">
-              {galleryImages.map((image, index) => (
+              {displayImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveImage(index)}
@@ -148,7 +172,7 @@ const ProductDetailPage = () => {
               <div>
                 <h3 className="font-semibold text-warm-brown mb-2">{t('productDetail.ingredients')}:</h3>
                 <ul className="text-gray-600 space-y-1">
-                  {product.ingredients.map((ingredient, index) => (
+                  {(product.ingredients || []).map((ingredient, index) => (
                     <li key={index}>• {t(ingredient) || ingredient}</li>
                   ))}
                 </ul>
@@ -160,7 +184,7 @@ const ProductDetailPage = () => {
               </div>
               <div>
                 <span className="font-semibold text-warm-brown">{t('productDetail.category')}: </span>
-                <span className="text-gray-600">{t(`categories.${product.category}`)}</span>
+                <span className="text-gray-600">{ProductUtils.getPrimaryCategory(product)}</span>
               </div>
             </div>
 
