@@ -1,4 +1,4 @@
-import { ArrowRight, Award, Heart, Leaf, Star, ChevronRight, Instagram, Play } from 'lucide-react';
+import { ChevronRight, Instagram } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
@@ -12,33 +12,16 @@ const HomePage = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
-  const [thumbStartX, setThumbStartX] = useState(0);
-  const [initialScrollLeft, setInitialScrollLeft] = useState(0);
+  // Removed unused thumbStartX / initialScrollLeft
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  // Removed unused isMobile
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  // removed mobile check effect (unused)
   }, []);
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
-  };
+  // removed unused scrollLeft/scrollRight
 
 
   const categories = [
@@ -95,19 +78,7 @@ const HomePage = () => {
   }, []);
 
   // Scrollbar logic
-  const scrollToPosition = (clientX: number) => {
-    if (!trackRef.current || !scrollContainerRef.current) return;
-
-
-    const trackRect = trackRef.current.getBoundingClientRect();
-    const trackWidth = trackRect.width;
-
-    const relativePosition = Math.max(0, Math.min(1, (clientX - trackRect.left) / trackWidth));
-
-    const { scrollWidth, clientWidth } = scrollContainerRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    scrollContainerRef.current.scrollLeft = relativePosition * maxScroll;
-  };
+  // removed unused scrollToPosition helper
 
   const handleTrackMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -124,8 +95,7 @@ const HomePage = () => {
       const offsetInThumb = e.clientX - thumbRect.left;
       setDragOffset(offsetInThumb);
 
-      setThumbStartX(e.clientX);
-      setInitialScrollLeft(scrollContainerRef.current.scrollLeft);
+  // removed tracking of initial positions (unused)
     } else {
       const clickPosition = (e.clientX - trackRect.left) / trackRect.width;
       const { scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -205,7 +175,7 @@ const HomePage = () => {
                 CODY
               </h1>
               <p className="text-base sm:text-3xl md:text-4xl font-light text-cream font-inter italic">
-                Coconut Candy
+                {t('hero.subtitleCandy')}
               </p>
             </div>
 
@@ -224,17 +194,14 @@ const HomePage = () => {
         <div className="relative bg-gradient-to-r from-light-green to-primary-green py-10 sm:py-16">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6">
             <p className="text-white text-base sm:text-lg md:text-xl font-medium mb-6 sm:mb-8 leading-relaxed lg:leading-loose uppercase px-1">
-              Cody is a journey that connects the world to the cultural essence of Ben Tre
-              through handcrafted coconut candy – the iconic sweet of Vietnam's riverlands.
-              Here, tradition, craftsmanship, and local stories blend into a truly immersive
-              experience.
+              {t('hero.journey')}
             </p>
 
             <Link
               to="/brand-story"
               className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-full hover:bg-cream transition-colors"
             >
-              SPEND A DAY WITH US
+              {t('hero.journeyCta')}
             </Link>
           </div>
         </div>

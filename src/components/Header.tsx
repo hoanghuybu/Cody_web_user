@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingCart, Search, User, Globe, Leaf, ChevronRight } from 'lucide-react';
+import { LanguageFlag, FlagIcon } from './FlagIcon';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import AuthModal from './auth/AuthModal';

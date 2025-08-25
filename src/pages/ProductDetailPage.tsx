@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Heart, Share2, Truck, Shield, Award } from 'lucide-react';
 import { allProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import ProductCard from '../components/ProductCard';
 
 const ProductDetailPage = () => {
@@ -11,15 +12,16 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
 
+  const { t } = useLanguage();
   const product = allProducts.find(p => p.id === id);
   
   if (!product) {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-warm-brown mb-4">Không tìm thấy sản phẩm</h2>
+          <h2 className="text-2xl font-bold text-warm-brown mb-4">{t('productDetail.notFound')}</h2>
           <Link to="/products" className="text-primary-green hover:underline">
-            Quay lại danh sách sản phẩm
+            {t('productDetail.backToList')}
           </Link>
         </div>
       </div>
@@ -51,16 +53,24 @@ const ProductDetailPage = () => {
     }
   };
 
+  const badgeKeyMap: Record<string, string> = {
+    'Mới': 'badges.new',
+    'Bán chạy': 'badges.bestSeller',
+    'Khuyến mãi': 'badges.promo'
+  };
+
+  const translatedBadge = product.badge ? (badgeKeyMap[product.badge] ? t(badgeKeyMap[product.badge]) : product.badge) : null;
+
   return (
     <div className="min-h-screen bg-cream py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <Link to="/" className="hover:text-primary-green">Trang chủ</Link>
+          <Link to="/" className="hover:text-primary-green">{t('productDetail.breadcrumbHome')}</Link>
           <span>/</span>
-          <Link to="/products" className="hover:text-primary-green">Sản phẩm</Link>
+          <Link to="/products" className="hover:text-primary-green">{t('productDetail.breadcrumbProducts')}</Link>
           <span>/</span>
-          <span className="text-warm-brown">{product.name}</span>
+          <span className="text-warm-brown">{t(product.name) || product.name}</span>
         </div>
 
         {/* Back Button */}
@@ -69,7 +79,7 @@ const ProductDetailPage = () => {
           className="inline-flex items-center text-primary-green hover:text-primary-green/80 mb-8 group"
         >
           <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-          Quay lại danh sách sản phẩm
+          {t('productDetail.backToList')}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
@@ -107,18 +117,18 @@ const ProductDetailPage = () => {
 
           {/* Product Info */}
           <div className="space-y-6">
-            {product.badge && (
+            {translatedBadge && (
               <span className="inline-block bg-accent-green text-white px-3 py-1 rounded-full text-sm font-semibold">
-                {product.badge}
+                {translatedBadge}
               </span>
             )}
             
             <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">
-              {product.name}
+              {t(product.name) || product.name}
             </h1>
             
             <p className="text-lg text-gray-600 leading-relaxed">
-              {product.description}
+              {t(product.description) || product.description}
             </p>
 
             {/* Price */}
@@ -136,17 +146,21 @@ const ProductDetailPage = () => {
             {/* Product Details */}
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold text-warm-brown mb-2">Thành phần:</h3>
+                <h3 className="font-semibold text-warm-brown mb-2">{t('productDetail.ingredients')}:</h3>
                 <ul className="text-gray-600 space-y-1">
                   {product.ingredients.map((ingredient, index) => (
-                    <li key={index}>• {ingredient}</li>
+                    <li key={index}>• {t(ingredient) || ingredient}</li>
                   ))}
                 </ul>
               </div>
               
               <div>
-                <span className="font-semibold text-warm-brown">Trọng lượng: </span>
+                <span className="font-semibold text-warm-brown">{t('productDetail.weight')}: </span>
                 <span className="text-gray-600">{product.weight}</span>
+              </div>
+              <div>
+                <span className="font-semibold text-warm-brown">{t('productDetail.category')}: </span>
+                <span className="text-gray-600">{t(`categories.${product.category}`)}</span>
               </div>
             </div>
 
@@ -173,7 +187,7 @@ const ProductDetailPage = () => {
                 className="flex-1 flex items-center justify-center px-8 py-3 bg-primary-green text-white font-semibold rounded-full hover:bg-primary-green/90 transition-colors"
               >
                 <ShoppingCart className="h-5 w-5 mr-2" />
-                Thêm vào giỏ hàng
+                {t('productDetail.addToCart')}
               </button>
             </div>
 
@@ -181,11 +195,11 @@ const ProductDetailPage = () => {
             <div className="flex space-x-4">
               <button className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
                 <Heart className="h-4 w-4 mr-2" />
-                Yêu thích
+                {t('productDetail.favorite')}
               </button>
               <button className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
                 <Share2 className="h-4 w-4 mr-2" />
-                Chia sẻ
+                {t('productDetail.share')}
               </button>
             </div>
 
@@ -193,15 +207,15 @@ const ProductDetailPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-gray-200">
               <div className="flex items-center space-x-3">
                 <Truck className="h-5 w-5 text-primary-green" />
-                <span className="text-sm text-gray-600">Miễn phí vận chuyển</span>
+                <span className="text-sm text-gray-600">{t('productDetail.featureFreeShip')}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Shield className="h-5 w-5 text-primary-green" />
-                <span className="text-sm text-gray-600">Đảm bảo chất lượng</span>
+                <span className="text-sm text-gray-600">{t('productDetail.featureQuality')}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Award className="h-5 w-5 text-primary-green" />
-                <span className="text-sm text-gray-600">100% tự nhiên</span>
+                <span className="text-sm text-gray-600">{t('productDetail.featureNatural')}</span>
               </div>
             </div>
           </div>
@@ -210,9 +224,7 @@ const ProductDetailPage = () => {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section>
-            <h2 className="text-2xl md:text-3xl font-bold text-warm-brown font-playfair mb-8">
-              Sản phẩm liên quan
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-warm-brown font-playfair mb-8">{t('productDetail.related')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map(product => (
                 <ProductCard key={product.id} product={product} />

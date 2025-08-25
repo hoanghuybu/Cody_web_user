@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Filter, Grid, List, Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { allProducts, categories } from '../data/products';
+import { useLanguage } from '../context/LanguageContext';
 
 import {
   Select,
@@ -53,6 +54,8 @@ const ProductsPage = () => {
   const muiTheme = useTheme();
   const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
+  const { t } = useLanguage();
+
   const filteredProducts = allProducts
     .filter(product =>
       selectedCategory === 'all' || product.category === selectedCategory
@@ -79,12 +82,8 @@ const ProductsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
-              Sản phẩm CODY
-            </h1>
-            <p className="text-lg text-gray-600">
-              Khám phá bộ sưu tập kẹo dừa sinh thái từ Bến Tre
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">{t('products.headerTitle')}</h1>
+            <p className="text-lg text-gray-600">{t('products.headerSubtitle')}</p>
           </div>
 
           {/* Filters and Search - Using MUI */}
@@ -93,7 +92,7 @@ const ProductsPage = () => {
               {/* Search - Using MUI TextField */}
               <TextField
                 fullWidth
-                placeholder="Tìm kiếm sản phẩm..."
+                placeholder={t('products.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
@@ -111,36 +110,36 @@ const ProductsPage = () => {
               <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
                 {/* Category Filter */}
                 <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
-                  <InputLabel>Danh mục</InputLabel>
+                  <InputLabel>{t('products.category')}</InputLabel>
                   <Select
                     value={selectedCategory}
-                    label="Danh mục"
+                    label={t('products.category')}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     MenuProps={{
                       disableScrollLock: true,
                     }}
                   >
-                    <MenuItem value="all">Tất cả danh mục</MenuItem>
+                    <MenuItem value="all">{t('products.allCategories')}</MenuItem>
                     {categories.map(cat => (
-                      <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
+                      <MenuItem key={cat.id} value={cat.id}>{t(`categories.${cat.id}`)}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
 
                 {/* Sort Filter */}
                 <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
-                  <InputLabel>Sắp xếp</InputLabel>
+                  <InputLabel>{t('products.sort')}</InputLabel>
                   <Select
                     value={sortBy}
-                    label="Sắp xếp"
+                    label={t('products.sort')}
                     onChange={(e) => setSortBy(e.target.value)}
                     MenuProps={{
                       disableScrollLock: true,
                     }}
                   >
-                    <MenuItem value="name">Sắp xếp theo tên</MenuItem>
-                    <MenuItem value="price-low">Giá: Thấp đến cao</MenuItem>
-                    <MenuItem value="price-high">Giá: Cao đến thấp</MenuItem>
+                    <MenuItem value="name">{t('products.sortName')}</MenuItem>
+                    <MenuItem value="price-low">{t('products.sortPriceLow')}</MenuItem>
+                    <MenuItem value="price-high">{t('products.sortPriceHigh')}</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -173,12 +172,12 @@ const ProductsPage = () => {
               {(searchTerm || selectedCategory !== 'all') && (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', pt: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Bộ lọc đang áp dụng:
+                    {t('products.activeFilters')}:
                   </Typography>
 
                   {selectedCategory !== 'all' && (
                     <Chip
-                      label={categories.find(c => c.id === selectedCategory)?.name}
+                      label={t(`categories.${selectedCategory}`)}
                       onDelete={() => setSelectedCategory('all')}
                       color="primary"
                       variant="outlined"
@@ -188,7 +187,7 @@ const ProductsPage = () => {
 
                   {searchTerm && (
                     <Chip
-                      label={`Tìm: "${searchTerm}"`}
+                      label={`${t('products.searchLabel')}: "${searchTerm}"`}
                       onDelete={() => setSearchTerm('')}
                       color="primary"
                       variant="outlined"
@@ -203,9 +202,9 @@ const ProductsPage = () => {
           {/* Results Count */}
           <div className="mb-6">
             <p className="text-gray-600">
-              Hiển thị {filteredProducts.length} sản phẩm
+              {t('products.showing').replace('{count}', String(filteredProducts.length))}
               {selectedCategory !== 'all' && (
-                <span> trong danh mục "{categories.find(c => c.id === selectedCategory)?.name}"</span>
+                <span> {t('products.inCategory').replace('{category}', t(`categories.${selectedCategory}`))}</span>
               )}
             </p>
           </div>
@@ -226,12 +225,8 @@ const ProductsPage = () => {
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Filter className="h-12 w-12 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                Không tìm thấy sản phẩm
-              </h3>
-              <p className="text-gray-500">
-                Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn
-              </p>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">{t('products.noResultsTitle')}</h3>
+              <p className="text-gray-500">{t('products.noResultsSubtitle')}</p>
             </div>
           )}
         </div>

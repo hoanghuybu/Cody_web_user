@@ -3,51 +3,51 @@ import { Product } from '../types/product';
 export const featuredProducts: Product[] = [
   {
     id: '1',
-    name: 'Kẹo Dừa Truyền Thống',
-    description: 'Kẹo dừa nguyên chất theo công thức truyền thống, vị ngọt thanh từ đường mía tự nhiên',
+  name: 'p.1.name',
+  description: 'p.1.desc',
     price: 45000,
     originalPrice: 55000,
     image: 'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
     category: 'traditional',
-    badge: 'Bán chạy',
+  badge: 'Bán chạy',
     inStock: true,
-    ingredients: ['Dừa tươi Bến Tre', 'Đường mía tự nhiên', 'Muối biển'],
+  ingredients: ['i.coconutFresh', 'i.caneSugar', 'i.seaSalt'],
     weight: '200g'
   },
   {
     id: '2',
-    name: 'Combo Kẹo Dừa Mix',
-    description: 'Combo 3 vị: truyền thống, cà phê và sầu riêng. Phù hợp làm quà tặng',
+  name: 'p.2.name',
+  description: 'p.2.desc',
     price: 125000,
     originalPrice: 150000,
     image: 'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=400',
     category: 'combo',
     badge: 'Khuyến mãi',
     inStock: true,
-    ingredients: ['Dừa tươi', 'Cà phê Arabica', 'Sầu riêng Đồng Nai', 'Đường mía'],
+  ingredients: ['i.coconutFresh', 'i.coffeeArabica', 'i.durian', 'i.caneSugar'],
     weight: '300g (3 x 100g)'
   },
   {
     id: '3',
-    name: 'Hộp Quà Tết CODY',
-    description: 'Hộp quà cao cấp gồm 6 loại kẹo dừa đặc biệt, thiết kế sang trọng',
+  name: 'p.3.name',
+  description: 'p.3.desc',
     price: 280000,
     image: 'https://images.pexels.com/photos/6697264/pexels-photo-6697264.jpeg?auto=compress&cs=tinysrgb&w=400',
     category: 'gift-box',
     badge: 'Mới',
     inStock: true,
-    ingredients: ['6 vị kẹo dừa premium', 'Hộp quà sang trọng'],
+  ingredients: ['i.premiumSet6', 'i.luxuryBox'],
     weight: '500g'
   },
   {
     id: '4',
-    name: 'Kẹo Dừa Dâu Tây',
-    description: 'Sự kết hợp hoàn hảo giữa vị ngọt của dừa và chua ngọt của dâu tây tự nhiên',
+  name: 'p.4.name',
+  description: 'p.4.desc',
     price: 65000,
     image: 'https://images.pexels.com/photos/7525184/pexels-photo-7525184.jpeg?auto=compress&cs=tinysrgb&w=400',
     category: 'premium',
     inStock: true,
-    ingredients: ['Dừa tươi', 'Dâu tây sấy khô', 'Đường mía'],
+  ingredients: ['i.coconutFresh', 'i.strawberryDried', 'i.caneSugar'],
     weight: '180g'
   }
 ];
@@ -56,24 +56,24 @@ export const allProducts: Product[] = [
   ...featuredProducts,
   {
     id: '5',
-    name: 'Kẹo Dừa Cà Phê',
-    description: 'Hương vị đậm đà của cà phê Arabica hòa quyện cùng vị ngọt của dừa',
+  name: 'p.5.name',
+  description: 'p.5.desc',
     price: 55000,
     image: 'https://images.pexels.com/photos/8835098/pexels-photo-8835098.jpeg?auto=compress&cs=tinysrgb&w=400',
     category: 'premium',
     inStock: true,
-    ingredients: ['Dừa tươi', 'Cà phê Arabica rang mộc', 'Đường mía'],
+  ingredients: ['i.coconutFresh', 'i.roastedArabica', 'i.caneSugar'],
     weight: '200g'
   },
   {
     id: '6',
-    name: 'Giỏ Quà Bến Tre',
-    description: 'Giỏ quà đặc sản Bến Tre với kẹo dừa và các sản phẩm từ dừa khác',
+  name: 'p.6.name',
+  description: 'p.6.desc',
     price: 350000,
     image: 'https://images.pexels.com/photos/1028637/pexels-photo-1028637.jpeg?auto=compress&cs=tinysrgb&w=400',
     category: 'gift-basket',
     inStock: true,
-    ingredients: ['Kẹo dừa CODY', 'Nước cốt dừa', 'Bánh dừa nướng', 'Mứt dừa'],
+  ingredients: ['i.codyCandy', 'i.coconutMilk', 'i.coconutBiscuit', 'i.coconutJam'],
     weight: '800g'
   }
 ];

@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const CartPage = () => {
   // Cart page with editable items and order summary
   const { items, total, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { t } = useLanguage();
 
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState('');
@@ -28,17 +30,17 @@ const CartPage = () => {
               <ShoppingBag className="h-12 w-12 text-gray-400" />
             </div>
             <h2 className="text-2xl font-bold text-warm-brown mb-4 font-playfair">
-              Giỏ hàng của bạn đang trống
+              {t('cart.emptyTitle')}
             </h2>
             <p className="text-gray-600 mb-8">
-              Hãy khám phá các sản phẩm kẹo dừa thơm ngon của CODY
+              {t('cart.emptySubtitle')}
             </p>
             <Link
               to="/products"
               className="inline-flex items-center px-8 py-4 bg-primary-green text-white font-semibold rounded-full hover:bg-primary-green/90 transition-colors group"
             >
               <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Tiếp tục mua sắm
+              {t('cart.continueShopping')}
             </Link>
           </div>
         </div>
@@ -56,10 +58,10 @@ const CartPage = () => {
             className="inline-flex items-center text-primary-green hover:text-primary-green/80 mb-4 group"
           >
             <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Tiếp tục mua sắm
+            {t('cart.continueShopping')}
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">Giỏ hàng của bạn</h1>
-          <p className="text-gray-600 mt-2 text-sm sm:text-base">Có {items.length} sản phẩm trong giỏ hàng</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">{t('cart.title')}</h1>
+          <p className="text-gray-600 mt-2 text-sm sm:text-base">{t('cart.itemsCount').replace('{count}', String(items.length))}</p>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -69,9 +71,9 @@ const CartPage = () => {
             <div className="hidden md:grid grid-cols-[96px_1fr_120px_160px_140px_40px] px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               <div></div>
               <div></div>
-              <div className="text-center">Giá</div>
-              <div className="text-center">Số lượng</div>
-              <div className="text-right">Tổng cộng</div>
+              <div className="text-center">{t('cart.price')}</div>
+              <div className="text-center">{t('cart.quantity')}</div>
+              <div className="text-right">{t('cart.total')}</div>
               <div></div>
             </div>
             <div className="space-y-4">
@@ -118,7 +120,7 @@ const CartPage = () => {
                       <div className="hidden md:block col-start-3 md:col-start-auto justify-self-end self-center">
                         <div className="flex items-center bg-white border border-gray-200 rounded-md overflow-hidden shadow-sm min-w-[160px] justify-between">
                           <button
-                            aria-label="Giảm số lượng"
+                            aria-label={t('cart.decreaseQty')}
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             disabled={!canDecrement}
                             className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-primary-green disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
@@ -127,7 +129,7 @@ const CartPage = () => {
                           </button>
                           <span className="px-3 py-1.5 font-semibold min-w-[3rem] text-center select-none">{item.quantity}</span>
                           <button
-                            aria-label="Tăng số lượng"
+                            aria-label={t('cart.increaseQty')}
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-primary-green focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
                           >
@@ -141,7 +143,7 @@ const CartPage = () => {
 
                       {/* Remove (desktop) */}
                       <button
-                        aria-label="Xóa sản phẩm khỏi giỏ hàng"
+                        aria-label={t('cart.removeItem')}
                         onClick={() => removeFromCart(item.id)}
                         className="col-start-3 md:col-start-auto justify-self-end hidden md:inline-flex items-center p-2 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
                         title="Xóa"
@@ -153,7 +155,7 @@ const CartPage = () => {
                     <div className="md:hidden flex justify-end mt-2 border-t border-gray-100 pt-2">
                       <div className="flex items-center bg-white border border-gray-200 rounded-md overflow-hidden shadow-sm min-w-[120px] max-[320px]:min-w-[112px] justify-between">
                         <button
-                          aria-label="Giảm số lượng"
+                          aria-label={t('cart.decreaseQty')}
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={!canDecrement}
                           className="h-8 w-8 max-[320px]:h-7 max-[320px]:w-7 flex items-center justify-center text-gray-600 hover:text-primary-green disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
@@ -162,7 +164,7 @@ const CartPage = () => {
                         </button>
                         <span className="px-2 py-1.5 font-semibold min-w-[2.5rem] text-center select-none max-[320px]:text-sm">{item.quantity}</span>
                         <button
-                          aria-label="Tăng số lượng"
+                          aria-label={t('cart.increaseQty')}
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="h-8 w-8 max-[320px]:h-7 max-[320px]:w-7 flex items-center justify-center text-gray-600 hover:text-primary-green focus:outline-none focus:ring-2 focus:ring-primary-green/40 transition"
                         >
@@ -177,7 +179,7 @@ const CartPage = () => {
 
             {/* Clear cart */}
             <div className="pt-4 border-t border-gray-200 mt-4">
-              <button onClick={clearCart} className="text-red-500 hover:text-red-600 text-sm font-medium">Xóa tất cả sản phẩm</button>
+              <button onClick={clearCart} className="text-red-500 hover:text-red-600 text-sm font-medium">{t('cart.clearAll')}</button>
             </div>
           </div>
 
@@ -187,10 +189,12 @@ const CartPage = () => {
     <div className="rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200 px-3 py-2 text-sm">
               {total < FREE_SHIPPING_THRESHOLD ? (
                 <span>
-      Còn <span className="font-semibold underline decoration-emerald-500">{formatPrice(FREE_SHIPPING_THRESHOLD - total)}</span> nữa bạn sẽ được <span className="font-semibold">MIỄN PHÍ</span> giao hàng! 🛵
+                  {t('cart.freeShipRemain')}
+                  <span className="font-semibold underline decoration-emerald-500">{formatPrice(FREE_SHIPPING_THRESHOLD - total)}</span>
+                  {t('cart.freeShipRemainTail')}
                 </span>
               ) : (
-                <span>Bạn đã đủ điều kiện <span className="font-semibold">MIỄN PHÍ</span> giao hàng! 🎉</span>
+                <span>{t('cart.freeShipQualified')}</span>
               )}
             </div>
 
@@ -202,7 +206,7 @@ const CartPage = () => {
                 aria-expanded={noteOpen}
                 className="w-full flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4"
               >
-                <span className="font-semibold text-warm-brown">Thêm ghi chú</span>
+                <span className="font-semibold text-warm-brown">{t('cart.addNote')}</span>
                 <span
                   className="inline-flex items-center justify-center h-6 w-6 rounded-full border border-gray-300 text-gray-600"
                   aria-hidden
@@ -212,16 +216,16 @@ const CartPage = () => {
               </button>
               {noteOpen && (
                 <div className="px-4 sm:px-5 pb-4 sm:pb-5">
-                  <label htmlFor="order-note" className="sr-only">Ghi chú đơn hàng</label>
+                  <label htmlFor="order-note" className="sr-only">{t('cart.noteLabel')}</label>
                   <textarea
                     id="order-note"
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     rows={3}
-                    placeholder="Nội dung ghi chú (tùy chọn)"
+                    placeholder={t('cart.notePlaceholder')}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/40"
                   />
-                  <p className="mt-2 text-xs text-gray-500">Ghi chú sẽ được gửi kèm đơn hàng.</p>
+                  <p className="mt-2 text-xs text-gray-500">{t('cart.noteHelp')}</p>
                 </div>
               )}
             </div>
@@ -229,12 +233,12 @@ const CartPage = () => {
             {/* Summary card */}
       <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
               <p className="text-sm text-gray-700 mb-4">
-                Đã bao gồm thuế. <span className="font-semibold">Phí vận chuyển</span> sẽ được tính khi thanh toán.
+                {t('cart.taxShipping')}
               </p>
               <button
         className="w-full bg-[#1f2a44] text-white font-bold py-4 rounded-lg hover:brightness-110 transition-colors uppercase tracking-wide"
               >
-                THANH TOÁN • {formatPrice(total)}
+                {t('cart.checkout')} • {formatPrice(total)}
               </button>
             </div>
           </div>

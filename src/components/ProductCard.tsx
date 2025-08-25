@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Eye } from 'lucide-react';
 import { Product } from '../types/product';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -32,20 +31,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* View Detail Button - Hidden by default, shows on hover */}
           <div className="absolute inset-0 flex items-end justify-center pb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button className="bg-primary-green text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-primary-green/90 transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 w-4/5 border border-white/20">
-              View Detail
+              {t('product.viewDetail')}
             </button>
           </div>
           
           {product.badge && (
             <span className="absolute top-4 left-4 bg-primary-green text-white px-3 py-1 text-xs font-bold tracking-wide rounded">
-              {product.badge.toUpperCase()}
+              {(() => {
+                const map: Record<string,string> = {
+                  'Mới': t('badges.new'),
+                  'Bán chạy': t('badges.bestSeller'),
+                  'Khuyến mãi': t('badges.promo')
+                };
+                const upper = map[product.badge] || product.badge;
+                return upper.toUpperCase();
+              })()}
             </span>
           )}
         </div>
         
         <div className="p-6 text-center bg-white">
           <h3 className="text-lg font-bold text-warm-brown mb-3 group-hover:text-primary-green transition-colors font-inter tracking-wide leading-tight">
-            {product.name}
+            {t(`p.${product.id}.name`) || product.name}
           </h3>
           
           <div className="mb-4">
@@ -59,6 +66,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </span>
               )}
             </div>
+            <p className="mt-2 text-sm text-gray-500 line-clamp-2">
+              {t(`p.${product.id}.desc`) || ''}
+            </p>
           </div>
         </div>
       </Link>
