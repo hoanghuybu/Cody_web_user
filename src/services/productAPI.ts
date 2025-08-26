@@ -1,4 +1,5 @@
-import { ProductSearchResponse, CategoriesResponse } from '../types/product';
+import { ProductSearchResponse } from '../types/product';
+import { CategoriesResponse } from '../types/category';
 
 const API_BASE_URL = 'https://www.cody-be.online/api/v1';
 
@@ -30,7 +31,7 @@ export class ProductAPI {
     });
 
     if (search) {
-      searchParams.append('search', search);
+      searchParams.append('keyword', search);
     }
 
     if (categoryId) {
@@ -55,7 +56,7 @@ export class ProductAPI {
   }
 
   static async getProductById(id: string) {
-    const url = `${API_BASE_URL}/products/${id}`;
+    const url = `${API_BASE_URL}/products/id/${id}`;
     
     try {
       const response = await fetch(url);

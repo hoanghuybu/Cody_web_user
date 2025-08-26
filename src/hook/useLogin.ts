@@ -12,7 +12,6 @@ export interface User {
 export interface AuthResponse {
   token?: string;
   user?: User;
-  // Error response structure
   status?: number;
   message?: string;
   error?: {

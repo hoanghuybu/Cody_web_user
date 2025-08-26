@@ -1,25 +1,12 @@
+import { Category } from './category';
+
 export interface ProductImage {
   id: string;
   imageUrl: string;
   isMain: boolean;
 }
 
-export interface ProductCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  metaDescription?: string;
-  updatedAt?: string;
-}
-
-export interface CategoriesResponse {
-  status: number;
-  message: string;
-  data: {
-    content: ProductCategory[];
-  };
-}
+export type ProductCategory = Category;
 
 export interface Product {
   id: string;
@@ -39,6 +26,8 @@ export interface Product {
   ingredients?: string[];
   weight?: string;
   gallery?: string[];
+  originalName?: string;
+  originalDescription?: string;
 }
 
 export interface ProductSearchResponse {

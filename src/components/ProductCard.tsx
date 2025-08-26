@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types/product';
 import { useLanguage } from '../context/LanguageContext';
+import { ProductUtils } from '../utils/product';
 
 interface ProductCardProps {
   product: Product;
@@ -12,10 +13,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
+    return ProductUtils.formatPrice(price);
   };
 
   return (
@@ -52,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         <div className="p-6 text-center bg-white">
           <h3 className="text-lg font-bold text-warm-brown mb-3 group-hover:text-primary-green transition-colors font-inter tracking-wide leading-tight">
-            {t(`p.${product.id}.name`) || product.name}
+            {t(product.name) || product.originalName || product.name}
           </h3>
           
           <div className="mb-4">
@@ -67,7 +65,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               )}
             </div>
             <p className="mt-2 text-sm text-gray-500 line-clamp-2">
-              {t(`p.${product.id}.desc`) || ''}
+              {t(product.description) || product.originalDescription || product.description}
             </p>
           </div>
         </div>

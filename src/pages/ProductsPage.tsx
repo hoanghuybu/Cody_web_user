@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Filter, Grid, List, Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
-import { useProductSearch, useCategories } from '../hooks/useProducts';
+import { useProductSearch } from '../hooks/useProducts';
+import { useAllCategories } from '../hooks/useCategories';
 import { ProductUtils } from '../utils/product';
 import { Product } from '../types/product';
 
@@ -38,7 +39,6 @@ const theme = createTheme({
         },
       },
     },
-    // Disable scroll lock globally for all MUI modals/menus/popovers
     MuiModal: {
       defaultProps: {
         disableScrollLock: true,
@@ -59,18 +59,41 @@ const ProductsPage = () => {
 
   const { t } = useLanguage();
 
-  const { data: categoriesData } = useCategories();
+  const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useAllCategories();
+
+  const categories = categoriesData?.data?.content || [];
+
+  const getCategoryId = (categoryParam: string) => {
+    if (categoryParam === 'all') return undefined;
+    
+    const categoryById = categories.find(cat => cat.id === categoryParam);
+    if (categoryById) return categoryParam;
+    
+    const categoryBySlug = categories.find(cat => cat.slug === categoryParam);
+    return categoryBySlug ? categoryBySlug.id : undefined;
+  };
+
+  const actualCategoryId = getCategoryId(selectedCategory);
+
   const { data: productsData, isLoading: productsLoading, error: productsError } = useProductSearch({
     page,
     size: 20,
     sortBy: sortBy === 'name' ? 'name' : 'price',
     sortDirection: sortBy === 'price-high' ? 'DESC' : 'ASC',
     search: searchTerm || undefined,
-    categoryId: selectedCategory !== 'all' ? selectedCategory : undefined
+    categoryId: actualCategoryId
   });
 
   const products: Product[] = productsData?.data?.content?.map(ProductUtils.toLegacyFormat) || [];
-  const categories = categoriesData?.data?.content || [];
+
+  console.log('URL category param:', category);
+  console.log('Selected category:', selectedCategory);
+  console.log('Actual category ID for API:', actualCategoryId);
+  console.log('Categories loading:', categoriesLoading);
+  console.log('Categories error:', categoriesError);
+  console.log('Categories data:', categoriesData);
+  console.log('Categories from API:', categories);
+  console.log('Products data:', productsData);
 
   useEffect(() => {
     setPage(0);
@@ -90,7 +113,6 @@ const ProductsPage = () => {
     );
   }
 
-  // Error state
   if (productsError) {
     return (
       <ThemeProvider theme={theme}>
@@ -157,7 +179,7 @@ const ProductsPage = () => {
                   </Select>
                 </FormControl>
 
-                {/* Sort Filter */}
+                {/* Product Sort Filter */}
                 <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
                   <InputLabel>{t('products.sort')}</InputLabel>
                   <Select
