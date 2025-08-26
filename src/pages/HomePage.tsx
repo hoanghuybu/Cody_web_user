@@ -1,9 +1,10 @@
-import { ArrowRight, Award, Heart, Leaf, Star, ChevronRight, Instagram, Play } from 'lucide-react';
+import { ChevronRight, Instagram } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
-import { featuredProducts } from '../data/products';
+import { useProductSearch } from '../hooks/useProducts';
+import { ProductUtils } from '../utils/product';
 
 const HomePage = () => {
   const { t } = useLanguage();
@@ -12,34 +13,20 @@ const HomePage = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
-  const [thumbStartX, setThumbStartX] = useState(0);
-  const [initialScrollLeft, setInitialScrollLeft] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
-  const [isMobile, setIsMobile] = useState(false);
+
+  const { data: productsData, isLoading: productsLoading } = useProductSearch({
+    page: 0,
+    size: 8,
+    sortBy: 'name',
+    sortDirection: 'ASC'
+  });
+
+  const featuredProducts = productsData?.data?.content?.map(ProductUtils.toLegacyFormat).slice(0, 4) || [];
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
-  };
-
 
   const categories = [
     { key: 'products.original', label: t('products.original') },
@@ -95,19 +82,7 @@ const HomePage = () => {
   }, []);
 
   // Scrollbar logic
-  const scrollToPosition = (clientX: number) => {
-    if (!trackRef.current || !scrollContainerRef.current) return;
-
-
-    const trackRect = trackRef.current.getBoundingClientRect();
-    const trackWidth = trackRect.width;
-
-    const relativePosition = Math.max(0, Math.min(1, (clientX - trackRect.left) / trackWidth));
-
-    const { scrollWidth, clientWidth } = scrollContainerRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    scrollContainerRef.current.scrollLeft = relativePosition * maxScroll;
-  };
+  // removed unused scrollToPosition helper
 
   const handleTrackMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -124,8 +99,7 @@ const HomePage = () => {
       const offsetInThumb = e.clientX - thumbRect.left;
       setDragOffset(offsetInThumb);
 
-      setThumbStartX(e.clientX);
-      setInitialScrollLeft(scrollContainerRef.current.scrollLeft);
+  // removed tracking of initial positions (unused)
     } else {
       const clickPosition = (e.clientX - trackRect.left) / trackRect.width;
       const { scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -205,7 +179,7 @@ const HomePage = () => {
                 CODY
               </h1>
               <p className="text-base sm:text-3xl md:text-4xl font-light text-cream font-inter italic">
-                Coconut Candy
+                {t('hero.subtitleCandy')}
               </p>
             </div>
 
@@ -224,17 +198,14 @@ const HomePage = () => {
         <div className="relative bg-gradient-to-r from-light-green to-primary-green py-10 sm:py-16">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6">
             <p className="text-white text-base sm:text-lg md:text-xl font-medium mb-6 sm:mb-8 leading-relaxed lg:leading-loose uppercase px-1">
-              Cody is a journey that connects the world to the cultural essence of Ben Tre
-              through handcrafted coconut candy – the iconic sweet of Vietnam's riverlands.
-              Here, tradition, craftsmanship, and local stories blend into a truly immersive
-              experience.
+              {t('hero.journey')}
             </p>
 
             <Link
               to="/brand-story"
               className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-full hover:bg-cream transition-colors"
             >
-              SPEND A DAY WITH US
+              {t('hero.journeyCta')}
             </Link>
           </div>
         </div>
@@ -301,14 +272,36 @@ const HomePage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {productsLoading ? (
+              // Loading skeleton
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-gray-200"></div>
+                  <div className="p-6 space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                  </div>
+                </div>
+              ))
+            ) : featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              // No products available
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500">{t('common.loading')}</p>
+              </div>
+            )}
           </div>
           <div className="text-center">
-            <button className="bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors">
+            <Link
+              to="/products"
+              className="inline-block bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors"
+            >
               {t('products.shopFull')}
-            </button>
+            </Link>
           </div>
         </div>
       </section>

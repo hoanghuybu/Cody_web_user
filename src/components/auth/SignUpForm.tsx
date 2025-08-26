@@ -3,6 +3,7 @@ import {
     RegisterDTO,
     validateRegister
 } from "../../dto/auth/register.dto";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface SignUpFormProps {
   onSubmit?: (data: Omit<RegisterDTO, "confirmPassword">) => Promise<void> | void;
@@ -22,6 +23,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   onSubmit,
   onSwitchToSignIn
 }) => {
+  const { t } = useLanguage();
   const [form, setForm] = useState<RegisterDTO>(initial);
   const [errors, setErrors] =
     useState<Partial<Record<keyof RegisterDTO, string>>>({});
@@ -58,13 +60,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   return (
     <div>
       <h2 id="auth-modal-title" className="text-2xl font-bold text-green-700 mb-2">
-        Tạo tài khoản
+        {t('auth.createAccount')}
       </h2>
-      <p className="text-sm text-neutral-600 mb-5">Điền thông tin để đăng ký.</p>
+      <p className="text-sm text-neutral-600 mb-5">{t('auth.signupSubtitle')}</p>
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold mb-1">First Name</label>
+            <label className="block text-xs font-semibold mb-1">{t('auth.firstName')}</label>
             <input
               name="firstName"
               value={form.firstName}
@@ -79,7 +81,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold mb-1">Last Name</label>
+            <label className="block text-xs font-semibold mb-1">{t('auth.lastName')}</label>
             <input
               name="lastName"
               value={form.lastName}
@@ -95,7 +97,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           </div>
         </div>
         <div>
-          <label className="block text-xs font-semibold mb-1">Email</label>
+          <label className="block text-xs font-semibold mb-1">{t('auth.email')}</label>
           <input
             name="email"
             type="email"
@@ -112,7 +114,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold mb-1">Password</label>
+            <label className="block text-xs font-semibold mb-1">{t('auth.password')}</label>
             <input
               name="password"
               type="password"
@@ -129,7 +131,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           </div>
           <div>
             <label className="block text-xs font-semibold mb-1">
-              Confirm Password
+              {t('auth.confirmPassword')}
             </label>
             <input
               name="confirmPassword"
@@ -157,32 +159,29 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
               : "bg-green-700 hover:bg-green-600 text-white"
           } font-semibold py-2.5 rounded-md transition shadow-sm border border-green-500/50 disabled:cursor-not-allowed disabled:opacity-90`}
         >
-          {loading ? "Đang tạo..." : "Đăng ký"}
+          {loading ? t('auth.creating') : t('auth.signUp')}
         </button>
 
         <div className="flex items-center gap-3 text-xs text-neutral-500">
           <span className="flex-1 h-px bg-neutral-200" />
-          HOẶC
+          {t('auth.or')}
           <span className="flex-1 h-px bg-neutral-200" />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex justify-center">
           <button type="button" className={socialBtn}>
-            <GoogleIcon /> Google
-          </button>
-          <button type="button" className={socialBtn}>
-            <AppleIcon /> Apple
+            <GoogleIcon /> {t('auth.continueWithGoogle')}
           </button>
         </div>
 
         <p className="text-xs text-center text-neutral-600">
-          Đã có tài khoản?{" "}
+          {t('auth.haveAccount')}{" "}
           <button
             type="button"
             onClick={onSwitchToSignIn}
             className="text-green-700 font-semibold hover:underline"
           >
-            Đăng nhập
+            {t('auth.loginHere')}
           </button>
         </p>
       </form>
@@ -195,11 +194,5 @@ export default SignUpForm;
 const GoogleIcon = () => (
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12.24 10.285v3.6h5.09c-.206 1.34-1.537 3.932-5.09 3.932-3.064 0-5.564-2.54-5.564-5.671 0-3.132 2.5-5.671 5.563-5.671 1.74 0 2.91.74 3.58 1.38l2.44-2.356C16.73 3.64 14.7 2.7 12.24 2.7 6.84 2.7 2.5 7.04 2.5 12.546c0 5.505 4.34 9.846 9.74 9.846 5.63 0 9.36-3.966 9.36-9.566 0-.64-.07-1.13-.16-1.64H12.24z" />
-  </svg>
-);
-
-const AppleIcon = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16.365 1.43c0 1.14-.416 2.07-1.247 2.886-.9.875-1.99 1.38-3.176 1.3-.05-1.11.43-2.14 1.28-2.94.86-.81 2.08-1.38 3.143-1.46zM20.16 17.26c-.56 1.26-.83 1.81-1.55 2.91-.99 1.51-2.38 3.39-4.11 3.4-1.53.02-1.93-.99-4-.99-2.07 0-2.52 1-4.05.97-1.73-.02-3.05-1.73-4.04-3.24-2.77-4.23-3.06-9.19-1.35-11.81 1.2-1.86 3.09-2.95 4.87-2.95 1.82 0 2.97 1 4.47 1 1.46 0 2.34-1 4.45-1 1.6 0 3.29.87 4.48 2.37-3.94 2.16-3.3 7.82.83 9.35z" />
   </svg>
 );

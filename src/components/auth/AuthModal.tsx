@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
+import { useLanguage } from "../../context/LanguageContext";
 
 export interface AuthModalProps {
   open: boolean;
@@ -24,6 +25,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
   onSignIn,
   onSignUp
 }) => {
+  const { t } = useLanguage();
   const escHandler = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -52,11 +54,12 @@ const AuthModal: React.FC<AuthModalProps> = ({
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-neutral-200 p-6 animate-fadeIn">
         <button
           onClick={onClose}
-          aria-label="Đóng"
+          aria-label={t('auth.close')}
           className="absolute top-3 right-3 text-neutral-400 hover:text-neutral-700"
         >
           ✕
         </button>
+        
         {mode === "signin" ? (
           <SignInForm
             compact

@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Filter, Grid, List, Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { allProducts, categories } from '../data/products';
+import { useLanguage } from '../context/LanguageContext';
+import { useProductSearch } from '../hooks/useProducts';
+import { useAllCategories } from '../hooks/useCategories';
+import { ProductUtils } from '../utils/product';
+import { Product } from '../types/product';
 
 import {
   Select,
@@ -35,7 +39,6 @@ const theme = createTheme({
         },
       },
     },
-    // Disable scroll lock globally for all MUI modals/menus/popovers
     MuiModal: {
       defaultProps: {
         disableScrollLock: true,
@@ -50,28 +53,81 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(category || 'all');
   const [sortBy, setSortBy] = useState('name');
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
   const muiTheme = useTheme();
   const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
-  const filteredProducts = allProducts
-    .filter(product =>
-      selectedCategory === 'all' || product.category === selectedCategory
-    )
-    .filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'price-low':
-          return a.price - b.price;
-        case 'price-high':
-          return b.price - a.price;
-        case 'name':
-        default:
-          return a.name.localeCompare(b.name);
-      }
-    });
+  const { t } = useLanguage();
+
+  const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useAllCategories();
+
+  const categories = categoriesData?.data?.content || [];
+
+  const getCategoryId = (categoryParam: string) => {
+    if (categoryParam === 'all') return undefined;
+    
+    const categoryById = categories.find(cat => cat.id === categoryParam);
+    if (categoryById) return categoryParam;
+    
+    const categoryBySlug = categories.find(cat => cat.slug === categoryParam);
+    return categoryBySlug ? categoryBySlug.id : undefined;
+  };
+
+  const actualCategoryId = getCategoryId(selectedCategory);
+
+  const { data: productsData, isLoading: productsLoading, error: productsError } = useProductSearch({
+    page,
+    size: 20,
+    sortBy: sortBy === 'name' ? 'name' : 'price',
+    sortDirection: sortBy === 'price-high' ? 'DESC' : 'ASC',
+    search: searchTerm || undefined,
+    categoryId: actualCategoryId
+  });
+
+  const products: Product[] = productsData?.data?.content?.map(ProductUtils.toLegacyFormat) || [];
+
+  console.log('URL category param:', category);
+  console.log('Selected category:', selectedCategory);
+  console.log('Actual category ID for API:', actualCategoryId);
+  console.log('Categories loading:', categoriesLoading);
+  console.log('Categories error:', categoriesError);
+  console.log('Categories data:', categoriesData);
+  console.log('Categories from API:', categories);
+  console.log('Products data:', productsData);
+
+  useEffect(() => {
+    setPage(0);
+  }, [selectedCategory, sortBy, searchTerm]);
+
+  if (productsLoading && page === 0) {
+    return (
+      <ThemeProvider theme={theme}>
+        <div className="min-h-screen bg-cream py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg text-gray-600">{t('common.loading')}</div>
+            </div>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  if (productsError) {
+    return (
+      <ThemeProvider theme={theme}>
+        <div className="min-h-screen bg-cream py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg text-red-600">
+                {t('common.error')}: {productsError.message}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -79,12 +135,8 @@ const ProductsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
-              Sản phẩm CODY
-            </h1>
-            <p className="text-lg text-gray-600">
-              Khám phá bộ sưu tập kẹo dừa sinh thái từ Bến Tre
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">{t('products.headerTitle')}</h1>
+            <p className="text-lg text-gray-600">{t('products.headerSubtitle')}</p>
           </div>
 
           {/* Filters and Search - Using MUI */}
@@ -93,7 +145,7 @@ const ProductsPage = () => {
               {/* Search - Using MUI TextField */}
               <TextField
                 fullWidth
-                placeholder="Tìm kiếm sản phẩm..."
+                placeholder={t('products.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
@@ -111,36 +163,36 @@ const ProductsPage = () => {
               <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
                 {/* Category Filter */}
                 <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
-                  <InputLabel>Danh mục</InputLabel>
+                  <InputLabel>{t('products.category')}</InputLabel>
                   <Select
                     value={selectedCategory}
-                    label="Danh mục"
+                    label={t('products.category')}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     MenuProps={{
                       disableScrollLock: true,
                     }}
                   >
-                    <MenuItem value="all">Tất cả danh mục</MenuItem>
-                    {categories.map(cat => (
+                    <MenuItem value="all">{t('products.allCategories')}</MenuItem>
+                    {categories.map((cat: any) => (
                       <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
 
-                {/* Sort Filter */}
+                {/* Product Sort Filter */}
                 <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
-                  <InputLabel>Sắp xếp</InputLabel>
+                  <InputLabel>{t('products.sort')}</InputLabel>
                   <Select
                     value={sortBy}
-                    label="Sắp xếp"
+                    label={t('products.sort')}
                     onChange={(e) => setSortBy(e.target.value)}
                     MenuProps={{
                       disableScrollLock: true,
                     }}
                   >
-                    <MenuItem value="name">Sắp xếp theo tên</MenuItem>
-                    <MenuItem value="price-low">Giá: Thấp đến cao</MenuItem>
-                    <MenuItem value="price-high">Giá: Cao đến thấp</MenuItem>
+                    <MenuItem value="name">{t('products.sortName')}</MenuItem>
+                    <MenuItem value="price-low">{t('products.sortPriceLow')}</MenuItem>
+                    <MenuItem value="price-high">{t('products.sortPriceHigh')}</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -173,12 +225,12 @@ const ProductsPage = () => {
               {(searchTerm || selectedCategory !== 'all') && (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', pt: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Bộ lọc đang áp dụng:
+                    {t('products.activeFilters')}:
                   </Typography>
 
                   {selectedCategory !== 'all' && (
                     <Chip
-                      label={categories.find(c => c.id === selectedCategory)?.name}
+                      label={categories.find((c: any) => c.id === selectedCategory)?.name || selectedCategory}
                       onDelete={() => setSelectedCategory('all')}
                       color="primary"
                       variant="outlined"
@@ -188,7 +240,7 @@ const ProductsPage = () => {
 
                   {searchTerm && (
                     <Chip
-                      label={`Tìm: "${searchTerm}"`}
+                      label={`${t('products.searchLabel')}: "${searchTerm}"`}
                       onDelete={() => setSearchTerm('')}
                       color="primary"
                       variant="outlined"
@@ -203,9 +255,9 @@ const ProductsPage = () => {
           {/* Results Count */}
           <div className="mb-6">
             <p className="text-gray-600">
-              Hiển thị {filteredProducts.length} sản phẩm
-              {selectedCategory !== 'all' && (
-                <span> trong danh mục "{categories.find(c => c.id === selectedCategory)?.name}"</span>
+              {t('products.showing').replace('{count}', String(products.length))}
+              {selectedCategory !== 'all' && productsData?.data?.content && (
+                <span> {t('products.inCategory').replace('{category}', categories.find((c: any) => c.id === selectedCategory)?.name || selectedCategory)}</span>
               )}
             </p>
           </div>
@@ -215,23 +267,19 @@ const ProductsPage = () => {
               ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
               : 'grid-cols-1'
             }`}>
-            {filteredProducts.map(product => (
+            {products.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
           {/* No Results */}
-          {filteredProducts.length === 0 && (
+          {products.length === 0 && (
             <div className="text-center py-16">
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Filter className="h-12 w-12 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                Không tìm thấy sản phẩm
-              </h3>
-              <p className="text-gray-500">
-                Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn
-              </p>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">{t('products.noResultsTitle')}</h3>
+              <p className="text-gray-500">{t('products.noResultsSubtitle')}</p>
             </div>
           )}
         </div>
