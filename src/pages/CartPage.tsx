@@ -84,10 +84,10 @@ const CartPage = () => {
                   <div key={item.id} className="relative bg-white rounded-xl border border-gray-100 max-md:border-amber-200 shadow-sm px-3 sm:px-4 md:px-6 max-[320px]:px-2 py-3 md:py-4">
                     {/* Mobile delete (absolute) */}
                     <button
-                      aria-label="Xóa sản phẩm khỏi giỏ hàng"
+                      aria-label={t('cart.removeItem')}
                       onClick={() => removeFromCart(item.id)}
                       className="md:hidden absolute top-2 right-2 inline-flex items-center p-2 max-[320px]:p-1.5 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
-                      title="Xóa"
+                      title={t('cart.removeItem')}
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
@@ -96,13 +96,13 @@ const CartPage = () => {
                       {/* Image */}
                       <img
                         src={item.image}
-                        alt={t(item.name) || item.originalName || item.name}
+                        alt={item.originalName || item.name}
                         className="w-16 h-16 max-[320px]:w-14 max-[320px]:h-14 md:w-24 md:h-24 object-cover rounded-lg"
                       />
 
                       {/* Name and meta */}
                       <div className="flex flex-col gap-1">
-                        <h3 className="font-playfair text-sm sm:text-base md:text-lg text-warm-brown leading-snug line-clamp-1 md:line-clamp-2 uppercase tracking-wide">{t(item.name) || item.originalName || item.name}</h3>
+                        <h3 className="font-playfair text-sm sm:text-base md:text-lg text-warm-brown leading-snug line-clamp-1 md:line-clamp-2 uppercase tracking-wide">{item.originalName || item.name}</h3>
                         <div className="hidden md:flex items-center gap-2">
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs">{item.weight}</span>
                         </div>
@@ -146,7 +146,7 @@ const CartPage = () => {
                         aria-label={t('cart.removeItem')}
                         onClick={() => removeFromCart(item.id)}
                         className="col-start-3 md:col-start-auto justify-self-end hidden md:inline-flex items-center p-2 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
-                        title="Xóa"
+                        title={t('cart.removeItem')}
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>

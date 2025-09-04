@@ -9,6 +9,7 @@ import Toast from './Toast';
 import useLogin from "../hook/useLogin";
 import useRegister from "../hook/useRegister";
 import { AuthUtils } from '../utils/auth';
+import { isApiError } from '../lib/ApiError';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -67,24 +68,25 @@ const Header = () => {
         
         setAuthOpen(false);
       } else if (res?.status && res?.status !== 200) {
-        let errorMsg = res.error?.detail || res.message || t('auth.loginFailed');
-        if (errorMsg === "Người dùng không tồn tại") {
-          errorMsg = t('auth.userNotFound');
-        }
-        showToast("error", t('auth.loginFailed'), errorMsg);
+        // Always show generic invalid credentials message (do not expose backend detail)
+        showToast("error", t('auth.loginFailed'), t('auth.invalidCredentials'));
       } else {
         console.warn('Unexpected response structure:', res);
         showToast("error", t('auth.loginFailed'), t('auth.networkError'));
       }
     } catch (e: any) {
-      let errorMsg = e?.response?.data?.error?.detail || 
-                    e?.response?.data?.message || 
-                    e?.message || 
-                    t('auth.networkError');
-      if (errorMsg === "Người dùng không tồn tại") {
-        errorMsg = t('auth.userNotFound');
+      // Extract server detail (e.g., "Bad credentials") for optional logging
+      let serverDetail: string | undefined;
+      if (isApiError(e)) {
+        serverDetail = (e.data as any)?.error?.detail || (e.data as any)?.message;
       }
-      showToast("error", t('auth.loginFailed'), errorMsg);
+      if (serverDetail) {
+        console.warn('Login error detail:', serverDetail);
+      }
+      const message = serverDetail && serverDetail.toLowerCase().includes('credential')
+        ? t('auth.invalidCredentials')
+        : (!e?.status && !isApiError(e) ? t('auth.networkError') : t('auth.invalidCredentials'));
+      showToast("error", t('auth.loginFailed'), message);
     }
   };
   const handleSignUp = async (d: {
@@ -106,32 +108,33 @@ const Header = () => {
         const successMsg = res?.message || t('auth.registrationSuccessMessage');
         showToast("success", t('auth.registrationSuccess'), successMsg);
       } else if (res?.status && res?.status !== 200) {
-        let errorMsg = res.error?.detail || res.message || t('auth.registrationFailed');
-        if (errorMsg === "Email đã tồn tại") {
-          errorMsg = t('auth.emailExists');
-        } else if (errorMsg === "Mật khẩu quá yếu") {
-          errorMsg = t('auth.passwordTooWeak');
-        } else if (errorMsg === "Yêu cầu không hợp lệ") {
-          errorMsg = t('auth.invalidRequest');
-        }
-        showToast("error", t('auth.registrationFailed'), errorMsg);
+        showToast("error", t('auth.registrationFailed'), t('auth.registrationGenericError'));
       } else {
         console.warn('Unexpected registration response:', res);
         showToast("error", t('auth.registrationFailed'), t('auth.networkError'));
       }
     } catch (e: any) {
-      let errorMsg = e?.response?.data?.error?.detail || 
-                    e?.response?.data?.message || 
-                    e?.message || 
-                    t('auth.networkError');
-      if (errorMsg === "Email đã tồn tại") {
-        errorMsg = t('auth.emailExists');
-      } else if (errorMsg === "Mật khẩu quá yếu") {
-        errorMsg = t('auth.passwordTooWeak');
-      } else if (errorMsg === "Yêu cầu không hợp lệ") {
-        errorMsg = t('auth.invalidRequest');
+      if (isApiError(e)) {
+        const data: any = e.data;
+        const fieldErrors = data?.errors || data?.error?.fields; // attempt common shapes
+        if (fieldErrors && typeof fieldErrors === 'object') {
+          // Show first field error via toast
+          const firstKey = Object.keys(fieldErrors)[0];
+          if (firstKey) {
+            showToast('error', t('auth.registrationFailed'), fieldErrors[firstKey] || t('auth.registrationGenericError'));
+          } else {
+            showToast('error', t('auth.registrationFailed'), t('auth.registrationGenericError'));
+          }
+          return;
+        }
+        const detail = data?.error?.detail || data?.message;
+        if (detail) {
+          console.warn('Register error detail:', detail);
+        }
+        showToast('error', t('auth.registrationFailed'), t('auth.registrationGenericError'));
+      } else {
+        showToast('error', t('auth.registrationFailed'), t('auth.networkError'));
       }
-      showToast("error", t('auth.registrationFailed'), errorMsg);
     }
   };
 
@@ -400,6 +403,13 @@ const Header = () => {
         onSwitch={(m) => setAuthMode(m)}
         onSignIn={handleSignIn}
         onSignUp={handleSignUp}
+        onSignUpFieldErrors={(errs) => {
+          // Show first field validation error via toast for quick feedback
+          const firstKey = Object.keys(errs)[0] as keyof typeof errs | undefined;
+            if (firstKey) {
+              showToast('error', t('auth.registrationFailed'), errs[firstKey] || t('auth.registrationGenericError'));
+            }
+        }}
       />
       
       <Toast

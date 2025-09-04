@@ -94,7 +94,7 @@ const ProductDetailPage = () => {
           <span>/</span>
           <Link to="/products" className="hover:text-primary-green">{t('productDetail.breadcrumbProducts')}</Link>
           <span>/</span>
-          <span className="text-warm-brown">{t(product.name) || product.originalName || product.name}</span>
+          <span className="text-warm-brown">{product.originalName || product.name}</span>
         </div>
 
         {/* Back Button */}
@@ -148,11 +148,11 @@ const ProductDetailPage = () => {
             )}
             
             <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">
-              {t(product.name) || product.originalName || product.name}
+              {product.originalName || product.name}
             </h1>
             
             <p className="text-lg text-gray-600 leading-relaxed">
-              {t(product.description) || product.originalDescription || product.description}
+              {product.originalDescription || product.description}
             </p>
 
             {/* Price */}
