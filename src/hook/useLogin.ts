@@ -22,7 +22,8 @@ export interface AuthResponse {
 const useLogin = () => {
   const { mutateAsync, data, error } = useMutation({
     mutationFn: async (variables: LoginDTO): Promise<AuthResponse> =>
-      rootApi.post(endpoints.login, variables) as Promise<AuthResponse>
+      rootApi.post(endpoints.login, variables) as Promise<AuthResponse>,
+    retry: false
   });
 
   return { mutateAsync, data, error };

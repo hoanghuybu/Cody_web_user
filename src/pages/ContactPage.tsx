@@ -135,7 +135,7 @@ const ContactPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
-                      placeholder="Nhập họ và tên của bạn"
+                      placeholder={t('contact.placeholder.name')}
                     />
                   </div>
                   
@@ -149,7 +149,7 @@ const ContactPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
-                      placeholder="Nhập địa chỉ email"
+                      placeholder={t('contact.placeholder.email')}
                     />
                   </div>
                 </div>
@@ -164,7 +164,7 @@ const ContactPage = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
-                      placeholder="Nhập số điện thoại"
+                      placeholder={t('contact.placeholder.phone')}
                     />
                   </div>
                   

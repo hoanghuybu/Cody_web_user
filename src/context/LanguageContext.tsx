@@ -153,6 +153,12 @@ const translations: Record<Language, TranslationDict> = {
   'cart.noteHelp': 'This note will be sent with your order.',
   'cart.taxShipping': 'Tax included. Shipping calculated at checkout.',
   'cart.checkout': 'Checkout',
+  'cart.subtotal': 'Subtotal',
+  'cart.shipping': 'Shipping',
+  'cart.free': 'Free',
+  'cart.grandTotal': 'Grand Total',
+  'cart.drawerEmpty': 'No items yet.',
+  'cart.proceedCheckout': 'Proceed to checkout',
   // Contact
   'contact.title': 'Contact CODY',
   'contact.subtitle': 'We\'re ready to support you. Reach out for product and service assistance.',
@@ -197,8 +203,10 @@ const translations: Record<Language, TranslationDict> = {
   'auth.welcome': 'Welcome',
   'auth.logoutSuccess': 'Logout Successful',
   'auth.logoutSuccessMessage': 'You have been logged out successfully.',
+  'auth.invalidCredentials': 'Your email or password is invalid',
   'auth.registrationSuccess': 'Registration Successful',
   'auth.registrationSuccessMessage': 'Your account has been created successfully. Welcome!',
+  'auth.registrationGenericError': 'Failed to register account. Please try again later.',
   'auth.email': 'Email',
   'auth.password': 'Password',
   'auth.confirmPassword': 'Confirm Password',
@@ -271,6 +279,11 @@ const translations: Record<Language, TranslationDict> = {
     // Instagram Section
     'instagram.title': 'FIND US ON\nINSTAGRAM',
     'instagram.subtitle': '& SHARE OUR CODY ADVENTURE',
+    'instagram.handle': '@CODY_COCONUT_CANDY',
+    'contact.placeholder.name': 'Enter your full name',
+    'contact.placeholder.email': 'Enter your email address',
+    'contact.placeholder.phone': 'Enter phone number',
+    'contact.instagramBanner': 'FIND US ON INSTAGRAM & SHARE OUR CODY ADVENTURE',
     
     // Footer
     'footer.description': 'Sustainable coconut candy brand from Ben Tre - the coconut land. We are committed to bringing high-quality, environmentally friendly products.',
@@ -438,6 +451,12 @@ const translations: Record<Language, TranslationDict> = {
   'cart.noteHelp': 'Ghi chú sẽ được gửi kèm đơn hàng.',
   'cart.taxShipping': 'Đã bao gồm thuế. Phí vận chuyển sẽ được tính khi thanh toán.',
   'cart.checkout': 'Thanh toán',
+  'cart.subtotal': 'Tạm tính',
+  'cart.shipping': 'Phí vận chuyển',
+  'cart.free': 'Miễn phí',
+  'cart.grandTotal': 'Tổng',
+  'cart.drawerEmpty': 'Chưa có sản phẩm nào.',
+  'cart.proceedCheckout': 'Tiến hành thanh toán',
   // Contact
   'contact.title': 'Liên hệ với CODY',
   'contact.subtitle': 'Chúng tôi luôn sẵn sàng hỗ trợ bạn về sản phẩm và dịch vụ.',
@@ -482,8 +501,10 @@ const translations: Record<Language, TranslationDict> = {
   'auth.welcome': 'Chào mừng',
   'auth.logoutSuccess': 'Đăng xuất thành công',
   'auth.logoutSuccessMessage': 'Bạn đã đăng xuất thành công.',
+  'auth.invalidCredentials': 'Email hoặc mật khẩu không đúng',
   'auth.registrationSuccess': 'Đăng ký thành công',
   'auth.registrationSuccessMessage': 'Tài khoản của bạn đã được tạo thành công. Chào mừng bạn!',
+  'auth.registrationGenericError': 'Đăng ký tài khoản thất bại. Vui lòng thử lại sau.',
   'auth.email': 'Email',
   'auth.password': 'Mật khẩu',
   'auth.confirmPassword': 'Xác nhận mật khẩu',
@@ -557,6 +578,11 @@ const translations: Record<Language, TranslationDict> = {
     // Instagram Section
     'instagram.title': 'TÌM CHÚNG TÔI TRÊN\nINSTAGRAM',
     'instagram.subtitle': '& CHIA SẺ HÀNH TRÌNH CODY',
+    'instagram.handle': '@CODY_COCONUT_CANDY',
+    'contact.placeholder.name': 'Nhập họ và tên của bạn',
+    'contact.placeholder.email': 'Nhập địa chỉ email',
+    'contact.placeholder.phone': 'Nhập số điện thoại',
+    'contact.instagramBanner': 'TÌM CHÚNG TÔI TRÊN INSTAGRAM & CHIA SẺ HÀNH TRÌNH CODY',
     
     // Footer
     'footer.description': 'Thương hiệu kẹo dừa bền vững từ Bến Tre - xứ dừa. Chúng tôi cam kết mang đến những sản phẩm chất lượng cao, thân thiện với môi trường.',

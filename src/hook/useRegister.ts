@@ -17,7 +17,8 @@ const useRegister = () => {
         variables
       );
       return response;
-    }
+    },
+    retry: false
   });
 
   return { mutateAsync, data, error };

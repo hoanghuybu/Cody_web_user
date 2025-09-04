@@ -15,6 +15,7 @@ export interface AuthModalProps {
     email: string;
     password: string;
   }) => Promise<void> | void;
+  onSignUpFieldErrors?: (errors: Partial<Record<'firstName'|'lastName'|'email'|'password'|'confirmPassword', string>>) => void;
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({
@@ -23,7 +24,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onSwitch,
   onSignIn,
-  onSignUp
+  onSignUp,
+  onSignUpFieldErrors
 }) => {
   const { t } = useLanguage();
   const escHandler = useCallback(
@@ -71,6 +73,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
           <SignUpForm
             compact
             onSubmit={onSignUp}
+            onFieldErrors={onSignUpFieldErrors}
             onSwitchToSignIn={() => onSwitch("signin")}
           />
         )}
