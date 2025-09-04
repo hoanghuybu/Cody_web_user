@@ -1,3 +1,4 @@
+import { ApiError } from './ApiError';
 const BASE = "/api/v1";
 
 type Query = Record<string, string | number | boolean | undefined | null>;
@@ -32,8 +33,7 @@ async function request<TRes, TReq = unknown>(
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
   if (!res.ok) {
-    const msg = data?.message || `Request failed (${res.status})`;
-    throw new Error(msg);
+    throw new ApiError(res.status, data);
   }
   return data as TRes;
 }

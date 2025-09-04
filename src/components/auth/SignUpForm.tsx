@@ -9,6 +9,7 @@ interface SignUpFormProps {
   onSubmit?: (data: Omit<RegisterDTO, "confirmPassword">) => Promise<void> | void;
   onSwitchToSignIn?: () => void;
   compact?: boolean;
+  onFieldErrors?: (errors: Partial<Record<keyof RegisterDTO, string>>) => void;
 }
 
 const initial: RegisterDTO = {
@@ -21,24 +22,74 @@ const initial: RegisterDTO = {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
   onSubmit,
-  onSwitchToSignIn
+  onSwitchToSignIn,
+  onFieldErrors
 }) => {
   const { t } = useLanguage();
   const [form, setForm] = useState<RegisterDTO>(initial);
-  const [errors, setErrors] =
-    useState<Partial<Record<keyof RegisterDTO, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof RegisterDTO, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof RegisterDTO, boolean>>>({});
   const [loading, setLoading] = useState(false);
 
+  const validateSingle = (name: keyof RegisterDTO, value: string, next: RegisterDTO): string | undefined => {
+    switch (name) {
+      case 'firstName':
+        if (!value.trim()) return 'First name required';
+        return;
+      case 'lastName':
+        if (!value.trim()) return 'Last name required';
+        return;
+      case 'email': {
+        if (!value.trim()) return 'Email required';
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        if (!emailRegex.test(value)) return 'Invalid email';
+        return;
+      }
+      case 'password':
+        if (!value) return 'Password required';
+        if (value.length < 8) return 'Min 8 characters';
+        return;
+      case 'confirmPassword':
+        if (!value) return 'Confirm password';
+        if (value !== next.password) return 'Passwords do not match';
+        return;
+      default:
+        return;
+    }
+  };
+
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
+    const { name, value } = e.target as { name: keyof RegisterDTO; value: string };
+    setForm(prev => {
+      const next = { ...prev, [name]: value } as RegisterDTO;
+      // mark touched
+      setTouched(t => ({ ...t, [name]: true }));
+      // validate this field
+      const fieldError = validateSingle(name, value, next);
+      setErrors(errs => ({ ...errs, [name]: fieldError }));
+      // if password changes, revalidate confirmPassword
+      if (name === 'password' && touched.confirmPassword) {
+        const confirmError = validateSingle('confirmPassword', next.confirmPassword, next);
+        setErrors(errs => ({ ...errs, confirmPassword: confirmError }));
+      }
+      if (name === 'confirmPassword' && touched.password) {
+        const confirmError = validateSingle('confirmPassword', value, next);
+        setErrors(errs => ({ ...errs, confirmPassword: confirmError }));
+      }
+      return next;
+    });
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { valid, errors } = validateRegister(form);
-    setErrors(errors);
-    if (!valid) return;
+    const { valid, errors: submitErrors } = validateRegister(form);
+    setErrors(submitErrors);
+    // mark all touched on submit attempt
+    setTouched({ firstName: true, lastName: true, email: true, password: true, confirmPassword: true });
+    if (!valid) {
+      onFieldErrors?.(submitErrors);
+      return;
+    }
     try {
       setLoading(true);
       await onSubmit?.({

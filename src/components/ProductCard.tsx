@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         <div className="p-6 text-center bg-white">
           <h3 className="text-lg font-bold text-warm-brown mb-3 group-hover:text-primary-green transition-colors font-inter tracking-wide leading-tight">
-            {t(product.name) || product.originalName || product.name}
+            {product.originalName || product.name}
           </h3>
           
           <div className="mb-4">
@@ -65,7 +65,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               )}
             </div>
             <p className="mt-2 text-sm text-gray-500 line-clamp-2">
-              {t(product.description) || product.originalDescription || product.description}
+              {product.originalDescription || product.description}
             </p>
           </div>
         </div>

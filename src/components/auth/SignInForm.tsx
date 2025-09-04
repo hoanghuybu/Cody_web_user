@@ -16,20 +16,35 @@ const SignInForm: React.FC<SignInFormProps> = ({
 }) => {
   const { t } = useLanguage();
   const [form, setForm] = useState<LoginDTO>({ email: "", password: "" });
-  const [errors, setErrors] =
-    useState<Partial<Record<keyof LoginDTO, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof LoginDTO, string>>>({});
   const [loading, setLoading] = useState(false);
 
+  const validateSingle = (name: keyof LoginDTO, value: string): string | undefined => {
+    if (name === 'email') {
+      if (!value.trim()) return 'Email required';
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(value)) return 'Invalid email';
+      return;
+    }
+    if (name === 'password') {
+      if (!value) return 'Password required';
+      return;
+    }
+    return;
+  };
+
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
+    const { name, value } = e.target as { name: keyof LoginDTO; value: string };
+    setForm(prev => ({ ...prev, [name]: value }));
+    const fieldError = validateSingle(name, value);
+    setErrors(errs => ({ ...errs, [name]: fieldError }));
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { valid, errors } = validateLogin(form);
-    setErrors(errors);
-    if (!valid) return;
+  const { valid, errors: submitErrors } = validateLogin(form);
+  setErrors(submitErrors);
+  if (!valid) return;
     try {
       setLoading(true);
       await onSubmit?.({ email: form.email.trim(), password: form.password });

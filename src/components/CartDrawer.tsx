@@ -2,11 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useLanguage } from '../context/LanguageContext';
 
 const CartDrawer: React.FC = () => {
   const { isCartOpen, closeCart, items, total, updateQuantity, removeFromCart } = useCart();
-  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const FREE_SHIPPING_THRESHOLD = 300000;
@@ -50,9 +48,9 @@ const CartDrawer: React.FC = () => {
                 const canDec = item.quantity > 1;
                 return (
                   <div key={item.id} className="grid grid-cols-[64px_1fr_auto] gap-3 p-3 border border-gray-100 rounded-lg">
-                    <img src={item.image} alt={t(item.name) || item.originalName || item.name} className="w-16 h-16 rounded object-cover" />
+                    <img src={item.image} alt={item.originalName || item.name} className="w-16 h-16 rounded object-cover" />
                     <div className="min-w-0">
-                      <h3 className="text-sm font-semibold text-warm-brown truncate">{t(item.name) || item.originalName || item.name}</h3>
+                      <h3 className="text-sm font-semibold text-warm-brown truncate">{item.originalName || item.name}</h3>
                       <p className="text-xs text-gray-500 mt-0.5">{item.weight}</p>
                       <div className="mt-2 flex items-center gap-2">
                         <div className="flex items-center border border-gray-200 rounded-full overflow-hidden">

@@ -96,13 +96,13 @@ const CartPage = () => {
                       {/* Image */}
                       <img
                         src={item.image}
-                        alt={t(item.name) || item.originalName || item.name}
+                        alt={item.originalName || item.name}
                         className="w-16 h-16 max-[320px]:w-14 max-[320px]:h-14 md:w-24 md:h-24 object-cover rounded-lg"
                       />
 
                       {/* Name and meta */}
                       <div className="flex flex-col gap-1">
-                        <h3 className="font-playfair text-sm sm:text-base md:text-lg text-warm-brown leading-snug line-clamp-1 md:line-clamp-2 uppercase tracking-wide">{t(item.name) || item.originalName || item.name}</h3>
+                        <h3 className="font-playfair text-sm sm:text-base md:text-lg text-warm-brown leading-snug line-clamp-1 md:line-clamp-2 uppercase tracking-wide">{item.originalName || item.name}</h3>
                         <div className="hidden md:flex items-center gap-2">
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs">{item.weight}</span>
                         </div>
