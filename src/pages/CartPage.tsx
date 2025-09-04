@@ -84,10 +84,10 @@ const CartPage = () => {
                   <div key={item.id} className="relative bg-white rounded-xl border border-gray-100 max-md:border-amber-200 shadow-sm px-3 sm:px-4 md:px-6 max-[320px]:px-2 py-3 md:py-4">
                     {/* Mobile delete (absolute) */}
                     <button
-                      aria-label="Xóa sản phẩm khỏi giỏ hàng"
+                      aria-label={t('cart.removeItem')}
                       onClick={() => removeFromCart(item.id)}
                       className="md:hidden absolute top-2 right-2 inline-flex items-center p-2 max-[320px]:p-1.5 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
-                      title="Xóa"
+                      title={t('cart.removeItem')}
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
@@ -146,7 +146,7 @@ const CartPage = () => {
                         aria-label={t('cart.removeItem')}
                         onClick={() => removeFromCart(item.id)}
                         className="col-start-3 md:col-start-auto justify-self-end hidden md:inline-flex items-center p-2 text-gray-400 hover:text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 transition"
-                        title="Xóa"
+                        title={t('cart.removeItem')}
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>

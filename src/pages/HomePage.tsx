@@ -487,11 +487,11 @@ const HomePage = () => {
                   hyphens: 'auto'
                 }}
               >
-                @CODY_COCONUT_CANDY
+                {t('instagram.handle')}
               </a>
             </div>
             <p className="text-xs sm:text-sm uppercase tracking-widest font-medium text-gray-700 font-inter px-2">
-              FIND US ON INSTAGRAM & SHARE OUR CODY ADVENTURE
+              {t('contact.instagramBanner')}
             </p>
           </div>
 
