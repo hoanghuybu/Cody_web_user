@@ -68,14 +68,14 @@ const Header = () => {
         
         setAuthOpen(false);
       } else if (res?.status && res?.status !== 200) {
-        // Always show generic invalid credentials message (do not expose backend detail)
-        showToast("error", t('auth.loginFailed'), t('auth.invalidCredentials'));
+        // Show generic error message instead of backend details
+        showToast("error", t('auth.loginFailed'), t('auth.genericError'));
       } else {
         console.warn('Unexpected response structure:', res);
-        showToast("error", t('auth.loginFailed'), t('auth.networkError'));
+        showToast("error", t('auth.loginFailed'), t('auth.genericError'));
       }
     } catch (e: any) {
-      // Extract server detail (e.g., "Bad credentials") for optional logging
+      // Log server detail for debugging but show generic message to user
       let serverDetail: string | undefined;
       if (isApiError(e)) {
         serverDetail = (e.data as any)?.error?.detail || (e.data as any)?.message;
@@ -83,10 +83,8 @@ const Header = () => {
       if (serverDetail) {
         console.warn('Login error detail:', serverDetail);
       }
-      const message = serverDetail && serverDetail.toLowerCase().includes('credential')
-        ? t('auth.invalidCredentials')
-        : (!e?.status && !isApiError(e) ? t('auth.networkError') : t('auth.invalidCredentials'));
-      showToast("error", t('auth.loginFailed'), message);
+      
+      showToast("error", t('auth.loginFailed'), t('auth.genericError'));
     }
   };
   const handleSignUp = async (d: {
@@ -108,32 +106,36 @@ const Header = () => {
         const successMsg = res?.message || t('auth.registrationSuccessMessage');
         showToast("success", t('auth.registrationSuccess'), successMsg);
       } else if (res?.status && res?.status !== 200) {
-        showToast("error", t('auth.registrationFailed'), t('auth.registrationGenericError'));
+        // Show generic error message instead of backend details
+        showToast("error", t('auth.registrationFailed'), t('auth.genericError'));
       } else {
         console.warn('Unexpected registration response:', res);
-        showToast("error", t('auth.registrationFailed'), t('auth.networkError'));
+        showToast("error", t('auth.registrationFailed'), t('auth.genericError'));
       }
     } catch (e: any) {
       if (isApiError(e)) {
         const data: any = e.data;
         const fieldErrors = data?.errors || data?.error?.fields; // attempt common shapes
         if (fieldErrors && typeof fieldErrors === 'object') {
-          // Show first field error via toast
+          // Log field errors for debugging but show generic message to user
           const firstKey = Object.keys(fieldErrors)[0];
           if (firstKey) {
-            showToast('error', t('auth.registrationFailed'), fieldErrors[firstKey] || t('auth.registrationGenericError'));
+            const backendFieldError = fieldErrors[firstKey];
+            console.warn('Register field error:', backendFieldError);
+            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
           } else {
-            showToast('error', t('auth.registrationFailed'), t('auth.registrationGenericError'));
+            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
           }
           return;
         }
         const detail = data?.error?.detail || data?.message;
         if (detail) {
+          // Log backend error detail for debugging but show generic message to user
           console.warn('Register error detail:', detail);
         }
-        showToast('error', t('auth.registrationFailed'), t('auth.registrationGenericError'));
+        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
       } else {
-        showToast('error', t('auth.registrationFailed'), t('auth.networkError'));
+        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
       }
     }
   };
@@ -404,10 +406,12 @@ const Header = () => {
         onSignIn={handleSignIn}
         onSignUp={handleSignUp}
         onSignUpFieldErrors={(errs) => {
-          // Show first field validation error via toast for quick feedback
+          // Log field validation errors for debugging but show generic message to user
           const firstKey = Object.keys(errs)[0] as keyof typeof errs | undefined;
             if (firstKey) {
-              showToast('error', t('auth.registrationFailed'), errs[firstKey] || t('auth.registrationGenericError'));
+              const backendFieldError = errs[firstKey];
+              console.warn('Signup field validation error:', backendFieldError);
+              showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
             }
         }}
       />
