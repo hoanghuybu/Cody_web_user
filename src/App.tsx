@@ -1,19 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import CartDrawer from './components/CartDrawer';
-import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import ProductsPage from './pages/ProductsPage';
-import ProductDetailPage from './pages/ProductDetailPage';
-import BrandStoryPage from './pages/BrandStoryPage';
-import BlogPage from './pages/BlogPage';
-import ContactPage from './pages/ContactPage';
-import CartPage from './pages/CartPage';
 import Chatbot from './components/Chatbot';
+import Footer from './components/Footer';
+import Header from './components/Header';
 import { CartProvider } from './context/CartContext';
 import { LanguageProvider } from './context/LanguageContext';
+import BlogPage from './pages/BlogPage';
+import BrandStoryPage from './pages/BrandStoryPage';
+import CartPage from './pages/CartPage';
+import ContactPage from './pages/ContactPage';
+import HomePage from './pages/HomePage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import ProductsPage from './pages/ProductsPage';
 
 function App() {
+  ///Main Route
   return (
     <LanguageProvider>
       <CartProvider>
