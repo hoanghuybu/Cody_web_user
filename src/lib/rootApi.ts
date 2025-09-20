@@ -1,5 +1,8 @@
 import { ApiError } from './ApiError';
-const BASE = "/api/v1";
+
+// Use backend URL directly instead of relative path to ensure API calls go to backend
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://www.cody-be.online';
+const BASE = `${API_BASE_URL}/api/v1`;
 
 type Query = Record<string, string | number | boolean | undefined | null>;
 
@@ -19,10 +22,16 @@ async function request<TRes, TReq = unknown>(
   query?: Query,
   init?: RequestInit
 ): Promise<TRes> {
-  const res = await fetch(buildUrl(path, query), {
+  const url = buildUrl(path, query);
+  
+  // Log API calls for debugging
+  console.log(`API ${method} ${url}`, body ? { body } : '');
+  
+  const res = await fetch(url, {
     method,
     headers: {
       "Content-Type": "application/json",
+      "Accept": "application/json",
       ...(init?.headers || {})
     },
     credentials: "include",
@@ -32,6 +41,10 @@ async function request<TRes, TReq = unknown>(
 
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
+  
+  // Log response for debugging
+  console.log(`API ${method} ${url} Response:`, { status: res.status, data });
+  
   if (!res.ok) {
     throw new ApiError(res.status, data);
   }
