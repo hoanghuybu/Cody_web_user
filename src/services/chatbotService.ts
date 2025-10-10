@@ -78,7 +78,7 @@ const PRODUCT_WHITELIST = [
 // Info type keywords mapping
 const INFO_TYPE_KEYWORDS = {
   price: ['giá', 'bao nhiêu', 'tiền', 'cost', 'price'],
-  ingredients: ['thành phần', 'nguyên liệu', 'làm từ', 'chứa gì'],
+  ingredients: ['thành phần', 'nguyên liệu', 'làm từ', 'chứa gì', 'công thức'],
   stock: ['còn hàng', 'có sẵn', 'tồn kho', 'hết hàng', 'available'],
   description: ['mô tả', 'thông tin', 'chi tiết', 'như thế nào'],
   weight: ['trọng lượng', 'nặng', 'gram', 'kg'],
