@@ -9,6 +9,7 @@ import BrandStoryPage from './pages/BrandStoryPage';
 import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import CartPage from './pages/CartPage';
+import CustomComboPage from './pages/CustomComboPage';
 import Chatbot from './components/Chatbot';
 import { CartProvider } from './context/CartContext';
 import { LanguageProvider } from './context/LanguageContext';
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/cart" element={<CartPage />} />
+                <Route path="/custom-combo" element={<CustomComboPage />} />
               </Routes>
             </main>
             <Footer />
