@@ -1,18 +1,19 @@
-import React from 'react';
+import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Facebook, Instagram, Leaf } from 'lucide-react';
+import logoCody from '../assets/images/logo-cody.png';
 import { useLanguage } from '../context/LanguageContext';
 
 const Footer = () => {
   const { t } = useLanguage();
-  
+
   return (
     <footer className="relative overflow-hidden">
       {/* Beach Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url("https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")'
+          backgroundImage:
+            'url("https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
         }}
       >
         {/* Dark overlay for text readability */}
@@ -25,13 +26,11 @@ const Footer = () => {
             {/* Brand Column */}
             <div className="col-span-1">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-primary-green rounded-full flex items-center justify-center">
-                  <Leaf className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white font-playfair tracking-wider">CODY</h3>
-                  <p className="text-xs text-blue-200 tracking-widest">COCONUT CANDY</p>
-                </div>
+                <img
+                  src={logoCody}
+                  alt="Cody Coconut Candy logo"
+                  className="h-12 lg:h-14 w-auto"
+                />
               </div>
               <p className="text-blue-100 mb-6 leading-relaxed">
                 {t('footer.description')}
@@ -39,7 +38,9 @@ const Footer = () => {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <MapPin className="h-4 w-4 text-white/70" />
-                  <p className="text-white/90 text-sm">123 Đường Dừa, Bến Tre</p>
+                  <p className="text-white/90 text-sm">
+                    123 Đường Dừa, Bến Tre
+                  </p>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Phone className="h-4 w-4 text-white/70" />
@@ -54,43 +55,45 @@ const Footer = () => {
 
             {/* About Us Column */}
             <div className="col-span-1">
-              <h4 className="text-lg font-bold text-white mb-6 tracking-wider">{t('footer.aboutUs')}</h4>
+              <h4 className="text-lg font-bold text-white mb-6 tracking-wider">
+                {t('footer.aboutUs')}
+              </h4>
               <ul className="space-y-4">
                 <li>
-                  <Link 
-                    to="/brand-story" 
+                  <Link
+                    to="/brand-story"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.philosophy')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/products" 
+                  <Link
+                    to="/products"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.candy')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/brand-story" 
+                  <Link
+                    to="/brand-story"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.culture')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/products/gift-box" 
+                  <Link
+                    to="/products/gift-box"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.gift')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/contact" 
+                  <Link
+                    to="/contact"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.mind')}
@@ -101,43 +104,45 @@ const Footer = () => {
 
             {/* Customer Service Column */}
             <div className="col-span-1">
-              <h4 className="text-lg font-bold text-white mb-6 tracking-wider">{t('footer.customerService')}</h4>
+              <h4 className="text-lg font-bold text-white mb-6 tracking-wider">
+                {t('footer.customerService')}
+              </h4>
               <ul className="space-y-4">
                 <li>
-                  <Link 
-                    to="/faq" 
+                  <Link
+                    to="/faq"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.faqs')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/terms" 
+                  <Link
+                    to="/terms"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.terms')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/privacy" 
+                  <Link
+                    to="/privacy"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.privacy')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/shipping" 
+                  <Link
+                    to="/shipping"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.shipping')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    to="/contact" 
+                  <Link
+                    to="/contact"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.contact')}
@@ -148,7 +153,9 @@ const Footer = () => {
 
             {/* Social Media Column */}
             <div className="col-span-1">
-              <h4 className="text-lg font-bold text-white mb-6 tracking-wider">{t('footer.followUs')}</h4>
+              <h4 className="text-lg font-bold text-white mb-6 tracking-wider">
+                {t('footer.followUs')}
+              </h4>
               <div className="flex space-x-4 mb-6">
                 <a
                   href="#"
