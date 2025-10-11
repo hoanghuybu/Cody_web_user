@@ -94,6 +94,7 @@ const translations: Record<Language, TranslationDict> = {
   'products.inCategory': 'in category {category}',
   'products.noResultsTitle': 'No products found',
   'products.noResultsSubtitle': 'Try adjusting your filters or search term.',
+  'products.createCombo': 'Create Gift Combo',
   // Category names
   'categories.traditional': 'Traditional',
   'categories.premium': 'Premium',
@@ -393,7 +394,8 @@ const translations: Record<Language, TranslationDict> = {
   'products.inCategory': 'trong danh mục {category}',
   'products.noResultsTitle': 'Không tìm thấy sản phẩm',
   'products.noResultsSubtitle': 'Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.',
-  // Category names
+  'products.createCombo': 'Tạo hộp quà',
+  // Category names  
   'categories.traditional': 'Truyền thống',
   'categories.premium': 'Cao cấp',
   'categories.combo': 'Combo',

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Filter, Grid, List, Search } from 'lucide-react';
+import { Filter, Grid, List, Search, Gift } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useProductSearch } from '../hooks/useProducts';
 import { useAllCategories } from '../hooks/useCategories';
 import { ProductUtils } from '../utils/product';
 import { Product } from '../types/product';
+import CustomComboModal from '../components/CustomComboModal'; 
 
 import {
   Select,
@@ -54,6 +55,7 @@ const ProductsPage = () => {
   const [sortBy, setSortBy] = useState('name');
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
+  const [openCombo, setOpenCombo] = useState(false);
   const muiTheme = useTheme();
   const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
@@ -208,17 +210,29 @@ const ProductsPage = () => {
                   >
                     <Grid className="h-4 w-4" />
                   </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    type="button"
-                    className={`relative -ml-px rounded-r-md px-3 py-2 text-sm font-semibold ring-1 ring-inset focus:z-10 ${viewMode === 'list'
+                <button
+                  onClick={() => setViewMode('list')}
+                  type="button"
+                  className={`relative -ml-px rounded-r-md px-3 py-2 text-sm font-semibold ring-1 ring-inset focus:z-10 ${viewMode === 'list'
                         ? 'bg-primary-green text-white hover:bg-primary-green/90 ring-primary-green'
                         : 'bg-white text-gray-700 hover:bg-gray-50 ring-gray-300'
                       }`}
-                  >
-                    <List className="h-4 w-4" />
-                  </button>
-                </div>
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
+              
+              {/* Create Combo Button */}
+              <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
+                <button
+                  onClick={() => setOpenCombo(true)}
+                  className="w-full h-full inline-flex items-center justify-center gap-2 px-4 py-[7px] bg-primary-green text-white font-medium text-sm rounded-lg hover:bg-primary-green/90 transition-colors"
+                  style={{ minHeight: isSmall ? '56px' : '40px' }}
+                >
+                  <Gift className="h-4 w-4" />
+                  {t('products.createCombo')}
+                </button>
+              </FormControl>
               </div>
 
               {/* Active Filters - Using MUI Chips */}
@@ -284,6 +298,7 @@ const ProductsPage = () => {
           )}
         </div>
       </div>
+      <CustomComboModal open={openCombo} onClose={() => setOpenCombo(false)} />
     </ThemeProvider>
   );
 };
