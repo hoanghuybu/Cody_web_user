@@ -48,6 +48,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       case 'password':
         if (!value) return 'Password required';
         if (value.length < 8) return 'Min 8 characters';
+        const hasLetter = /[a-zA-Z]/.test(value);
+        const hasNumber = /[0-9]/.test(value);
+        if (!hasLetter || !hasNumber) return 'Password must contain both letters and numbers';
         return;
       case 'confirmPassword':
         if (!value) return 'Confirm password';
