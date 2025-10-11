@@ -1,16 +1,25 @@
-import { useState, useEffect } from 'react';
+import {
+  ChevronRight,
+  Globe,
+  Leaf,
+  Menu,
+  Search,
+  ShoppingCart,
+  User,
+  X,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingCart, Search, User, Globe, Leaf, ChevronRight } from 'lucide-react';
-import { FlagIcon } from './FlagIcon';
+import logoCody from '../assets/images/logo-cody.png';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
-import AuthModal from './auth/AuthModal';
-import Toast from './Toast';
-import useLogin from "../hook/useLogin";
-import useRegister from "../hook/useRegister";
-import { AuthUtils } from '../utils/auth';
+import useLogin from '../hook/useLogin';
+import useRegister from '../hook/useRegister';
 import { isApiError } from '../lib/ApiError';
-
+import { AuthUtils } from '../utils/auth';
+import AuthModal from './auth/AuthModal';
+import { FlagIcon } from './FlagIcon';
+import Toast from './Toast';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
@@ -19,21 +28,25 @@ const Header = () => {
   const { items, openCart } = useCart();
   const { language, setLanguage, t } = useLanguage();
   const [authOpen, setAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
-  
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+
   const [toastOpen, setToastOpen] = useState(false);
-  const [toastType, setToastType] = useState<"success" | "error">("error");
-  const [toastTitle, setToastTitle] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
-  
-  const showToast = (type: "success" | "error", title: string, message: string) => {
+  const [toastType, setToastType] = useState<'success' | 'error'>('error');
+  const [toastTitle, setToastTitle] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+
+  const showToast = (
+    type: 'success' | 'error',
+    title: string,
+    message: string
+  ) => {
     setToastType(type);
     setToastTitle(title);
     setToastMessage(message);
     setToastOpen(true);
   };
-  
-  const openAuth = (mode: "signin" | "signup" = "signin") => {
+
+  const openAuth = (mode: 'signin' | 'signup' = 'signin') => {
     setAuthMode(mode);
     setAuthOpen(true);
   };
@@ -43,48 +56,61 @@ const Header = () => {
 
   const handleLogout = () => {
     AuthUtils.clearAuthData();
-    showToast("success", t('auth.logoutSuccess'), t('auth.logoutSuccessMessage'));
+    showToast(
+      'success',
+      t('auth.logoutSuccess'),
+      t('auth.logoutSuccessMessage')
+    );
   };
 
   const handleSignIn = async (d: { email: string; password: string }) => {
     try {
-      console.log('Login payload:', d); 
-      const res = await doLogin(d) as any;
-      console.log('Login response:', res); 
-      
+      console.log('Login payload:', d);
+      const res = (await doLogin(d)) as any;
+      console.log('Login response:', res);
+
       if (res?.status === 200 && res?.data?.accessToken) {
         AuthUtils.saveAuthData(
           res.data.accessToken,
           res.data.refreshToken,
           res.data.user
         );
-        
+
         const userName = AuthUtils.getUserFullName();
         if (userName) {
-          showToast("success", t('auth.loginSuccess'), `${t('auth.welcome')} ${userName}!`);
+          showToast(
+            'success',
+            t('auth.loginSuccess'),
+            `${t('auth.welcome')} ${userName}!`
+          );
         } else {
-          showToast("success", t('auth.loginSuccess'), t('auth.loginSuccessMessage'));
+          showToast(
+            'success',
+            t('auth.loginSuccess'),
+            t('auth.loginSuccessMessage')
+          );
         }
-        
+
         setAuthOpen(false);
       } else if (res?.status && res?.status !== 200) {
         // Show generic error message instead of backend details
-        showToast("error", t('auth.loginFailed'), t('auth.genericError'));
+        showToast('error', t('auth.loginFailed'), t('auth.genericError'));
       } else {
         console.warn('Unexpected response structure:', res);
-        showToast("error", t('auth.loginFailed'), t('auth.genericError'));
+        showToast('error', t('auth.loginFailed'), t('auth.genericError'));
       }
     } catch (e: any) {
       // Log server detail for debugging but show generic message to user
       let serverDetail: string | undefined;
       if (isApiError(e)) {
-        serverDetail = (e.data as any)?.error?.detail || (e.data as any)?.message;
+        serverDetail =
+          (e.data as any)?.error?.detail || (e.data as any)?.message;
       }
       if (serverDetail) {
         console.warn('Login error detail:', serverDetail);
       }
-      
-      showToast("error", t('auth.loginFailed'), t('auth.genericError'));
+
+      showToast('error', t('auth.loginFailed'), t('auth.genericError'));
     }
   };
   const handleSignUp = async (d: {
@@ -96,21 +122,29 @@ const Header = () => {
     try {
       const registerData = {
         ...d,
-        confirmPassword: d.password
+        confirmPassword: d.password,
       };
-      console.log('Register payload:', registerData); 
-      const res = await doRegister(registerData) as any; 
+      console.log('Register payload:', registerData);
+      const res = (await doRegister(registerData)) as any;
       console.log('Register response:', res);
       if (res?.status === 200) {
         setAuthOpen(false);
         const successMsg = res?.message || t('auth.registrationSuccessMessage');
-        showToast("success", t('auth.registrationSuccess'), successMsg);
+        showToast('success', t('auth.registrationSuccess'), successMsg);
       } else if (res?.status && res?.status !== 200) {
         // Show generic error message instead of backend details
-        showToast("error", t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       } else {
         console.warn('Unexpected registration response:', res);
-        showToast("error", t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       }
     } catch (e: any) {
       if (isApiError(e)) {
@@ -122,9 +156,17 @@ const Header = () => {
           if (firstKey) {
             const backendFieldError = fieldErrors[firstKey];
             console.warn('Register field error:', backendFieldError);
-            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+            showToast(
+              'error',
+              t('auth.registrationFailed'),
+              t('auth.genericError')
+            );
           } else {
-            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+            showToast(
+              'error',
+              t('auth.registrationFailed'),
+              t('auth.genericError')
+            );
           }
           return;
         }
@@ -133,9 +175,17 @@ const Header = () => {
           // Log backend error detail for debugging but show generic message to user
           console.warn('Register error detail:', detail);
         }
-        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       } else {
-        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       }
     }
   };
@@ -179,8 +229,7 @@ const Header = () => {
     setIsMenuOpen(newMenuState);
 
     if (isMobile) {
-      setTimeout(() => {
-      }, 50);
+      setTimeout(() => {}, 50);
     }
   };
 
@@ -198,12 +247,13 @@ const Header = () => {
     };
   }, [isMenuOpen, isMobile]);
 
-
   return (
     <>
       {/* Discount Banner */}
       <div
-        className={`text-white py-2 sticky top-0 z-50 transition-transform duration-300 ${showBanner ? 'translate-y-0' : '-translate-y-full'}`}
+        className={`text-white py-2 sticky top-0 z-50 transition-transform duration-300 ${
+          showBanner ? 'translate-y-0' : '-translate-y-full'
+        }`}
         style={{ backgroundColor: '#d4ae57' }}
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
@@ -215,7 +265,9 @@ const Header = () => {
 
       {/* Main Header */}
       <header
-        className={`sticky z-40 transition-all duration-300 bg-white ${showBanner ? 'top-8' : 'top-0'} relative`}
+        className={`sticky z-40 transition-all duration-300 bg-white ${
+          showBanner ? 'top-8' : 'top-0'
+        } relative`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Desktop Header */}
@@ -226,7 +278,11 @@ const Header = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
+                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
+                    isActive(item.href)
+                      ? 'text-primary-green'
+                      : 'text-warm-brown'
+                  }`}
                 >
                   {item.name}
                 </Link>
@@ -234,14 +290,12 @@ const Header = () => {
             </nav>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 bg-primary-green rounded-full flex items-center justify-center">
-                <Leaf className="h-6 w-6 lg:h-7 lg:w-7 text-white" />
-              </div>
-              <div className="text-center">
-                <h1 className="text-2xl lg:text-3xl font-bold text-primary-green font-montserrat tracking-normal lg:tracking-wider">CODY</h1>
-                <p className="text-[11px] lg:text-xs text-warm-brown -mt-1 tracking-wide lg:tracking-widest">COCONUT CANDY</p>
-              </div>
+            <Link to="/" className="flex items-center flex-shrink-0">
+              <img
+                src={logoCody}
+                alt="Cody Coconut Candy logo"
+                className="h-12 lg:h-14 w-auto"
+              />
             </Link>
 
             {/* Right Navigation */}
@@ -250,7 +304,11 @@ const Header = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${isActive(item.href) ? 'text-primary-green' : 'text-warm-brown'}`}
+                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
+                    isActive(item.href)
+                      ? 'text-primary-green'
+                      : 'text-warm-brown'
+                  }`}
                 >
                   {item.name}
                 </Link>
@@ -275,7 +333,7 @@ const Header = () => {
                 </button>
 
                 <button
-                  onClick={() => openAuth("signin")}
+                  onClick={() => openAuth('signin')}
                   className="p-2 text-warm-brown hover:text-primary-green transition-colors"
                 >
                   <User className="h-5 w-5" />
@@ -297,7 +355,10 @@ const Header = () => {
           {/* Mobile Header */}
           <div className="xl:hidden flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2 flex-shrink-0 min-w-0">
+            <Link
+              to="/"
+              className="flex items-center space-x-2 flex-shrink-0 min-w-0"
+            >
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary-green rounded-full flex items-center justify-center">
                 <Leaf className="h-3 w-3 sm:h-5 sm:w-5 text-white" />
               </div>
@@ -341,7 +402,11 @@ const Header = () => {
         {isMobile && (
           <div
             className={`absolute left-0 right-0 top-full xl:hidden z-50 transition-all duration-300 ease-out origin-top
-            ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none overflow-hidden'}`}
+            ${
+              isMenuOpen
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 -translate-y-2 pointer-events-none overflow-hidden'
+            }`}
             aria-hidden={!isMenuOpen}
           >
             <div
@@ -350,7 +415,9 @@ const Header = () => {
             >
               {/* Header row inside dropdown (icons removed per request) */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                <span className="text-xs font-semibold tracking-wider text-gray-500">MENU</span>
+                <span className="text-xs font-semibold tracking-wider text-gray-500">
+                  MENU
+                </span>
                 <button
                   onClick={toggleMenu}
                   className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 text-warm-brown hover:bg-gray-100 transition"
@@ -360,34 +427,56 @@ const Header = () => {
                 </button>
               </div>
               <nav className="max-h-[70vh] overflow-y-auto divide-y divide-gray-100">
-                {navigation.map(item => (
+                {navigation.map((item) => (
                   <Link
                     key={item.href}
                     to={item.href}
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wider transition-colors
-                      ${isActive(item.href) ? 'bg-primary-green/5 text-primary-green' : 'text-warm-brown hover:bg-primary-green/5 hover:text-primary-green'}`}
+                      ${
+                        isActive(item.href)
+                          ? 'bg-primary-green/5 text-primary-green'
+                          : 'text-warm-brown hover:bg-primary-green/5 hover:text-primary-green'
+                      }`}
                   >
                     <span className="truncate">{item.name.toUpperCase()}</span>
                     <ChevronRight className="h-4 w-4 opacity-60" />
                   </Link>
                 ))}
                 <button
-                  onClick={() => { openAuth('signin'); setIsMenuOpen(false); }}
+                  onClick={() => {
+                    openAuth('signin');
+                    setIsMenuOpen(false);
+                  }}
                   className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
                 >
                   <span>{t('auth.login')}</span>
                   <ChevronRight className="h-4 w-4 opacity-60" />
                 </button>
                 <button
-                  onClick={() => { setLanguage(language === 'en' ? 'vn' : 'en'); setIsMenuOpen(false); }}
+                  onClick={() => {
+                    setLanguage(language === 'en' ? 'vn' : 'en');
+                    setIsMenuOpen(false);
+                  }}
                   className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
                 >
                   <span className="flex items-center gap-2">
-                    {language === 'en' ? <><FlagIcon code="vn" className="w-6 h-4" /> TIẾNG VIỆT</> : <><FlagIcon code="us" className="w-6 h-4" /> ENGLISH</>}
+                    {language === 'en' ? (
+                      <>
+                        <FlagIcon code="vn" className="w-6 h-4" /> TIẾNG VIỆT
+                      </>
+                    ) : (
+                      <>
+                        <FlagIcon code="us" className="w-6 h-4" /> ENGLISH
+                      </>
+                    )}
                   </span>
                   <span className="text-lg" aria-hidden>
-                    {language === 'en' ? <FlagIcon code="vn" className="w-7 h-5" /> : <FlagIcon code="us" className="w-7 h-5" />}
+                    {language === 'en' ? (
+                      <FlagIcon code="vn" className="w-7 h-5" />
+                    ) : (
+                      <FlagIcon code="us" className="w-7 h-5" />
+                    )}
                   </span>
                 </button>
               </nav>
@@ -407,15 +496,21 @@ const Header = () => {
         onSignUp={handleSignUp}
         onSignUpFieldErrors={(errs) => {
           // Log field validation errors for debugging but show generic message to user
-          const firstKey = Object.keys(errs)[0] as keyof typeof errs | undefined;
-            if (firstKey) {
-              const backendFieldError = errs[firstKey];
-              console.warn('Signup field validation error:', backendFieldError);
-              showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
-            }
+          const firstKey = Object.keys(errs)[0] as
+            | keyof typeof errs
+            | undefined;
+          if (firstKey) {
+            const backendFieldError = errs[firstKey];
+            console.warn('Signup field validation error:', backendFieldError);
+            showToast(
+              'error',
+              t('auth.registrationFailed'),
+              t('auth.genericError')
+            );
+          }
         }}
       />
-      
+
       <Toast
         open={toastOpen}
         type={toastType}
