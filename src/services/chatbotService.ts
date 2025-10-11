@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { endpoints } from '../lib/endpoints';
+import { rootApi } from '../lib/rootApi';
+
 // Chatbot Service - Rule-based Vietnamese Q&A System
 export interface ChatbotQuery {
   question: string;
@@ -420,27 +424,46 @@ class ChatbotProcessor {
   }
 
   // Main processing method
-  public processQuery(question: string): ChatbotResponse {
+  public async processQuery(question: string): Promise<ChatbotResponse> {
     const parsed = this.parseQuestion(question);
 
-    if (
-      parsed.entity_type === 'product' &&
-      parsed.product_name &&
-      parsed.info_type
-    ) {
-      return this.queryProduct(parsed.product_name, parsed.info_type);
-    }
+    try {
+      const res = await rootApi.get<ChatbotResponse>(
+        endpoints.chatbot,
+        parsed ?? {}
+      );
+      const message = res;
+      if (
+        parsed.entity_type === 'product' &&
+        parsed.product_name &&
+        parsed.info_type
+      ) {
+        return message;
+      }
 
-    if (parsed.entity_type === 'order' && parsed.order_id && parsed.info_type) {
-      return this.queryOrder(parsed.order_id, parsed.info_type);
-    }
+      if (
+        parsed.entity_type === 'order' &&
+        parsed.order_id &&
+        parsed.info_type
+      ) {
+        return message;
+      }
 
-    return {
-      entity_type: 'unknown',
-      message:
-        'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về sản phẩm (giá, thành phần, tồn kho) hoặc đơn hàng (trạng thái, tổng tiền, ngày giao hàng).',
-      response_type: 'text',
-    };
+      return {
+        entity_type: 'unknown',
+        message:
+          'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về sản phẩm (giá, thành phần, tồn kho) hoặc đơn hàng (trạng thái, tổng tiền, ngày giao hàng).',
+        response_type: 'text',
+      };
+    } catch (error) {
+      console.error('Lỗi khi gọi chatbot API:', error);
+      return {
+        entity_type: 'unknown',
+        message:
+          'Đã xảy ra lỗi khi kết nối đến hệ thống. Vui lòng thử lại sau.',
+        response_type: 'text',
+      };
+    }
   }
 }
 
@@ -451,10 +474,7 @@ const chatbotProcessor = new ChatbotProcessor();
 export const chatbotQuery = async (
   query: ChatbotQuery
 ): Promise<ChatbotResponse> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 800));
-
-  return chatbotProcessor.processQuery(query.question);
+  return await chatbotProcessor.processQuery(query.question);
 };
 
 // Export for testing

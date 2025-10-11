@@ -1,7 +1,12 @@
-import { useQuery, UseQueryOptions, keepPreviousData } from '@tanstack/react-query';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  keepPreviousData,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import { QueryKeys } from '../lib/queryKeys';
 import { ProductAPI, ProductSearchParams } from '../services/productAPI';
 import { ProductSearchResponse } from '../types/product';
-import { QueryKeys } from '../lib/queryKeys';
 
 export const useProductSearch = (
   params: ProductSearchParams = {},
@@ -18,26 +23,23 @@ export const useProductSearch = (
       }
       return failureCount < 2;
     },
-    ...options
+    ...options,
   });
 };
 
-export const useProduct = (
-  id: string,
-  options?: UseQueryOptions<any>
-) => {
+export const useProduct = (id: string, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: QueryKeys.products.detail(id),
     queryFn: () => ProductAPI.getProductById(id),
     enabled: !!id,
-    staleTime: 10 * 60 * 1000, 
+    staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error?.status === 404) {
         return false;
       }
       return failureCount < 2;
     },
-    ...options
+    ...options,
   });
 };
 
@@ -47,7 +49,11 @@ export const useInfiniteProducts = (
   return useQuery({
     queryKey: QueryKeys.products.infinite(params),
     queryFn: async () => {
-      const response = await ProductAPI.searchProducts({ ...params, page: 0, size: 20 });
+      const response = await ProductAPI.searchProducts({
+        ...params,
+        page: 0,
+        size: 20,
+      });
       return response;
     },
     staleTime: 3 * 60 * 1000,
