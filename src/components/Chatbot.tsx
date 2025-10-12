@@ -9,7 +9,7 @@ interface ChatMessage {
   text: string;
   isBot: boolean;
   timestamp: Date;
-  response_type?: 'text' | 'image' | 'list';
+  responseType?: 'text' | 'image' | 'list';
 
   data?: any;
 }
@@ -22,7 +22,7 @@ const Chatbot = () => {
       text: 'Xin chào! Tôi là trợ lý ảo của CODY. Tôi có thể giúp bạn tìm hiểu về sản phẩm và đơn hàng. Hãy hỏi tôi nhé!',
       isBot: true,
       timestamp: new Date(),
-      response_type: 'text',
+      responseType: 'text',
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -45,7 +45,7 @@ const Chatbot = () => {
       text: messageText,
       isBot: false,
       timestamp: new Date(),
-      response_type: 'text' as const,
+      responseType: 'text' as const,
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -64,7 +64,7 @@ const Chatbot = () => {
         text: response.message || 'Xin lỗi, tôi không thể trả lời câu hỏi này.',
         isBot: true,
         timestamp: new Date(),
-        response_type: response.response_type,
+        responseType: response.responseType,
         data: response.data,
       };
 
@@ -76,7 +76,7 @@ const Chatbot = () => {
         text: 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.',
         isBot: true,
         timestamp: new Date(),
-        response_type: 'text',
+        responseType: 'text',
       };
 
       setMessages((prev) => [...prev, errorMessage]);
@@ -86,7 +86,7 @@ const Chatbot = () => {
   };
 
   const renderMessage = (message: ChatMessage) => {
-    if (message.response_type === 'image' && message.data?.image) {
+    if (message.responseType === 'image' && message.data?.image) {
       return (
         <div className="space-y-2">
           <p className="text-sm">{message.text}</p>
@@ -99,24 +99,39 @@ const Chatbot = () => {
       );
     }
 
-    if (message.response_type === 'list' && message.data) {
+    if (message.responseType === 'list' && message.data) {
       return (
         <div className="space-y-2">
           <p className="text-sm">{message.text}</p>
           <ul className="text-sm space-y-1">
             {message.data.ingredients &&
-              message.data.ingredients.map((item: string, index: number) => (
+              message.data.ingredients.map((item: any, index: number) => (
                 <li key={index} className="flex items-start">
                   <span className="text-primary-green mr-2">•</span>
-                  {item}
+                  {item?.message}
                 </li>
               ))}
-            {message.data.items &&
-              message.data.items.map((item: any, index: number) => (
+
+            {message.data.image &&
+              message.data.image.map((item: any, index: number) => (
                 <li key={index} className="flex items-start">
                   <span className="text-primary-green mr-2">•</span>
-                  {item.name} - SL: {item.quantity} - Giá:{' '}
-                  {item.price.toLocaleString('vi-VN')}đ
+                  <div className="space-y-2">
+                    <p className="text-sm">{item.message}</p>
+                    <img
+                      src={item.image}
+                      alt={item.name || 'Product image'}
+                      className="max-w-48 rounded-lg shadow-sm"
+                    />
+                  </div>
+                </li>
+              ))}
+
+            {message.data.price &&
+              message.data.price.map((item: any, index: number) => (
+                <li key={index} className="flex items-start">
+                  <span className="text-primary-green mr-2">•</span>
+                  {item?.message}
                 </li>
               ))}
           </ul>

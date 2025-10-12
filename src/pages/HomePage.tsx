@@ -2,7 +2,8 @@ import { ChevronRight, Instagram } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import lblImg from '../assets/images/lbl-img.jpg';
-import workshopImg from '../assets/images/workshop-img.jpg';
+
+import { images } from '../assets/images';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useProductSearch } from '../hooks/useProducts';
@@ -424,7 +425,7 @@ const HomePage = () => {
             {/* Image Section */}
             <div className="aspect-square lg:aspect-auto">
               <img
-                src={workshopImg}
+                src={images.workshop}
                 alt="Workshop Experience"
                 className="w-full h-full object-cover"
                 loading="lazy"

@@ -113,28 +113,33 @@ const translations: Record<Language, TranslationDict> = {
     'categories.gift-basket': 'Gift Basket',
     // Brand Story
     'brand.heroTitle': 'The Story of',
-    'brand.heroSubtitle': 'Where Sweetness Meets Vietnamese Heritage',
-    'brand.originTitle': 'Origin from the Coconut Land',
+    'brand.heroHighlight': 'BEN TRE & COCONUT CANDY',
+    'brand.heroSubtitle':
+      'Known as the Land of Coconuts, Ben Tre is where generations have turned simple ingredients into timeless flavors. Coconut candy represents more than sweetness — it embodies the craftsmanship, warmth, and resilience of the people who make it. At CODY, we preserve that legacy while giving it a modern identity. Our candies celebrate the harmony between tradition and innovation, offering a taste that feels both nostalgic and refreshingly new.',
+    'brand.originTitle': 'About CODY',
     'brand.originP1':
-      "Ben Tre – a land blessed with endless green coconut groves, where the Mekong's waves blend with the whispering leaves. This is where CODY was born.",
+      'At CODY, we bring a modern twist to one of Vietnam’s most beloved traditions — the Ben Tre coconut candy.',
     'brand.originP2':
-      'With deep love for our homeland and the desire to preserve cultural values, we began a journey to create coconut candy that is both delicious and environmentally friendly.',
+      'Founded by high school student Le Bao Long, CODY started as a small idea to give new life to a familiar treat — creating a product that’s not only delicious but also meaningful.',
     'brand.originP3':
-      'Every CODY candy carries the dedication of farmers tending the coconut gardens and the craftsmanship of artisans with decades of experience.',
-    'brand.timelineTitle': 'Our Growth Journey',
+      'We believe in sustainability, cultural pride, and community impact. Every piece of candy reflects our commitment to responsible production, from using recycled coconut by-products for packaging to promoting eco-conscious gifting.',
+    'brand.originP4':
+      'CODY isn’t just candy — it’s a story of creativity, culture, and compassion, handcrafted in Vietnam and shared with the world.',
+    'brand.timelineTitle': 'Experience Ben Tre',
     'brand.timelineSubtitle':
-      'From the first steps to today, we stay true to our mission of quality and sustainability.',
-    'brand.milestone1Title': 'Beginning',
+      'We invite travelers and culture lovers to explore Ben Tre through the CODY Experience — a hands-on journey into the art of coconut.',
+    'brand.milestone1Title': 'Make your own coconut candy',
     'brand.milestone1Desc':
-      'The idea of CODY formed from love for Ben Tre and a desire for sustainable development.',
-    'brand.milestone2Title': 'Establishment',
+      'with local artisans and witness every stage — from melting sugar and stirring the mixture to cutting and wrapping by hand. Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories, where human connection and the taste of home melt together in every bite.',
+    'brand.milestone2Title': 'Craft with coconut leaves',
     'brand.milestone2Desc':
-      'Officially founded and launched our first small-batch coconut candy.',
-    'brand.milestone3Title': 'Expansion',
-    'brand.milestone3Desc': 'Diversified products and expanded nationwide.',
-    'brand.milestone4Title': 'Green Future',
+      'with local villagers as they guide you step by step to craft baskets, hats, or beautiful ornaments. Each creation is more than a souvenir — it is a symbol of creativity, skill, and the hardworking spirit of the people of the coconut land, reflecting their deep bond with nature and traditional culture.',
+    'brand.milestone3Title': 'Row through coconut groves',
+    'brand.milestone3Desc':
+      'to fully embrace the tranquility of the waterways. With each gentle stroke, glide beneath lush green palms, listen to the birds singing, and breathe in the salty breeze. It’s more than a ride — it’s a journey of inner peace, harmony, and the simple joy of slowing down in the heart of life.',
+    'brand.milestone4Title': 'Join art workshops',
     'brand.milestone4Desc':
-      'Committed to sustainability and becoming a leading Vietnamese coconut candy brand.',
+      'using coconut wood and natural materials to awaken your inner creativity. From selecting the materials and shaping them to perfecting your design, each step is a meaningful journey of connection with art and nature. Bring home a one-of-a-kind creation that reflects your personality and supports a sustainable, eco-friendly lifestyle.',
     'brand.valuesTitle': 'Core Values',
     'brand.valuesSubtitle':
       'Principles guiding everything we do and making every product unique.',
@@ -154,6 +159,29 @@ const translations: Record<Language, TranslationDict> = {
       "We deliver premium, eco-friendly coconut candy while preserving Ben Tre's traditional craft and promoting sustainable growth for community and planet.",
     'brand.ctaExplore': 'Explore Products',
     'brand.ctaContact': 'Contact Us',
+    'purpose.title': 'Our Purpose',
+    'purpose.des':
+      'Our mission goes beyond business — it’s about sharing sweetness and spreading hope.',
+    'purpose.label1': 'For the planet',
+    'purpose.labelDes1':
+      'We design packaging from recycled coconut fibers and natural materials like water hyacinth and palm leaves.',
+    'purpose.label2': 'For the community',
+    'purpose.labelDes2':
+      'Through our CODY Scholarship Box campaign, we’ve raised over 70,000,000 VND to support education for 100+ underprivileged students across Vietnam.',
+    'purpose.label3': 'For the culture',
+    'purpose.labelDes3':
+      'We aim to showcase Vietnam’s craftsmanship on the global stage, where each candy tells a story of kindness, creativity, and care.',
+    'purpose.tagLine':
+      '“Each experience connects you to the soul of Vietnam — a place where nature, craft, and community come together in harmony.”',
+    'meet.title': 'Meet the Founder',
+    'meet.subtitle':
+      'The story behind CODY’s vision and the heart that drives it forward.',
+    'meet.name': 'Le Bao Long',
+    'meet.role': 'Founder & CEO of CODY',
+    'meet.des':
+      'Le Bao Long, a Vietnamese student studying in California, is driven by a mission to bridge cultures through entrepreneurship. From selling 1,200+ handmade products in Phase I to building scholarship programs for students in need, Long’s vision is to redefine what a “sweet” brand can mean — a symbol of culture, sustainability, and compassion.',
+    'meet.quote':
+      '“We want people to taste more than candy. We want them to taste the story of Vietnam — one that’s humble, hopeful, and beautifully human.”',
     // Cart
     'cart.title': 'Your Cart',
     'cart.itemsCount': '{count} items in your cart',
@@ -483,27 +511,33 @@ const translations: Record<Language, TranslationDict> = {
     'categories.gift-basket': 'Giỏ quà',
     // Brand Story
     'brand.heroTitle': 'Câu chuyện',
-    'brand.heroSubtitle': 'Nơi Vị Ngọt Gặp Gỡ Di Sản Việt Nam',
-    'brand.originTitle': 'Khởi nguồn từ xứ Dừa',
+    'brand.heroHighlight': 'BẾN TRE & KẸO DỪA',
+    'brand.heroSubtitle':
+      'Được mệnh danh là “Xứ dừa”, Bến Tre là nơi qua bao thế hệ, con người đã biến những nguyên liệu giản dị thành hương vị trường tồn. Kẹo dừa không chỉ mang vị ngọt — mà còn là sự khéo léo, ấm áp và bền bỉ của những người tạo nên nó. Tại CODY, chúng tôi giữ gìn tinh hoa ấy và khoác lên nó một diện mạo hiện đại. Mỗi viên kẹo là sự hòa quyện giữa truyền thống và sáng tạo, mang đến hương vị vừa quen thuộc, vừa mới mẻ.',
+    'brand.originTitle': 'Về CODY',
     'brand.originP1':
-      'Bến Tre – mảnh đất được thiên nhiên ưu ái với những hàng dừa xanh mướt, nơi sóng Mekong hòa cùng tiếng lá dừa xào xạc. Đây là nơi CODY ra đời.',
+      'Tại CODY, chúng tôi mang đến một phiên bản hiện đại của món kẹo dừa Bến Tre — biểu tượng ngọt ngào của văn hóa Việt Nam.',
     'brand.originP2':
-      'Với tình yêu dành cho quê hương và mong muốn giữ gìn giá trị truyền thống, chúng tôi bắt đầu hành trình tạo ra kẹo dừa vừa thơm ngon vừa thân thiện môi trường.',
+      'Dự án được sáng lập bởi Lê Bảo Long, một học sinh trung học với mong muốn thổi làn gió mới vào món quà truyền thống, tạo nên sản phẩm vừa ngon miệng vừa mang giá trị sâu sắc.',
     'brand.originP3':
-      'Mỗi viên kẹo CODY chứa đựng tâm huyết của người nông dân chăm sóc vườn dừa và sự tận tâm của nghệ nhân nhiều năm kinh nghiệm.',
-    'brand.timelineTitle': 'Hành trình phát triển',
+      'Chúng tôi tin vào sự bền vững, niềm tự hào văn hóa và tác động cộng đồng. Mỗi viên kẹo là cam kết cho trách nhiệm với môi trường — từ bao bì làm từ phế phẩm dừa tái chế đến ý tưởng quà tặng thân thiện.',
+    'brand.originP4':
+      'CODY không chỉ là kẹo — đó là câu chuyện của sáng tạo, văn hóa và lòng nhân ái, được làm thủ công tại Việt Nam và gửi ra thế giới.',
+    'brand.timelineTitle': 'Hành trình trải nghiệm Bến Tre',
     'brand.timelineSubtitle':
-      'Từ những bước đi đầu tiên đến hôm nay, chúng tôi kiên định với sứ mệnh chất lượng và bền vững.',
-    'brand.milestone1Title': 'Khởi nguồn',
+      'Hãy khám phá Bến Tre qua hành trình trải nghiệm CODY — nơi bạn được trực tiếp hòa mình vào nghệ thuật từ dừa.',
+    'brand.milestone1Title': 'Tự tay làm kẹo dừa',
     'brand.milestone1Desc':
-      'Ý tưởng hình thành từ tình yêu Bến Tre và mong muốn phát triển bền vững.',
-    'brand.milestone2Title': 'Thành lập',
+      'cùng những nghệ nhân địa phương, bạn sẽ được tận mắt chứng kiến từng công đoạn từ nấu đường, đảo kẹo đến cắt và gói bằng tay. Hãy để hương thơm ngọt ngào của dừa, tiếng cười rộn ràng và câu chuyện làng nghề đưa bạn về miền ký ức tuổi thơ, nơi tình người và hương vị quê hương hoà quyện.',
+    'brand.milestone2Title': 'Đan sản phẩm từ lá dừa',
     'brand.milestone2Desc':
-      'Chính thức ra mắt với mẻ kẹo dừa đầu tiên quy mô nhỏ.',
-    'brand.milestone3Title': 'Mở rộng',
-    'brand.milestone3Desc': 'Đa dạng sản phẩm và mở rộng ra toàn quốc.',
-    'brand.milestone4Title': 'Tương lai xanh',
-    'brand.milestone4Desc': 'Cam kết bền vững và hướng tới vị thế hàng đầu.',
+      'cùng người dân bản địa, bạn sẽ được hướng dẫn tỉ mỉ từng thao tác để tạo ra giỏ, mũ hay vật trang trí độc đáo. Mỗi sản phẩm không chỉ là món quà lưu niệm mang đậm dấu ấn miền Tây, mà còn là biểu tượng của sự sáng tạo, khéo léo và tình yêu lao động của con người xứ dừa.',
+    'brand.milestone3Title': 'Chèo thuyền giữa rặng dừa',
+    'brand.milestone3Desc':
+      'để cảm nhận trọn vẹn nét yên bình của miền sông nước. Mỗi nhịp chèo nhẹ đưa bạn đi qua những tán dừa xanh mát, nghe tiếng chim gọi bạn tình, và hít hà hương gió mặn mà. Đây không chỉ là chuyến đi, mà còn là hành trình tìm lại sự cân bằng, thư thái và niềm vui giản dị trong cuộc sống.',
+    'brand.milestone4Title': 'Tham gia workshop nghệ thuật',
+    'brand.milestone4Desc':
+      'từ gỗ dừa và vật liệu tự nhiên để khám phá khả năng sáng tạo bên trong bạn. Từ khâu chọn nguyên liệu, tạo hình, đến hoàn thiện sản phẩm, mỗi bước đều là cơ hội để bạn kết nối với nghệ thuật và thiên nhiên. Hãy mang về một tác phẩm độc đáo, chứa đựng dấu ấn cá nhân và tinh thần bền vững.',
     'brand.valuesTitle': 'Giá trị cốt lõi',
     'brand.valuesSubtitle':
       'Những giá trị định hướng mọi hoạt động và tạo nên khác biệt.',
@@ -522,6 +556,29 @@ const translations: Record<Language, TranslationDict> = {
       'Chúng tôi mang đến kẹo dừa chất lượng cao, thân thiện môi trường, góp phần bảo tồn nghề truyền thống và phát triển bền vững vì cộng đồng và hành tinh.',
     'brand.ctaExplore': 'Khám phá sản phẩm',
     'brand.ctaContact': 'Liên hệ với chúng tôi',
+    'purpose.title': 'Sứ mệnh của chúng tôi',
+    'purpose.des':
+      'Sứ mệnh của chúng tôi vượt xa kinh doanh — đó là lan tỏa vị ngọt và gieo mầm hy vọng.',
+    'purpose.label1': 'Vì hành tinh',
+    'purpose.labelDes1':
+      'Bao bì được làm từ sợi dừa tái chế và vật liệu tự nhiên như lá dừa, cây lục bình.',
+    'purpose.label2': 'Vì cộng đồng',
+    'purpose.labelDes2':
+      'Chiến dịch CODY Scholarship Box đã gây quỹ hơn 70.000.000 đồng, trao học bổng cho hơn 100 học sinh khó khăn trên khắp Việt Nam.',
+    'purpose.label3': 'Vì tương lai',
+    'purpose.labelDes3':
+      'Chúng tôi mong muốn đưa tay nghề Việt Nam ra thế giới, để mỗi viên kẹo trở thành câu chuyện về lòng nhân ái, sự sáng tạo và tinh thần Việt.',
+    'purpose.tagLine':
+      '“Mỗi trải nghiệm là một nhịp cầu nối bạn đến linh hồn của Việt Nam — nơi thiên nhiên, con người và văn hóa giao hòa.”',
+    'meet.title': 'Meet the Founder',
+    'meet.subtitle':
+      'The story behind CODY’s vision and the heart that drives it forward.',
+    'meet.name': 'Lê Bảo Long',
+    'meet.role': 'Người sáng lập và Chủ tịch của CODY',
+    'meet.des':
+      'Lê Bảo Long, nhà sáng lập và Chủ tịch dự án CODY, là một học sinh Việt Nam đang học tập tại California, với mong muốn kết nối văn hóa qua con đường khởi nghiệp. Từ việc bán hơn 1.200 sản phẩm thủ công trong giai đoạn đầu, đến xây dựng chương trình học bổng giúp đỡ học sinh khó khăn, Long mong muốn định nghĩa lại ý nghĩa của “một thương hiệu ngọt ngào” — đó là biểu tượng của văn hóa, bền vững và lòng nhân ái.',
+    'meet.quote':
+      '“Chúng tôi không chỉ muốn mọi người nếm vị kẹo, mà còn muốn họ cảm nhận được câu chuyện Việt Nam — mộc mạc, đầy hy vọng và đậm tính con người.”',
     // Cart
     'cart.title': 'Giỏ hàng của bạn',
     'cart.itemsCount': 'Có {count} sản phẩm trong giỏ hàng',

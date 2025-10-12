@@ -16,7 +16,7 @@ export interface ChatbotResponse {
   info_type?: string;
   data?: any;
   message?: string;
-  response_type: 'text' | 'image' | 'list';
+  responseType: 'text' | 'image' | 'list';
 }
 
 // Stop words configuration
@@ -74,6 +74,7 @@ const PRODUCT_WHITELIST = [
   'hộp quà tết cody',
   'giỏ quà bến tre',
   'kẹo dừa',
+  'kẹo',
   'combo',
   'hộp quà',
   'giỏ quà',
@@ -277,7 +278,7 @@ class ChatbotProcessor {
       return {
         entity_type: 'product',
         message: 'Xin lỗi, tôi không tìm thấy sản phẩm này trong hệ thống.',
-        response_type: 'text',
+        responseType: 'text',
       };
     }
 
@@ -291,7 +292,7 @@ class ChatbotProcessor {
           message: `Giá của ${product.name} là ${product.price.toLocaleString(
             'vi-VN'
           )}đ`,
-          response_type: 'text',
+          responseType: 'text',
         };
 
       case 'ingredients':
@@ -301,7 +302,7 @@ class ChatbotProcessor {
           info_type: 'ingredients',
           data: { ingredients: product.ingredients },
           message: `Thành phần của ${product.name}:`,
-          response_type: 'list',
+          responseType: 'list',
         };
 
       case 'stock':
@@ -313,7 +314,7 @@ class ChatbotProcessor {
           message: product.stock
             ? `${product.name} hiện đang có sẵn`
             : `${product.name} hiện đang hết hàng`,
-          response_type: 'text',
+          responseType: 'text',
         };
 
       case 'weight':
@@ -323,7 +324,7 @@ class ChatbotProcessor {
           info_type: 'weight',
           data: { weight: product.weight },
           message: `Trọng lượng của ${product.name} là ${product.weight}`,
-          response_type: 'text',
+          responseType: 'text',
         };
 
       case 'image':
@@ -333,7 +334,7 @@ class ChatbotProcessor {
           info_type: 'image',
           data: { image: product.image, name: product.name },
           message: `Hình ảnh của ${product.name}:`,
-          response_type: 'image',
+          responseType: 'image',
         };
 
       default:
@@ -343,7 +344,7 @@ class ChatbotProcessor {
           info_type: 'description',
           data: { description: product.description },
           message: product.description,
-          response_type: 'text',
+          responseType: 'text',
         };
     }
   }
@@ -356,7 +357,7 @@ class ChatbotProcessor {
       return {
         entity_type: 'order',
         message: 'Xin lỗi, tôi không tìm thấy đơn hàng này trong hệ thống.',
-        response_type: 'text',
+        responseType: 'text',
       };
     }
 
@@ -368,7 +369,7 @@ class ChatbotProcessor {
           info_type: 'status',
           data: { status: order.status },
           message: `Trạng thái đơn hàng ${orderId}: ${order.status}`,
-          response_type: 'text',
+          responseType: 'text',
         };
 
       case 'total':
@@ -380,7 +381,7 @@ class ChatbotProcessor {
           message: `Tổng tiền đơn hàng ${orderId}: ${order.total.toLocaleString(
             'vi-VN'
           )}đ`,
-          response_type: 'text',
+          responseType: 'text',
         };
 
       case 'delivery':
@@ -390,7 +391,7 @@ class ChatbotProcessor {
           info_type: 'delivery',
           data: { delivery_date: order.delivery_date },
           message: `Ngày giao hàng dự kiến cho đơn hàng ${orderId}: ${order.delivery_date}`,
-          response_type: 'text',
+          responseType: 'text',
         };
 
       case 'items':
@@ -400,7 +401,7 @@ class ChatbotProcessor {
           info_type: 'items',
           data: { items: order.items },
           message: `Sản phẩm trong đơn hàng ${orderId}:`,
-          response_type: 'list',
+          responseType: 'list',
         };
 
       default:
@@ -418,7 +419,7 @@ class ChatbotProcessor {
           }\n- Tổng tiền: ${order.total.toLocaleString(
             'vi-VN'
           )}đ\n- Ngày giao hàng: ${order.delivery_date}`,
-          response_type: 'text',
+          responseType: 'text',
         };
     }
   }
@@ -426,6 +427,15 @@ class ChatbotProcessor {
   // Main processing method
   public async processQuery(question: string): Promise<ChatbotResponse> {
     const parsed = this.parseQuestion(question);
+
+    if (parsed.entity_type === 'unknown') {
+      return {
+        entity_type: 'unknown',
+        message:
+          'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về sản phẩm (giá, thành phần, tồn kho) hoặc đơn hàng (trạng thái, tổng tiền, ngày giao hàng).',
+        responseType: 'text',
+      };
+    }
 
     try {
       const res = await rootApi.get<ChatbotResponse>(
@@ -453,7 +463,7 @@ class ChatbotProcessor {
         entity_type: 'unknown',
         message:
           'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về sản phẩm (giá, thành phần, tồn kho) hoặc đơn hàng (trạng thái, tổng tiền, ngày giao hàng).',
-        response_type: 'text',
+        responseType: 'text',
       };
     } catch (error) {
       console.error('Lỗi khi gọi chatbot API:', error);
@@ -461,7 +471,7 @@ class ChatbotProcessor {
         entity_type: 'unknown',
         message:
           'Đã xảy ra lỗi khi kết nối đến hệ thống. Vui lòng thử lại sau.',
-        response_type: 'text',
+        responseType: 'text',
       };
     }
   }
