@@ -6,9 +6,7 @@ export default {
   theme: {
     fontFamily: {
       ...defaultTheme.fontFamily,
-      sans: ['"MuseoModerno"', ...defaultTheme.fontFamily.sans],
-      museo: ['"MuseoModerno"', ...defaultTheme.fontFamily.sans],
-      tektur: ['"Tektur"', ...defaultTheme.fontFamily.sans],
+      ganh: ['"GanhType"', ...defaultTheme.fontFamily.sans],
     },
     extend: {
       colors: {
