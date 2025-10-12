@@ -1,0 +1,22 @@
+export const images = {
+  exploreBanner:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760277482/file.jpg',
+  explore1:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760276225/file.jpg',
+  lblImg:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760271697/file.jpg',
+  milestone1:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760276362/file.jpg',
+  milestone2:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760276431/file.jpg',
+  milestone3:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760276479/file.jpg',
+  milestone4:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760276504/file.jpg',
+  workshop:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760271697/file.jpg',
+  about1:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760282461/file.jpg',
+  about2:
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760282638/file.jpg',
+};
