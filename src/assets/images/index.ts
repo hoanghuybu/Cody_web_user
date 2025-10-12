@@ -16,7 +16,7 @@ export const images = {
   workshop:
     'https://res.cloudinary.com/dutzdkelx/image/upload/v1760271697/file.jpg',
   about1:
-    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760282461/file.jpg',
+    'https://res.cloudinary.com/dutzdkelx/image/upload/v1760284664/file.jpg',
   about2:
     'https://res.cloudinary.com/dutzdkelx/image/upload/v1760282638/file.jpg',
 };
