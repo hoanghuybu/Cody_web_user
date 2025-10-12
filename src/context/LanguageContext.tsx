@@ -175,7 +175,7 @@ const translations: Record<Language, TranslationDict> = {
       '“Each experience connects you to the soul of Vietnam — a place where nature, craft, and community come together in harmony.”',
     'meet.title': 'Meet the Founder',
     'meet.subtitle':
-      'The story behind CODY’s vision and the heart that drives it forward.',
+      'Câu chuyện đằng sau tầm nhìn của CODY và trái tim đã thúc đẩy nó tiến về phía trước.',
     'meet.name': 'Le Bao Long',
     'meet.role': 'Founder & CEO of CODY',
     'meet.des':
