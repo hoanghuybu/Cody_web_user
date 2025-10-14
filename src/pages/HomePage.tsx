@@ -7,6 +7,8 @@ import { images } from '../assets/images';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useProductSearch } from '../hooks/useProducts';
+import { useAllCategories } from '../hooks/useCategories';
+import { Category } from '../types/category';
 import { ProductUtils } from '../utils/product';
 const HomePage = () => {
   const { t } = useLanguage();
@@ -17,12 +19,19 @@ const HomePage = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
+  // Fetch all categories from API
+  const { data: categoriesData } = useAllCategories();
+  const categories: Category[] = categoriesData?.data?.content || [];
+
+  // Fetch products by selected category
   const { data: productsData, isLoading: productsLoading } = useProductSearch({
     page: 0,
     size: 8,
     sortBy: 'name',
     sortDirection: 'ASC',
+    categoryId: selectedCategoryId || undefined,
   });
 
   const featuredProducts =
@@ -30,19 +39,6 @@ const HomePage = () => {
     [];
 
   useEffect(() => {}, []);
-
-  const categories = [
-    { key: 'products.original', label: t('products.original') },
-    { key: 'products.durian', label: t('products.durian') },
-    { key: 'products.durianPeanut', label: t('products.durianPeanut') },
-    { key: 'products.mixBox', label: t('products.mixBox') },
-    { key: 'products.coffee', label: t('products.coffee') },
-    { key: 'products.strawberry', label: t('products.strawberry') },
-    { key: 'products.chocolate', label: t('products.chocolate') },
-    { key: 'products.mango', label: t('products.mango') },
-    { key: 'products.pandan', label: t('products.pandan') },
-    { key: 'products.giftSet', label: t('products.giftSet') },
-  ];
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -222,7 +218,7 @@ const HomePage = () => {
               <h3 className="text-2xl font-black text-warm-brown font-inter mb-2 tracking-wide italic">
                 {t('products.homemade')}
               </h3>
-              <h2 className="text-4xl md:text-5xl font-black text-warm-brown font-montserrat mb-4 tracking-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-warm-brown font-montserrat mb-2 tracking-tight">
                 {t('products.title')}
               </h2>
               <h2 className="text-3xl md:text-4xl font-black text-warm-brown font-montserrat tracking-tight">
@@ -243,10 +239,11 @@ const HomePage = () => {
                 >
                   {categories.map((category) => (
                     <button
-                      key={category.key}
-                      className="text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10"
+                      key={category.id}
+                      className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10 ${selectedCategoryId === category.id ? 'bg-primary-green text-white' : ''}`}
+                      onClick={() => setSelectedCategoryId(category.id)}
                     >
-                      {category.label}
+                      {category.name}
                     </button>
                   ))}
                 </div>
@@ -306,7 +303,7 @@ const HomePage = () => {
           <div className="text-center">
             <Link
               to="/products"
-              className="inline-block bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors"
+              className="inline-block bg-primary-green text-white px-8 py-3 font-bold tracking-wider rounded-full hover:bg-primary-green/90 transition-colors shadow-lg"
             >
               {t('products.shopFull')}
             </Link>

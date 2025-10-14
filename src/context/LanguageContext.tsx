@@ -260,7 +260,7 @@ const translations: Record<Language, TranslationDict> = {
     'auth.invalidCredentials': 'Your email or password is invalid',
     'auth.registrationSuccess': 'Registration Successful',
     'auth.registrationSuccessMessage':
-      'Your account has been created successfully. Welcome!',
+      'Your account has been created successfully.',
     'auth.registrationGenericError':
       'Failed to register account. Please try again later.',
     'auth.email': 'Email',
@@ -659,7 +659,7 @@ const translations: Record<Language, TranslationDict> = {
     'auth.invalidCredentials': 'Email hoặc mật khẩu không đúng',
     'auth.registrationSuccess': 'Đăng ký thành công',
     'auth.registrationSuccessMessage':
-      'Tài khoản của bạn đã được tạo thành công. Chào mừng bạn!',
+      'Tài khoản của bạn đã được tạo thành công.',
     'auth.registrationGenericError':
       'Đăng ký tài khoản thất bại. Vui lòng thử lại sau.',
     'auth.email': 'Email',

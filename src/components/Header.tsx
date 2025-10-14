@@ -128,64 +128,36 @@ const Header = () => {
       const res = (await doRegister(registerData)) as any;
       console.log('Register response:', res);
       if (res?.status === 200) {
-        setAuthOpen(false);
-        const successMsg = res?.message || t('auth.registrationSuccessMessage');
-        showToast('success', t('auth.registrationSuccess'), successMsg);
+        setAuthMode('signin');
+        showToast('success', t('auth.registrationSuccess'), t('auth.registrationSuccessMessage'));
       } else if (res?.status && res?.status !== 200) {
-        // Show generic error message instead of backend details
-        showToast(
-          'error',
-          t('auth.registrationFailed'),
-          t('auth.genericError')
-        );
+        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
       } else {
         console.warn('Unexpected registration response:', res);
-        showToast(
-          'error',
-          t('auth.registrationFailed'),
-          t('auth.genericError')
-        );
+        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
       }
     } catch (e: any) {
       if (isApiError(e)) {
         const data: any = e.data;
-        const fieldErrors = data?.errors || data?.error?.fields; // attempt common shapes
+        const fieldErrors = data?.errors || data?.error?.fields;
         if (fieldErrors && typeof fieldErrors === 'object') {
-          // Log field errors for debugging but show generic message to user
           const firstKey = Object.keys(fieldErrors)[0];
           if (firstKey) {
             const backendFieldError = fieldErrors[firstKey];
             console.warn('Register field error:', backendFieldError);
-            showToast(
-              'error',
-              t('auth.registrationFailed'),
-              t('auth.genericError')
-            );
+            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
           } else {
-            showToast(
-              'error',
-              t('auth.registrationFailed'),
-              t('auth.genericError')
-            );
+            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
           }
           return;
         }
         const detail = data?.error?.detail || data?.message;
         if (detail) {
-          // Log backend error detail for debugging but show generic message to user
           console.warn('Register error detail:', detail);
         }
-        showToast(
-          'error',
-          t('auth.registrationFailed'),
-          t('auth.genericError')
-        );
+        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
       } else {
-        showToast(
-          'error',
-          t('auth.registrationFailed'),
-          t('auth.genericError')
-        );
+        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
       }
     }
   };
@@ -332,12 +304,21 @@ const Header = () => {
                   )}
                 </button>
 
-                <button
-                  onClick={() => openAuth('signin')}
-                  className="p-2 text-warm-brown hover:text-primary-green transition-colors"
-                >
-                  <User className="h-5 w-5" />
-                </button>
+                {AuthUtils.isAuthenticated() ? (
+                  <button
+                    onClick={handleLogout}
+                    className="p-2 text-warm-brown hover:text-primary-green transition-colors"
+                  >
+                    {t('auth.logout')}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => openAuth('signin')}
+                    className="p-2 text-warm-brown hover:text-primary-green transition-colors"
+                  >
+                    <User className="h-5 w-5" />
+                  </button>
+                )}
 
                 <button
                   onClick={() => setLanguage(language === 'en' ? 'vn' : 'en')}
@@ -443,16 +424,29 @@ const Header = () => {
                     <ChevronRight className="h-4 w-4 opacity-60" />
                   </Link>
                 ))}
-                <button
-                  onClick={() => {
-                    openAuth('signin');
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
-                >
-                  <span>{t('auth.login')}</span>
-                  <ChevronRight className="h-4 w-4 opacity-60" />
-                </button>
+                {AuthUtils.isAuthenticated() ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
+                  >
+                    <span>{t('auth.logout')}</span>
+                    <ChevronRight className="h-4 w-4 opacity-60" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      openAuth('signin');
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
+                  >
+                    <span>{t('auth.login')}</span>
+                    <ChevronRight className="h-4 w-4 opacity-60" />
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setLanguage(language === 'en' ? 'vn' : 'en');
