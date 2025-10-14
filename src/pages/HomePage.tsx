@@ -1,11 +1,13 @@
 import { ChevronRight, Instagram } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import lblImg from '../assets/images/lbl-img.jpg';
+
+import { images } from '../assets/images';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useProductSearch } from '../hooks/useProducts';
 import { ProductUtils } from '../utils/product';
-
 const HomePage = () => {
   const { t } = useLanguage();
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -20,13 +22,14 @@ const HomePage = () => {
     page: 0,
     size: 8,
     sortBy: 'name',
-    sortDirection: 'ASC'
+    sortDirection: 'ASC',
   });
 
-  const featuredProducts = productsData?.data?.content?.map(ProductUtils.toLegacyFormat).slice(0, 4) || [];
+  const featuredProducts =
+    productsData?.data?.content?.map(ProductUtils.toLegacyFormat).slice(0, 4) ||
+    [];
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const categories = [
     { key: 'products.original', label: t('products.original') },
@@ -47,7 +50,6 @@ const HomePage = () => {
         scrollContainerRef.current;
       const maxScroll = scrollWidth - clientWidth;
 
-
       // Calculate actual scroll progress (0-100%)
       let progress = 0;
       if (maxScroll > 0) {
@@ -58,7 +60,6 @@ const HomePage = () => {
           progress = 100;
         }
       }
-
 
       setScrollProgress(progress);
     }
@@ -71,7 +72,6 @@ const HomePage = () => {
   const closeModal = () => {
     setSelectedPost(null);
   };
-
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -99,11 +99,12 @@ const HomePage = () => {
       const offsetInThumb = e.clientX - thumbRect.left;
       setDragOffset(offsetInThumb);
 
-  // removed tracking of initial positions (unused)
+      // removed tracking of initial positions (unused)
     } else {
       const clickPosition = (e.clientX - trackRect.left) / trackRect.width;
       const { scrollWidth, clientWidth } = scrollContainerRef.current;
-      scrollContainerRef.current.scrollLeft = clickPosition * (scrollWidth - clientWidth);
+      scrollContainerRef.current.scrollLeft =
+        clickPosition * (scrollWidth - clientWidth);
     }
 
     setIsDragging(true);
@@ -118,7 +119,10 @@ const HomePage = () => {
       const newThumbLeft = e.clientX - dragOffset;
 
       const maxThumbPosition = trackWidth - thumbWidth;
-      const thumbPosition = Math.max(0, Math.min(maxThumbPosition, newThumbLeft - trackRect.left));
+      const thumbPosition = Math.max(
+        0,
+        Math.min(maxThumbPosition, newThumbLeft - trackRect.left)
+      );
       const scrollRatio = thumbPosition / maxThumbPosition;
 
       const { scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -131,7 +135,6 @@ const HomePage = () => {
     setIsDragging(false);
   };
 
-
   useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -142,7 +145,6 @@ const HomePage = () => {
       };
     }
   }, [isDragging]);
-
 
   const instagramPosts = [
     'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
@@ -164,8 +166,9 @@ const HomePage = () => {
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: 'url("https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
-              backgroundSize: 'cover'
+              backgroundImage:
+                'url("https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+              backgroundSize: 'cover',
             }}
           >
             {/* Overlay for text readability and brand color */}
@@ -235,7 +238,7 @@ const HomePage = () => {
                   style={{
                     scrollbarWidth: 'none',
                     msOverflowStyle: 'none',
-                    WebkitOverflowScrolling: 'touch'
+                    WebkitOverflowScrolling: 'touch',
                   }}
                 >
                   {categories.map((category) => (
@@ -255,15 +258,17 @@ const HomePage = () => {
                     onMouseDown={handleTrackMouseDown}
                     onTouchStart={(e) => {
                       const touch = e.touches[0];
-                      handleTrackMouseDown({ clientX: touch.clientX } as React.MouseEvent);
+                      handleTrackMouseDown({
+                        clientX: touch.clientX,
+                      } as React.MouseEvent);
                     }}
                   >
                     <div
                       ref={thumbRef}
                       className="h-4 bg-primary-green rounded-sm absolute top-0 transition-none"
                       style={{
-                        left: `${scrollProgress * (100 - 20) / 100}%`,
-                        width: '20%'
+                        left: `${(scrollProgress * (100 - 20)) / 100}%`,
+                        width: '20%',
                       }}
                     />
                   </div>
@@ -275,7 +280,10 @@ const HomePage = () => {
             {productsLoading ? (
               // Loading skeleton
               Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse"
+                >
                   <div className="aspect-square bg-gray-200"></div>
                   <div className="p-6 space-y-3">
                     <div className="h-4 bg-gray-200 rounded w-3/4"></div>
@@ -319,7 +327,6 @@ const HomePage = () => {
             </p>
           </div>
 
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Corporate Gifts */}
             <div className="relative overflow-hidden group">
@@ -335,7 +342,6 @@ const HomePage = () => {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
-
 
                 {/* Title and Button Below Image */}
                 <div className="bg-primary-green text-white p-6 sm:p-8 text-center">
@@ -363,7 +369,6 @@ const HomePage = () => {
                   />
                 </div>
 
-
                 {/* Title and Button Below Image */}
                 <div className="bg-accent-green text-white p-8 text-center">
                   <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight">
@@ -385,24 +390,21 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Workshop Section */}
             <div className="relative">
-              <div className="bg-teal-dark text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
-                <div className="border-2 border-white p-1 mb-8 mx-auto">
+              <div className="bg-accent-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
+                <div className="p-1 mb-8 mx-auto">
                   <h3 className="text-lg md:text-xl font-black tracking-wider px-4 py-2 whitespace-pre-line">
                     {t('workshop.title')}
                   </h3>
                 </div>
-
 
                 <div className="space-y-6 mb-12">
                   <p className="text-base leading-relaxed font-inter whitespace-pre-line">
                     {t('workshop.description1')}
                   </p>
 
-
                   <p className="text-base leading-relaxed font-inter whitespace-pre-line">
                     {t('workshop.description2')}
                   </p>
-
 
                   <p className="text-base leading-relaxed font-inter whitespace-pre-line">
                     {t('workshop.description3')}
@@ -412,7 +414,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-teal-dark px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
                   >
                     {t('workshop.discover')}
                   </Link>
@@ -420,11 +422,10 @@ const HomePage = () => {
               </div>
             </div>
 
-
             {/* Image Section */}
             <div className="aspect-square lg:aspect-auto">
               <img
-                src="https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=800"
+                src={images.workshop}
                 alt="Workshop Experience"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -434,13 +435,12 @@ const HomePage = () => {
             </div>
           </div>
 
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Team Image Section */}
             <div className="order-2 lg:order-1 aspect-square lg:aspect-auto">
               <img
-                src="https://images.pexels.com/photos/11406167/pexels-photo-11406167.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="CODY Team"
+                src={lblImg}
+                alt="LBL"
                 className="w-full h-full object-cover"
                 loading="lazy"
                 width="800"
@@ -450,9 +450,11 @@ const HomePage = () => {
             {/* About Section */}
             <div className="order-1 lg:order-2 relative">
               <div className="bg-light-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
-                <h3 className="text-3xl md:text-4xl font-black font-montserrat mb-8 tracking-tight leading-tight whitespace-pre-line">
-                  {t('about.title')}
-                </h3>
+                <div className="p-1 mb-8 mx-auto">
+                  <h3 className="text-lg md:text-xl font-black tracking-wider px-4 py-2 whitespace-pre-line">
+                    {t('about.title')}
+                  </h3>
+                </div>
                 <p className="text-base leading-relaxed font-inter mb-12 whitespace-pre-line">
                   {t('about.description')}
                 </p>
@@ -484,7 +486,7 @@ const HomePage = () => {
                 style={{
                   wordBreak: 'break-all',
                   overflowWrap: 'break-word',
-                  hyphens: 'auto'
+                  hyphens: 'auto',
                 }}
               >
                 {t('instagram.handle')}
@@ -525,7 +527,17 @@ const HomePage = () => {
                 className="fixed top-3 sm:top-6 right-3 sm:right-6 z-[60] text-white hover:text-gray-300"
                 onClick={closeModal}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -573,13 +585,15 @@ const HomePage = () => {
                   />
                 </div>
 
-
                 {/* Right side*/}
                 <div className="w-full md:w-2/5 flex flex-col bg-white h-auto max-h-[40vh] md:h-[90vh] md:max-h-[90vh] overflow-y-auto">
                   {/* Header */}
                   <div className="flex items-center p-4 border-b">
                     <div className="h-8 w-8 bg-gray-200 overflow-hidden mr-3">
-                      <Instagram href="#" className="w-full h-full object-cover" />
+                      <Instagram
+                        href="#"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="font-semibold">CODY_COCONUT_CANDY</div>
                   </div>
@@ -587,13 +601,11 @@ const HomePage = () => {
                   {/* Caption */}
                   <div className="p-4 flex-1 overflow-y-auto">
                     <div className="flex mb-4">
-                      <div>
-                      </div>
+                      <div></div>
                     </div>
 
                     {/* Content */}
-                    <div className="mt-4">
-                    </div>
+                    <div className="mt-4"></div>
                   </div>
                   <div className="text-gray-500 text-center text-xs p-4 border-t">
                     September 25, 2025
