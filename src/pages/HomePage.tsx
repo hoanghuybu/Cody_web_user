@@ -21,9 +21,42 @@ const HomePage = () => {
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
-  // Fetch all categories from API
+  // Fetch all categories from API, but only show a fixed set on the horizontal nav
   const { data: categoriesData } = useAllCategories();
-  const categories: Category[] = categoriesData?.data?.content || [];
+  const rawCategories: Category[] = categoriesData?.data?.content || [];
+
+  // Keep this exact ordered list for the horizontal nav. New categories created in
+  // the backend will NOT appear here unless added to this list.
+  // Use the actual slugs from backend so the nav matches your CMS entries.
+  // Order here determines order in the horizontal nav.
+  const allowedNav = [
+    { slug: 'keo-dua-truyen-thong', key: 'products.original' },
+    { slug: 'keo-dua-la-dua', key: 'products.pandan' },
+    { slug: 'keo-dua-xoai', key: 'products.mango' },
+    { slug: 'keo-dua-chocolate', key: 'products.chocolate' },
+    { slug: 'keo-dua-dau-tay', key: 'products.strawberry' },
+    { slug: 'keo-dua-ca-phe', key: 'products.coffee' },
+    { slug: 'keo-dua-sau-rieng-dau-phong', key: 'products.durianPeanut' },
+    { slug: 'keo-dua-sau-rieng', key: 'products.durian' },
+    { slug: 'bo-qua-tang-cao-cap', key: 'products.giftSet' },
+    
+  ];
+
+  // Build nav items in the allowed order; only include items that exist in API
+  const categories = allowedNav
+    .map((a) => {
+      const found = rawCategories.find(
+        (c) => (c.slug || '').toLowerCase() === a.slug.toLowerCase()
+      );
+      return found
+        ? {
+            id: found.id,
+            slug: found.slug,
+            label: t(a.key),
+          }
+        : null;
+    })
+    .filter((x): x is { id: string; slug: string; label: string } => !!x);
 
   // Fetch products by selected category
   const { data: productsData, isLoading: productsLoading } = useProductSearch({
@@ -210,8 +243,8 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-20 bg-cream">
+  {/* Featured Products Section */}
+  <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <div className="mb-8">
@@ -243,7 +276,7 @@ const HomePage = () => {
                       className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10 ${selectedCategoryId === category.id ? 'bg-primary-green text-white' : ''}`}
                       onClick={() => setSelectedCategoryId(category.id)}
                     >
-                      {category.name}
+                      {category.label}
                     </button>
                   ))}
                 </div>
@@ -273,7 +306,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             {productsLoading ? (
               // Loading skeleton
               Array.from({ length: 4 }).map((_, index) => (
@@ -311,6 +344,8 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* NOTE: Modal is opened from the dedicated personalize-gift page. */}
+
       {/* Customization Section - Split Layout */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -345,9 +380,12 @@ const HomePage = () => {
                   <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight drop-shadow-sm">
                     {t('custom.personalizedGift')}
                   </h3>
-                  <button className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors">
+                  <Link
+                    to="/personalize-gift"
+                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors inline-block"
+                  >
                     {t('custom.learnMore')}
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -1,8 +1,8 @@
 import { ApiError } from './ApiError';
+import { AuthUtils } from '../utils/auth';
 
 // Use backend URL directly instead of relative path to ensure API calls go to backend
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'https://www.cody-be.online';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://www.cody-be.online';
 const BASE = `${API_BASE_URL}/api/v1`;
 
 type Query = Record<string, string | number | boolean | undefined | null>;
@@ -10,11 +10,9 @@ type Query = Record<string, string | number | boolean | undefined | null>;
 function buildUrl(path: string, query?: Query) {
   if (!query) return `${BASE}${path}`;
   const params = Object.entries(query)
-    .filter(([, v]) => v !== undefined && v !== null && v !== '')
-    .map(
-      ([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`
-    )
-    .join('&');
+    .filter(([, v]) => v !== undefined && v !== null && v !== "")
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+    .join("&");
   return params ? `${BASE}${path}?${params}` : `${BASE}${path}`;
 }
 
@@ -26,28 +24,32 @@ async function request<TRes, TReq = unknown>(
   init?: RequestInit
 ): Promise<TRes> {
   const url = buildUrl(path, query);
-
+  
   // Log API calls for debugging
   console.log(`API ${method} ${url}`, body ? { body } : '');
-
+  
+  // Get authentication token
+  const token = AuthUtils.getAccessToken();
+  
   const res = await fetch(url, {
     method,
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      ...(init?.headers || {}),
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      ...(token && { "Authorization": `Bearer ${token}` }),
+      ...(init?.headers || {})
     },
-    credentials: 'include',
+    credentials: "include",
     body: body ? JSON.stringify(body) : undefined,
-    ...init,
+    ...init
   });
 
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
-
+  
   // Log response for debugging
   console.log(`API ${method} ${url} Response:`, { status: res.status, data });
-
+  
   if (!res.ok) {
     throw new ApiError(res.status, data);
   }
@@ -56,13 +58,13 @@ async function request<TRes, TReq = unknown>(
 
 export const rootApi = {
   get: <TRes>(path: string, query?: Query, init?: RequestInit) =>
-    request<TRes>(path, 'GET', undefined, query, init),
+    request<TRes>(path, "GET", undefined, query, init),
   post: <TRes, TReq = unknown>(path: string, body: TReq, init?: RequestInit) =>
-    request<TRes, TReq>(path, 'POST', body, undefined, init),
+    request<TRes, TReq>(path, "POST", body, undefined, init),
   put: <TRes, TReq = unknown>(path: string, body: TReq, init?: RequestInit) =>
-    request<TRes, TReq>(path, 'PUT', body, undefined, init),
+    request<TRes, TReq>(path, "PUT", body, undefined, init),
   patch: <TRes, TReq = unknown>(path: string, body: TReq, init?: RequestInit) =>
-    request<TRes, TReq>(path, 'PATCH', body, undefined, init),
+    request<TRes, TReq>(path, "PATCH", body, undefined, init),
   del: <TRes>(path: string, init?: RequestInit) =>
-    request<TRes>(path, 'DELETE', undefined, undefined, init),
+    request<TRes>(path, "DELETE", undefined, undefined, init)
 };

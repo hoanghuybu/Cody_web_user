@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthUtils } from '../utils/auth';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 
 const CartPage = () => {
   // Cart page with editable items and order summary
   const { items, total, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
   const { t } = useLanguage();
 
   const [noteOpen, setNoteOpen] = useState(false);
@@ -47,6 +50,85 @@ const CartPage = () => {
       </div>
     );
   }
+
+  // Checkout handler
+  const handleCheckout = async () => {
+    // Check for user info in sessionStorage or cookie
+    let userInfo = null;
+    try {
+      const sessionUser = sessionStorage.getItem('userInfo');
+      if (sessionUser) userInfo = JSON.parse(sessionUser);
+      // You can add cookie check here if needed
+    } catch {}
+
+    if (!userInfo) {
+      // Redirect to info page (implement this page if needed)
+      navigate('/enter-info');
+      return;
+    }
+
+    // Prepare order payload mapping to backend expected fields
+    // If user is authenticated, prefer name from auth user info (lastName + firstName)
+    const authUser = AuthUtils.getUserInfo();
+    const buyerNameFromAuth = authUser ? `${authUser.lastName || ''} ${authUser.firstName || ''}`.trim() : '';
+    const buyerName = (buyerNameFromAuth) || (userInfo?.name) || (`${userInfo?.firstName || ''} ${userInfo?.lastName || ''}`).trim();
+    const orderPayload = {
+      buyerName: buyerName.trim(),
+      buyerPhone: (userInfo?.phone || userInfo?.phoneNumber || userInfo?.mobile) || authUser?.phone || authUser?.phoneNumber || '',
+      addressUrl: (userInfo?.address || userInfo?.addressUrl) || authUser?.address || authUser?.addressUrl || '',
+      paymentMethod: 'COD', // default to Cash on Delivery; change if you support other methods
+      items: items.map(item => ({
+        productId: item.id,
+        quantity: item.quantity,
+        price: item.price,
+        name: item.name,
+      })),
+      totalPrice: total,
+      note,
+    };
+
+    try {
+      const token = AuthUtils.getAccessToken();
+      const res = await fetch('https://www.cody-be.online/api/v1/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(orderPayload),
+      });
+
+      // Read body as text first to avoid json() throwing on empty/non-json responses
+      const text = await res.text();
+      let data: any = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (parseErr) {
+          // non-JSON response, keep text for error message if needed
+          data = null;
+        }
+      }
+
+      if (res.ok) {
+        // Prefer navigating to specific order detail if backend returned an id
+        const orderId = data?.data?.orderId || data?.orderId || data?.data?.id || data?.id;
+        clearCart();
+        if (orderId) {
+          navigate(`/order/${orderId}`);
+        } else {
+          navigate('/order-success');
+        }
+      } else {
+        const errMsg = data?.message || text || res.statusText || 'Lỗi không xác định';
+        alert('Đặt hàng thất bại: ' + errMsg);
+      }
+    } catch (err) {
+      let msg = 'Lỗi không xác định';
+      if (err instanceof Error) msg = err.message;
+      alert('Đặt hàng thất bại: ' + msg);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-cream py-8">
@@ -236,7 +318,8 @@ const CartPage = () => {
                 {t('cart.taxShipping')}
               </p>
               <button
-        className="w-full bg-[#1f2a44] text-white font-bold py-4 rounded-lg hover:brightness-110 transition-colors uppercase tracking-wide"
+                className="w-full bg-[#1f2a44] text-white font-bold py-4 rounded-lg hover:brightness-110 transition-colors uppercase tracking-wide"
+                onClick={handleCheckout}
               >
                 {t('cart.checkout')} • {formatPrice(total)}
               </button>

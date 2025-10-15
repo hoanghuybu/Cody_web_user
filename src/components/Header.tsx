@@ -51,6 +51,16 @@ const Header = () => {
     setAuthOpen(true);
   };
 
+  // Listen for global event to open auth modal from other pages
+  useEffect(() => {
+    const handler = (e: any) => {
+      const mode = e?.detail?.mode || 'signin';
+      openAuth(mode);
+    };
+    window.addEventListener('open-auth', handler as EventListener);
+    return () => window.removeEventListener('open-auth', handler as EventListener);
+  }, []);
+
   const { mutateAsync: doLogin } = useLogin();
   const { mutateAsync: doRegister } = useRegister();
 
@@ -92,6 +102,10 @@ const Header = () => {
         }
 
         setAuthOpen(false);
+        // Notify any listeners that auth succeeded
+        try {
+          window.dispatchEvent(new CustomEvent('auth-success'));
+        } catch {}
       } else if (res?.status && res?.status !== 200) {
         // Show generic error message instead of backend details
         showToast('error', t('auth.loginFailed'), t('auth.genericError'));
