@@ -8,7 +8,7 @@ interface CartState {
 }
 
 interface CartContextType extends CartState {
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -18,7 +18,7 @@ interface CartContextType extends CartState {
 }
 
 type CartAction =
-  | { type: 'ADD_TO_CART'; payload: Product }
+  | { type: 'ADD_TO_CART'; payload: { product: Product; quantity: number } }
   | { type: 'REMOVE_FROM_CART'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
@@ -31,25 +31,26 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
   case 'ADD_TO_CART': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      
+      const { product, quantity } = action.payload;
+      const existingItem = state.items.find(item => item.id === product.id);
+
       if (existingItem) {
         const updatedItems = state.items.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: item.quantity + 1 }
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
         return {
           items: updatedItems,
           total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-      isCartOpen: true,
+          isCartOpen: true,
         };
       } else {
-        const newItems = [...state.items, { ...action.payload, quantity: 1 }];
+        const newItems = [...state.items, { ...product, quantity }];
         return {
           items: newItems,
           total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-      isCartOpen: true,
+          isCartOpen: true,
         };
       }
     }
@@ -97,8 +98,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [], total: 0, isCartOpen: false });
 
-  const addToCart = (product: Product) => {
-    dispatch({ type: 'ADD_TO_CART', payload: product });
+  const addToCart = (product: Product, quantity = 1) => {
+    dispatch({ type: 'ADD_TO_CART', payload: { product, quantity } });
   };
 
   const removeFromCart = (productId: string) => {

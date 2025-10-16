@@ -7,6 +7,8 @@ import { images } from '../assets/images';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useProductSearch } from '../hooks/useProducts';
+import { useAllCategories } from '../hooks/useCategories';
+import { Category } from '../types/category';
 import { ProductUtils } from '../utils/product';
 const HomePage = () => {
   const { t } = useLanguage();
@@ -17,12 +19,52 @@ const HomePage = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
+  // Fetch all categories from API, but only show a fixed set on the horizontal nav
+  const { data: categoriesData } = useAllCategories();
+  const rawCategories: Category[] = categoriesData?.data?.content || [];
+
+  // Keep this exact ordered list for the horizontal nav. New categories created in
+  // the backend will NOT appear here unless added to this list.
+  // Use the actual slugs from backend so the nav matches your CMS entries.
+  // Order here determines order in the horizontal nav.
+  const allowedNav = [
+    { slug: 'keo-dua-truyen-thong', key: 'products.original' },
+    { slug: 'keo-dua-la-dua', key: 'products.pandan' },
+    { slug: 'keo-dua-xoai', key: 'products.mango' },
+    { slug: 'keo-dua-chocolate', key: 'products.chocolate' },
+    { slug: 'keo-dua-dau-tay', key: 'products.strawberry' },
+    { slug: 'keo-dua-ca-phe', key: 'products.coffee' },
+    { slug: 'keo-dua-sau-rieng-dau-phong', key: 'products.durianPeanut' },
+    { slug: 'keo-dua-sau-rieng', key: 'products.durian' },
+    { slug: 'bo-qua-tang-cao-cap', key: 'products.giftSet' },
+    
+  ];
+
+  // Build nav items in the allowed order; only include items that exist in API
+  const categories = allowedNav
+    .map((a) => {
+      const found = rawCategories.find(
+        (c) => (c.slug || '').toLowerCase() === a.slug.toLowerCase()
+      );
+      return found
+        ? {
+            id: found.id,
+            slug: found.slug,
+            label: t(a.key),
+          }
+        : null;
+    })
+    .filter((x): x is { id: string; slug: string; label: string } => !!x);
+
+  // Fetch products by selected category
   const { data: productsData, isLoading: productsLoading } = useProductSearch({
     page: 0,
     size: 8,
     sortBy: 'name',
     sortDirection: 'ASC',
+    categoryId: selectedCategoryId || undefined,
   });
 
   const featuredProducts =
@@ -30,19 +72,6 @@ const HomePage = () => {
     [];
 
   useEffect(() => {}, []);
-
-  const categories = [
-    { key: 'products.original', label: t('products.original') },
-    { key: 'products.durian', label: t('products.durian') },
-    { key: 'products.durianPeanut', label: t('products.durianPeanut') },
-    { key: 'products.mixBox', label: t('products.mixBox') },
-    { key: 'products.coffee', label: t('products.coffee') },
-    { key: 'products.strawberry', label: t('products.strawberry') },
-    { key: 'products.chocolate', label: t('products.chocolate') },
-    { key: 'products.mango', label: t('products.mango') },
-    { key: 'products.pandan', label: t('products.pandan') },
-    { key: 'products.giftSet', label: t('products.giftSet') },
-  ];
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -214,15 +243,15 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-20 bg-cream">
+  {/* Featured Products Section */}
+  <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <div className="mb-8">
               <h3 className="text-2xl font-black text-warm-brown font-inter mb-2 tracking-wide italic">
                 {t('products.homemade')}
               </h3>
-              <h2 className="text-4xl md:text-5xl font-black text-warm-brown font-montserrat mb-4 tracking-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-warm-brown font-montserrat mb-2 tracking-tight">
                 {t('products.title')}
               </h2>
               <h2 className="text-3xl md:text-4xl font-black text-warm-brown font-montserrat tracking-tight">
@@ -243,8 +272,9 @@ const HomePage = () => {
                 >
                   {categories.map((category) => (
                     <button
-                      key={category.key}
-                      className="text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10"
+                      key={category.id}
+                      className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10 ${selectedCategoryId === category.id ? 'bg-primary-green text-white' : ''}`}
+                      onClick={() => setSelectedCategoryId(category.id)}
                     >
                       {category.label}
                     </button>
@@ -276,7 +306,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             {productsLoading ? (
               // Loading skeleton
               Array.from({ length: 4 }).map((_, index) => (
@@ -306,13 +336,15 @@ const HomePage = () => {
           <div className="text-center">
             <Link
               to="/products"
-              className="inline-block bg-red-500 text-white px-8 py-3 font-bold tracking-wider hover:bg-red-600 transition-colors"
+              className="inline-block bg-primary-green text-white px-8 py-3 font-bold tracking-wider rounded-full hover:bg-primary-green/90 transition-colors shadow-lg"
             >
               {t('products.shopFull')}
             </Link>
           </div>
         </div>
       </section>
+
+      {/* NOTE: Modal is opened from the dedicated personalize-gift page. */}
 
       {/* Customization Section - Split Layout */}
       <section className="py-20 bg-white">
@@ -348,9 +380,12 @@ const HomePage = () => {
                   <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight drop-shadow-sm">
                     {t('custom.personalizedGift')}
                   </h3>
-                  <button className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors">
+                  <Link
+                    to="/personalize-gift"
+                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors inline-block"
+                  >
                     {t('custom.learnMore')}
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

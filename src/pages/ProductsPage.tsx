@@ -282,7 +282,7 @@ const ProductsPage = () => {
               : 'grid-cols-1'
             }`}>
             {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} hoverActionText={t('product.addToCart')} />
             ))}
           </div>
 
