@@ -19,4 +19,5 @@ export const images = {
     'https://res.cloudinary.com/dutzdkelx/image/upload/v1760284664/file.jpg',
   about2:
     'https://res.cloudinary.com/dutzdkelx/image/upload/v1760282638/file.jpg',
+  banner1: './banner-1.jpg',
 };

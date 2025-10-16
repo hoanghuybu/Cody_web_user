@@ -1,9 +1,17 @@
+import {
+  ArrowLeft,
+  Award,
+  Heart,
+  Share2,
+  Shield,
+  ShoppingCart,
+  Truck,
+} from 'lucide-react';
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Heart, Share2, Truck, Shield, Award } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
-import ProductCard from '../components/ProductCard';
 import { useProduct, useProductSearch } from '../hooks/useProducts';
 import { ProductUtils } from '../utils/product';
 
@@ -14,31 +22,38 @@ const ProductDetailPage = () => {
   const [activeImage, setActiveImage] = useState(0);
 
   const { t } = useLanguage();
-  
+
   // Fetch product by ID from API
-  const { data: productResponse, isLoading: productLoading, error: productError } = useProduct(id || '');
-  
+  const {
+    data: productResponse,
+    isLoading: productLoading,
+    error: productError,
+  } = useProduct(id || '');
+
   // Fetch related products (same category)
   const { data: relatedProductsData } = useProductSearch({
     page: 0,
     size: 8,
     sortBy: 'name',
-    sortDirection: 'ASC'
+    sortDirection: 'ASC',
   });
 
   // Convert API product to legacy format
-  const product = productResponse?.data ? ProductUtils.toLegacyFormat(productResponse.data) : null;
-  
+  const product = productResponse?.data
+    ? ProductUtils.toLegacyFormat(productResponse.data)
+    : null;
+
   // Get related products (filter out current product and limit to 4)
-  const relatedProducts = relatedProductsData?.data?.content
-    ?.map(ProductUtils.toLegacyFormat)
-    .filter(p => p.id !== id)
-    .slice(0, 4) || [];
+  const relatedProducts =
+    relatedProductsData?.data?.content
+      ?.map(ProductUtils.toLegacyFormat)
+      .filter((p) => p.id !== id)
+      .slice(0, 4) || [];
 
   // Loading state
   if (productLoading) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-green mx-auto mb-4"></div>
           <p className="text-lg text-gray-600">{t('common.loading')}</p>
@@ -50,9 +65,11 @@ const ProductDetailPage = () => {
   // Error state
   if (productError || !product) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-warm-brown mb-4">{t('productDetail.notFound')}</h2>
+          <h2 className="text-2xl font-bold text-warm-brown mb-4">
+            {t('productDetail.notFound')}
+          </h2>
           <Link to="/products" className="text-primary-green hover:underline">
             {t('productDetail.backToList')}
           </Link>
@@ -63,9 +80,12 @@ const ProductDetailPage = () => {
 
   // Get all gallery images from product
   const galleryImages = ProductUtils.getAllImages(product);
-  
+
   // Ensure we have at least one image (fallback to main image)
-  const displayImages = galleryImages.length > 0 ? galleryImages : [ProductUtils.getMainImage(product)];
+  const displayImages =
+    galleryImages.length > 0
+      ? galleryImages
+      : [ProductUtils.getMainImage(product)];
 
   const formatPrice = (price: number) => {
     return ProductUtils.formatPrice(price);
@@ -78,23 +98,33 @@ const ProductDetailPage = () => {
   };
 
   const badgeKeyMap: Record<string, string> = {
-    'Mới': 'badges.new',
+    Mới: 'badges.new',
     'Bán chạy': 'badges.bestSeller',
-    'Khuyến mãi': 'badges.promo'
+    'Khuyến mãi': 'badges.promo',
   };
 
-  const translatedBadge = product.badge ? (badgeKeyMap[product.badge] ? t(badgeKeyMap[product.badge]) : product.badge) : null;
+  const translatedBadge = product.badge
+    ? badgeKeyMap[product.badge]
+      ? t(badgeKeyMap[product.badge])
+      : product.badge
+    : null;
 
   return (
-    <div className="min-h-screen bg-cream py-8">
+    <div className="min-h-screen bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <Link to="/" className="hover:text-primary-green">{t('productDetail.breadcrumbHome')}</Link>
+          <Link to="/" className="hover:text-primary-green">
+            {t('productDetail.breadcrumbHome')}
+          </Link>
           <span>/</span>
-          <Link to="/products" className="hover:text-primary-green">{t('productDetail.breadcrumbProducts')}</Link>
+          <Link to="/products" className="hover:text-primary-green">
+            {t('productDetail.breadcrumbProducts')}
+          </Link>
           <span>/</span>
-          <span className="text-warm-brown">{product.originalName || product.name}</span>
+          <span className="text-warm-brown">
+            {product.originalName || product.name}
+          </span>
         </div>
 
         {/* Back Button */}
@@ -116,7 +146,7 @@ const ProductDetailPage = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            
+
             {/* Thumbnail Gallery */}
             <div className="grid grid-cols-4 gap-2">
               {displayImages.map((image, index) => (
@@ -146,11 +176,11 @@ const ProductDetailPage = () => {
                 {translatedBadge}
               </span>
             )}
-            
+
             <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair">
               {product.originalName || product.name}
             </h1>
-            
+
             <p className="text-lg text-gray-600 leading-relaxed">
               {product.originalDescription || product.description}
             </p>
@@ -170,21 +200,29 @@ const ProductDetailPage = () => {
             {/* Product Details */}
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold text-warm-brown mb-2">{t('productDetail.ingredients')}:</h3>
+                <h3 className="font-semibold text-warm-brown mb-2">
+                  {t('productDetail.ingredients')}:
+                </h3>
                 <ul className="text-gray-600 space-y-1">
                   {(product.ingredients || []).map((ingredient, index) => (
                     <li key={index}>• {t(ingredient) || ingredient}</li>
                   ))}
                 </ul>
               </div>
-              
+
               <div>
-                <span className="font-semibold text-warm-brown">{t('productDetail.weight')}: </span>
+                <span className="font-semibold text-warm-brown">
+                  {t('productDetail.weight')}:{' '}
+                </span>
                 <span className="text-gray-600">{product.weight}</span>
               </div>
               <div>
-                <span className="font-semibold text-warm-brown">{t('productDetail.category')}: </span>
-                <span className="text-gray-600">{ProductUtils.getPrimaryCategory(product)}</span>
+                <span className="font-semibold text-warm-brown">
+                  {t('productDetail.category')}:{' '}
+                </span>
+                <span className="text-gray-600">
+                  {ProductUtils.getPrimaryCategory(product)}
+                </span>
               </div>
             </div>
 
@@ -205,7 +243,7 @@ const ProductDetailPage = () => {
                   +
                 </button>
               </div>
-              
+
               <button
                 onClick={handleAddToCart}
                 className="flex-1 flex items-center justify-center px-8 py-3 bg-primary-green text-white font-semibold rounded-full hover:bg-primary-green/90 transition-colors"
@@ -231,15 +269,21 @@ const ProductDetailPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-gray-200">
               <div className="flex items-center space-x-3">
                 <Truck className="h-5 w-5 text-primary-green" />
-                <span className="text-sm text-gray-600">{t('productDetail.featureFreeShip')}</span>
+                <span className="text-sm text-gray-600">
+                  {t('productDetail.featureFreeShip')}
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <Shield className="h-5 w-5 text-primary-green" />
-                <span className="text-sm text-gray-600">{t('productDetail.featureQuality')}</span>
+                <span className="text-sm text-gray-600">
+                  {t('productDetail.featureQuality')}
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <Award className="h-5 w-5 text-primary-green" />
-                <span className="text-sm text-gray-600">{t('productDetail.featureNatural')}</span>
+                <span className="text-sm text-gray-600">
+                  {t('productDetail.featureNatural')}
+                </span>
               </div>
             </div>
           </div>
@@ -248,9 +292,11 @@ const ProductDetailPage = () => {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section>
-            <h2 className="text-2xl md:text-3xl font-bold text-warm-brown font-playfair mb-8">{t('productDetail.related')}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-warm-brown font-playfair mb-8">
+              {t('productDetail.related')}
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map(product => (
+              {relatedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

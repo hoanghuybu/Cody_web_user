@@ -9,12 +9,13 @@ import BlogPage from './pages/BlogPage';
 import BrandStoryPage from './pages/BrandStoryPage';
 import CartPage from './pages/CartPage';
 import ContactPage from './pages/ContactPage';
+import CustomPage from './pages/CustomPage';
+import EnterInfoPage from './pages/EnterInfoPage';
 import HomePage from './pages/HomePage';
+import OrderDetailPage from './pages/OrderDetailPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductsPage from './pages/ProductsPage';
-import OrderSuccessPage from './pages/OrderSuccessPage';
-import OrderDetailPage from './pages/OrderDetailPage';
-import EnterInfoPage from './pages/EnterInfoPage';
 
 function App() {
   ///Main Route
@@ -22,12 +23,13 @@ function App() {
     <LanguageProvider>
       <CartProvider>
         <Router>
-          <div className="min-h-screen bg-cream flex flex-col">
+          <div className="min-h-screen bg-white flex flex-col">
             <Header />
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/products" element={<ProductsPage />} />
+                <Route path="/custom" element={<CustomPage />} />
                 <Route path="/products/:category" element={<ProductsPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/brand-story" element={<BrandStoryPage />} />

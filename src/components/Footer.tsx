@@ -1,26 +1,33 @@
 import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import footerImg from '../assets/images/footer.jpg';
 import logoCody from '../assets/images/logo-cody.png';
 import { useLanguage } from '../context/LanguageContext';
 
 const Footer = () => {
   const { t } = useLanguage();
 
+  useEffect(() => {
+    // Preload ảnh footer để đảm bảo load sẵn trong bộ nhớ
+    const img = new Image();
+    img.src = footerImg;
+  }, []);
   return (
     <footer className="relative overflow-hidden">
       {/* Beach Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage:
-            'url("https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+          backgroundImage: `url(${footerImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center bottom',
+          transform: 'translateZ(0)',
+          willChange: 'transform',
         }}
-      >
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/60"></div>
-      </div>
+      ></div>
 
-      <div className="relative pt-16 pb-12">
+      <div className="relative pt-[260px] pb-[80px] md:pt-[300px] md:pb-[100px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             {/* Brand Column */}
@@ -85,7 +92,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/products/gift-box"
+                    to="/custom"
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.gift')}
@@ -176,7 +183,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 mt-12 pt-8 text-center">
+          <div className="border-t border-gray-200 mt-8 pt-8 text-center">
             <p className="text-white/70 text-sm tracking-wide">
               {t('footer.copyright')}
             </p>

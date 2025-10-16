@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ChevronRight,
   Globe,
@@ -58,7 +60,8 @@ const Header = () => {
       openAuth(mode);
     };
     window.addEventListener('open-auth', handler as EventListener);
-    return () => window.removeEventListener('open-auth', handler as EventListener);
+    return () =>
+      window.removeEventListener('open-auth', handler as EventListener);
   }, []);
 
   const { mutateAsync: doLogin } = useLogin();
@@ -143,12 +146,24 @@ const Header = () => {
       console.log('Register response:', res);
       if (res?.status === 200) {
         setAuthMode('signin');
-        showToast('success', t('auth.registrationSuccess'), t('auth.registrationSuccessMessage'));
+        showToast(
+          'success',
+          t('auth.registrationSuccess'),
+          t('auth.registrationSuccessMessage')
+        );
       } else if (res?.status && res?.status !== 200) {
-        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       } else {
         console.warn('Unexpected registration response:', res);
-        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       }
     } catch (e: any) {
       if (isApiError(e)) {
@@ -159,9 +174,17 @@ const Header = () => {
           if (firstKey) {
             const backendFieldError = fieldErrors[firstKey];
             console.warn('Register field error:', backendFieldError);
-            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+            showToast(
+              'error',
+              t('auth.registrationFailed'),
+              t('auth.genericError')
+            );
           } else {
-            showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+            showToast(
+              'error',
+              t('auth.registrationFailed'),
+              t('auth.genericError')
+            );
           }
           return;
         }
@@ -169,9 +192,17 @@ const Header = () => {
         if (detail) {
           console.warn('Register error detail:', detail);
         }
-        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       } else {
-        showToast('error', t('auth.registrationFailed'), t('auth.genericError'));
+        showToast(
+          'error',
+          t('auth.registrationFailed'),
+          t('auth.genericError')
+        );
       }
     }
   };
@@ -199,9 +230,10 @@ const Header = () => {
   }, []);
 
   const navigation = [
-    { name: t('nav.shop'), href: '/products' },
     { name: t('nav.culture'), href: '/brand-story' },
-    { name: t('nav.special'), href: '/products/gift-box' },
+    { name: t('nav.special'), href: '/custom' },
+    { name: t('nav.shop'), href: '/products' },
+    { name: t('nav.blog'), href: '/blog' },
   ];
 
   const isActive = (path: string) => {
@@ -259,12 +291,12 @@ const Header = () => {
           {/* Desktop Header */}
           <div className="hidden xl:flex justify-between items-center h-16 lg:h-20">
             {/* Left Navigation */}
-            <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-start">
+            <nav className="flex items-center flex-1 justify-start">
               {navigation.slice(0, 2).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
+                  className={`flex flex-1 justify-start whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
                     isActive(item.href)
                       ? 'text-primary-green'
                       : 'text-warm-brown'
@@ -285,12 +317,12 @@ const Header = () => {
             </Link>
 
             {/* Right Navigation */}
-            <nav className="flex items-center space-x-4 lg:space-x-12 flex-1 justify-end">
-              {navigation.slice(2, 3).map((item) => (
+            <nav className="flex items-center flex-1 justify-end">
+              {navigation.slice(2, 4).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
+                  className={`flex flex-1 justify-end whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
                     isActive(item.href)
                       ? 'text-primary-green'
                       : 'text-warm-brown'
