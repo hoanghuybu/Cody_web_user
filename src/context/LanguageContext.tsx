@@ -283,6 +283,7 @@ const translations: Record<Language, TranslationDict> = {
     'common.ok': 'OK',
     // Header
     'nav.shop': 'SHOP',
+    'nav.blog': 'BLOG',
     'nav.culture': 'EXPLORE CULTURE',
     'nav.home': 'HOME',
     'nav.special': 'SPECIAL EDITION',
@@ -320,37 +321,50 @@ const translations: Record<Language, TranslationDict> = {
     'custom.personalizedGift': 'Personalized Gift',
     'custom.customizeStickers': 'customize stickers',
     'custom.learnMore': 'learn more',
-  // Personalize page additions
-  'custom.personalizedSubtitle': 'Create a meaningful gift by selecting items, adding a message, and choosing packaging.',
-  'custom.buildCombo': 'Build your combo',
-  'customWhy.title': 'Why choose Personalized Gift',
-  'customWhy.description': 'Design a beautiful and meaningful gift — pick flavors, compose the set, and add a personal note.',
-  // Detailed personalize page content (EN)
-  'personalize.heroTitle': 'PERSONALIZED GIFT – CREATE A GIFT YOUR WAY',
-  'personalize.heroSubtitle': 'Discover meaning and creativity in every gift',
-  'personalize.intro': 'We understand a gift is more than an item — it is the message and feeling you want to send. With Personalized Gift service, you can handcraft unique presents that carry your personal touch. Whether it\'s a birthday, holiday, or any special occasion, we are here to help you express care and thoughtfulness through every detail.',
-  'personalize.whyTitle': 'Why Choose Personalized Gift?',
-  'personalize.why.p1.title': 'Freedom to create',
-  'personalize.why.p1.desc': 'Customize your gift set: choose products, packaging, and basket styles to match the recipient\'s taste.',
-  'personalize.why.p2.title': 'Add a personal touch',
-  'personalize.why.p2.desc': 'Each product can be personalized — from favorite candy flavors to add-on accessories like coconut-fiber cups and wooden utensils, showing care in every selection.',
-  'personalize.why.p3.title': 'Special meaning',
-  'personalize.why.p3.desc': 'A thoughtfully designed, customized gift feels warm, intimate, and truly special to the recipient.',
-  'personalize.customTitle': 'Customize Your Gift',
-  'personalize.customIntro': 'With Personalized Gift, you can pick your favorite items to create a meaningful set. You can also request additional customizations such as:',
-  'personalize.custom.p1.title': 'Choose products in your combo',
-  'personalize.custom.p1.desc': 'Swap flavors or add/remove accessory items in the basket to suit the recipient\'s preferences.',
-  'personalize.custom.p2.title': 'Customize packaging and baskets',
-  'personalize.custom.p2.desc': 'We offer a variety of baskets and boxes — request shape, material, and color to match your personal taste.',
-  'personalize.custom.p3.title': 'Include a personal message',
-  'personalize.custom.p3.desc': 'Attach a heartfelt note or message. We will present it elegantly to enhance the emotional value of your gift.',
-  'personalize.reasonsTitle': 'Why Choose Us?',
-  'personalize.reasons.p1.title': 'Quality assured',
-  'personalize.reasons.p1.desc': 'All gift products are made from natural ingredients and are quality-assured and safe.',
-  'personalize.reasons.p2.title': 'Professional service',
-  'personalize.reasons.p2.desc': 'Our team is ready to support you in creating the perfect gift to your satisfaction.',
-  'personalize.reasons.p3.title': 'Unique gifts',
-  'personalize.reasons.p3.desc': 'Each customized gift is a unique item that creates strong surprise and impression.',
+    // Personalize page additions
+    'custom.personalizedSubtitle':
+      'Create a meaningful gift by selecting items, adding a message, and choosing packaging.',
+    'custom.buildCombo': 'Build your combo',
+    'customWhy.title': 'Why choose Personalized Gift',
+    'customWhy.description':
+      'Design a beautiful and meaningful gift — pick flavors, compose the set, and add a personal note.',
+    // Detailed personalize page content (EN)
+    'personalize.heroTitle': 'PERSONALIZED GIFT – CREATE A GIFT YOUR WAY',
+    'personalize.heroSubtitle': 'Discover meaning and creativity in every gift',
+    'personalize.intro':
+      "We understand a gift is more than an item — it is the message and feeling you want to send. With Personalized Gift service, you can handcraft unique presents that carry your personal touch. Whether it's a birthday, holiday, or any special occasion, we are here to help you express care and thoughtfulness through every detail.",
+    'personalize.whyTitle': 'Why Choose Personalized Gift?',
+    'personalize.why.p1.title': 'Freedom to create',
+    'personalize.why.p1.desc':
+      "Customize your gift set: choose products, packaging, and basket styles to match the recipient's taste.",
+    'personalize.why.p2.title': 'Add a personal touch',
+    'personalize.why.p2.desc':
+      'Each product can be personalized — from favorite candy flavors to add-on accessories like coconut-fiber cups and wooden utensils, showing care in every selection.',
+    'personalize.why.p3.title': 'Special meaning',
+    'personalize.why.p3.desc':
+      'A thoughtfully designed, customized gift feels warm, intimate, and truly special to the recipient.',
+    'personalize.customTitle': 'Customize Your Gift',
+    'personalize.customIntro':
+      'With Personalized Gift, you can pick your favorite items to create a meaningful set. You can also request additional customizations such as:',
+    'personalize.custom.p1.title': 'Choose products in your combo',
+    'personalize.custom.p1.desc':
+      "Swap flavors or add/remove accessory items in the basket to suit the recipient's preferences.",
+    'personalize.custom.p2.title': 'Customize packaging and baskets',
+    'personalize.custom.p2.desc':
+      'We offer a variety of baskets and boxes — request shape, material, and color to match your personal taste.',
+    'personalize.custom.p3.title': 'Include a personal message',
+    'personalize.custom.p3.desc':
+      'Attach a heartfelt note or message. We will present it elegantly to enhance the emotional value of your gift.',
+    'personalize.reasonsTitle': 'Why Choose Us?',
+    'personalize.reasons.p1.title': 'Quality assured',
+    'personalize.reasons.p1.desc':
+      'All gift products are made from natural ingredients and are quality-assured and safe.',
+    'personalize.reasons.p2.title': 'Professional service',
+    'personalize.reasons.p2.desc':
+      'Our team is ready to support you in creating the perfect gift to your satisfaction.',
+    'personalize.reasons.p3.title': 'Unique gifts',
+    'personalize.reasons.p3.desc':
+      'Each customized gift is a unique item that creates strong surprise and impression.',
 
     // Custom Combo Modal
     'customCombo.errorNameRequired': 'Please enter a name for your combo',
@@ -414,7 +428,7 @@ const translations: Record<Language, TranslationDict> = {
     'contact.placeholder.phone': 'Enter phone number',
     'contact.instagramBanner':
       'FIND US ON INSTAGRAM & SHARE OUR CODY ADVENTURE',
-  'contact.reachOut': 'Reach out to us',
+    'contact.reachOut': 'Reach out to us',
 
     // Footer
     'footer.description':
@@ -434,7 +448,7 @@ const translations: Record<Language, TranslationDict> = {
     'footer.followUs': 'FOLLOW US',
     'footer.followDescription':
       'Follow us to update new products and stories about the sustainable journey from Ben Tre.',
-    'footer.copyright': '© 2024 CODY - COCONUT CANDY. ALL RIGHTS RESERVED.',
+    'footer.copyright': '© 2025 CODY - COCONUT CANDY. ALL RIGHTS RESERVED.',
 
     // Product Card
     'product.addToCart': 'ADD TO CART',
@@ -715,6 +729,7 @@ const translations: Record<Language, TranslationDict> = {
 
     // Header
     'nav.shop': 'CỬA HÀNG',
+    'nav.blog': 'BÀI VIẾT',
     'nav.culture': 'KHÁM PHÁ VĂN HÓA',
     'nav.home': 'TRANG CHỦ',
     'nav.special': 'PHIÊN BẢN ĐẶC BIỆT',
@@ -752,37 +767,53 @@ const translations: Record<Language, TranslationDict> = {
     'custom.personalizedGift': 'Quà tặng cá nhân hóa',
     'custom.customizeStickers': 'tùy chỉnh nhãn dán',
     'custom.learnMore': 'tìm hiểu thêm',
-  // Detailed personalize page content (VN)
-  'personalize.heroTitle': 'PERSONALIZED GIFT – TẠO DỰNG MÓN QUÀ THEO PHONG CÁCH CỦA BẠN',
-  'personalize.heroSubtitle': 'Khám Phá Ý Nghĩa Và Sự Sáng Tạo Trong Mỗi Món Quà',
-  'personalize.intro': 'Chúng tôi hiểu rằng món quà không chỉ là vật phẩm trao tặng, mà còn là thông điệp và tình cảm mà bạn muốn gửi gắm. Với dịch vụ Personalized Gift, bạn hoàn toàn có thể tự tay tạo ra những món quà độc đáo, mang đậm dấu ấn cá nhân cho người thân yêu. Dù là dịp sinh nhật, lễ tết, hay bất kỳ sự kiện đặc biệt nào, chúng tôi luôn sẵn sàng giúp bạn thể hiện sự tinh tế và chân thành qua từng món quà.',
-  'personalize.whyTitle': 'Tại Sao Chọn Personalized Gift?',
-  'personalize.why.p1.title': 'Tự Do Tạo Ra Món Quà Theo Ý Thích',
-  'personalize.why.p1.desc': 'Bạn có thể tùy chỉnh bộ quà của mình, từ chọn lựa các sản phẩm trong set quà cho đến việc lựa chọn cách đóng gói và giỏ quà sao cho phù hợp với sở thích của người nhận.',
-  'personalize.why.p2.title': 'Tạo Dấu Ấn Cá Nhân',
-  'personalize.why.p2.desc': 'Mỗi sản phẩm trong giỏ quà đều có thể được cá nhân hóa, từ việc chọn hương vị kẹo yêu thích đến việc chọn các món quà phụ kiện như ly xơ dừa, muỗng nĩa gỗ dừa, tất cả đều thể hiện sự tỉ mỉ và chăm chút trong việc lựa chọn món quà cho người nhận.',
-  'personalize.why.p3.title': 'Ý Nghĩa Đặc Biệt',
-  'personalize.why.p3.desc': 'Những món quà được thiết kế và lựa chọn riêng sẽ mang lại cảm giác gần gũi, ấm áp và độc đáo, khiến người nhận cảm thấy thực sự đặc biệt.',
-  'personalize.customTitle': 'Tùy Chỉnh Món Quà Theo Ý Muốn',
-  'personalize.customIntro': 'Với dịch vụ Personalized Gift, bạn có thể tự chọn những sản phẩm yêu thích để tạo nên bộ quà độc đáo và đầy ý nghĩa. Bạn cũng có thể yêu cầu điều chỉnh thêm các yếu tố như:',
-  'personalize.custom.p1.title': 'Chọn lựa sản phẩm trong combo quà',
-  'personalize.custom.p1.desc': 'Bạn có thể thay đổi các hương vị kẹo hoặc thêm bớt các món phụ kiện trong giỏ quà để phù hợp với sở thích của người nhận.',
-  'personalize.custom.p2.title': 'Tùy chỉnh cách đóng gói và giỏ quà',
-  'personalize.custom.p2.desc': 'Chúng tôi cung cấp các loại giỏ quà và hộp quà đa dạng, bạn có thể yêu cầu giỏ quà theo sở thích cá nhân của mình, từ kiểu dáng, chất liệu đến màu sắc.',
-  'personalize.custom.p3.title': 'Gửi thông điệp cá nhân',
-  'personalize.custom.p3.desc': 'Bạn có thể kèm theo lời nhắn yêu thương hoặc thông điệp đặc biệt để tạo nên một món quà ý nghĩa hơn. Chúng tôi sẽ giúp bạn truyền tải thông điệp này một cách tinh tế và đẹp mắt.',
-  'personalize.reasonsTitle': 'Lý Do Nên Chọn Personalized Gift Từ Chúng Tôi?',
-  'personalize.reasons.p1.title': 'Chất Lượng Đảm Bảo',
-  'personalize.reasons.p1.desc': 'Tất cả sản phẩm quà tặng đều được làm từ nguyên liệu tự nhiên, đảm bảo chất lượng và an toàn cho sức khỏe.',
-  'personalize.reasons.p2.title': 'Dịch Vụ Chuyên Nghiệp',
-  'personalize.reasons.p2.desc': 'Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn trong việc tạo ra món quà theo đúng ý muốn, mang đến sự hài lòng tuyệt đối cho khách hàng.',
-  'personalize.reasons.p3.title': 'Quà Tặng Độc Đáo',
-  'personalize.reasons.p3.desc': 'Với mỗi món quà được tùy chỉnh, bạn sẽ tạo ra một sản phẩm mang đậm dấu ấn cá nhân, tạo nên sự bất ngờ và ấn tượng mạnh mẽ đối với người nhận.',
-  // Personalize page additions (vn)
-  'custom.personalizedSubtitle': 'Tạo món quà đầy ý nghĩa bằng cách chọn sản phẩm, thêm lời nhắn và lựa chọn đóng gói.',
-  'custom.buildCombo': 'Tạo combo của bạn',
-  'customWhy.title': 'Tại sao chọn Quà Tặng Cá Nhân Hóa',
-  'customWhy.description': 'Thiết kế món quà đẹp và ý nghĩa — chọn hương vị, sắp xếp set, và thêm lời nhắn cá nhân.',
+    // Detailed personalize page content (VN)
+    'personalize.heroTitle':
+      'PERSONALIZED GIFT – TẠO DỰNG MÓN QUÀ THEO PHONG CÁCH CỦA BẠN',
+    'personalize.heroSubtitle':
+      'Khám Phá Ý Nghĩa Và Sự Sáng Tạo Trong Mỗi Món Quà',
+    'personalize.intro':
+      'Chúng tôi hiểu rằng món quà không chỉ là vật phẩm trao tặng, mà còn là thông điệp và tình cảm mà bạn muốn gửi gắm. Với dịch vụ Personalized Gift, bạn hoàn toàn có thể tự tay tạo ra những món quà độc đáo, mang đậm dấu ấn cá nhân cho người thân yêu. Dù là dịp sinh nhật, lễ tết, hay bất kỳ sự kiện đặc biệt nào, chúng tôi luôn sẵn sàng giúp bạn thể hiện sự tinh tế và chân thành qua từng món quà.',
+    'personalize.whyTitle': 'Tại Sao Chọn Personalized Gift?',
+    'personalize.why.p1.title': 'Tự Do Tạo Ra Món Quà Theo Ý Thích',
+    'personalize.why.p1.desc':
+      'Bạn có thể tùy chỉnh bộ quà của mình, từ chọn lựa các sản phẩm trong set quà cho đến việc lựa chọn cách đóng gói và giỏ quà sao cho phù hợp với sở thích của người nhận.',
+    'personalize.why.p2.title': 'Tạo Dấu Ấn Cá Nhân',
+    'personalize.why.p2.desc':
+      'Mỗi sản phẩm trong giỏ quà đều có thể được cá nhân hóa, từ việc chọn hương vị kẹo yêu thích đến việc chọn các món quà phụ kiện như ly xơ dừa, muỗng nĩa gỗ dừa, tất cả đều thể hiện sự tỉ mỉ và chăm chút trong việc lựa chọn món quà cho người nhận.',
+    'personalize.why.p3.title': 'Ý Nghĩa Đặc Biệt',
+    'personalize.why.p3.desc':
+      'Những món quà được thiết kế và lựa chọn riêng sẽ mang lại cảm giác gần gũi, ấm áp và độc đáo, khiến người nhận cảm thấy thực sự đặc biệt.',
+    'personalize.customTitle': 'Tùy Chỉnh Món Quà Theo Ý Muốn',
+    'personalize.customIntro':
+      'Với dịch vụ Personalized Gift, bạn có thể tự chọn những sản phẩm yêu thích để tạo nên bộ quà độc đáo và đầy ý nghĩa. Bạn cũng có thể yêu cầu điều chỉnh thêm các yếu tố như:',
+    'personalize.custom.p1.title': 'Chọn lựa sản phẩm trong combo quà',
+    'personalize.custom.p1.desc':
+      'Bạn có thể thay đổi các hương vị kẹo hoặc thêm bớt các món phụ kiện trong giỏ quà để phù hợp với sở thích của người nhận.',
+    'personalize.custom.p2.title': 'Tùy chỉnh cách đóng gói và giỏ quà',
+    'personalize.custom.p2.desc':
+      'Chúng tôi cung cấp các loại giỏ quà và hộp quà đa dạng, bạn có thể yêu cầu giỏ quà theo sở thích cá nhân của mình, từ kiểu dáng, chất liệu đến màu sắc.',
+    'personalize.custom.p3.title': 'Gửi thông điệp cá nhân',
+    'personalize.custom.p3.desc':
+      'Bạn có thể kèm theo lời nhắn yêu thương hoặc thông điệp đặc biệt để tạo nên một món quà ý nghĩa hơn. Chúng tôi sẽ giúp bạn truyền tải thông điệp này một cách tinh tế và đẹp mắt.',
+    'personalize.reasonsTitle':
+      'Lý Do Nên Chọn Personalized Gift Từ Chúng Tôi?',
+    'personalize.reasons.p1.title': 'Chất Lượng Đảm Bảo',
+    'personalize.reasons.p1.desc':
+      'Tất cả sản phẩm quà tặng đều được làm từ nguyên liệu tự nhiên, đảm bảo chất lượng và an toàn cho sức khỏe.',
+    'personalize.reasons.p2.title': 'Dịch Vụ Chuyên Nghiệp',
+    'personalize.reasons.p2.desc':
+      'Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn trong việc tạo ra món quà theo đúng ý muốn, mang đến sự hài lòng tuyệt đối cho khách hàng.',
+    'personalize.reasons.p3.title': 'Quà Tặng Độc Đáo',
+    'personalize.reasons.p3.desc':
+      'Với mỗi món quà được tùy chỉnh, bạn sẽ tạo ra một sản phẩm mang đậm dấu ấn cá nhân, tạo nên sự bất ngờ và ấn tượng mạnh mẽ đối với người nhận.',
+    // Personalize page additions (vn)
+    'custom.personalizedSubtitle':
+      'Tạo món quà đầy ý nghĩa bằng cách chọn sản phẩm, thêm lời nhắn và lựa chọn đóng gói.',
+    'custom.buildCombo': 'Tạo combo của bạn',
+    'customWhy.title': 'Tại sao chọn Quà Tặng Cá Nhân Hóa',
+    'customWhy.description':
+      'Thiết kế món quà đẹp và ý nghĩa — chọn hương vị, sắp xếp set, và thêm lời nhắn cá nhân.',
 
     // Custom Combo Modal
     'customCombo.errorNameRequired': 'Vui lòng đặt tên cho hộp quà của bạn',
@@ -865,7 +896,7 @@ const translations: Record<Language, TranslationDict> = {
     'footer.followUs': 'THEO DÕI CHÚNG TÔI',
     'footer.followDescription':
       'Theo dõi chúng tôi để cập nhật những sản phẩm mới và câu chuyện về hành trình bền vững từ Bến Tre.',
-    'footer.copyright': '© 2024 CODY - KẸO DỪA. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.',
+    'footer.copyright': '© 2025 CODY - KẸO DỪA. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.',
 
     // Product Card
     'product.addToCart': 'THÊM VÀO GIỎ',

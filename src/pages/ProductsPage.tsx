@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Filter, Gift, Grid, List, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Filter, Grid, List, Search, Gift } from 'lucide-react';
+import CustomComboModal from '../components/CustomComboModal';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
-import { useProductSearch } from '../hooks/useProducts';
 import { useAllCategories } from '../hooks/useCategories';
-import { ProductUtils } from '../utils/product';
+import { useProductSearch } from '../hooks/useProducts';
 import { Product } from '../types/product';
-import CustomComboModal from '../components/CustomComboModal'; 
+import { ProductUtils } from '../utils/product';
 
 import {
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  TextField,
-  InputAdornment,
   Box,
   Chip,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -61,32 +62,41 @@ const ProductsPage = () => {
 
   const { t } = useLanguage();
 
-  const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useAllCategories();
+  const {
+    data: categoriesData,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useAllCategories();
 
   const categories = categoriesData?.data?.content || [];
 
   const getCategoryId = (categoryParam: string) => {
     if (categoryParam === 'all') return undefined;
-    
-    const categoryById = categories.find(cat => cat.id === categoryParam);
+
+    const categoryById = categories.find((cat) => cat.id === categoryParam);
     if (categoryById) return categoryParam;
-    
-    const categoryBySlug = categories.find(cat => cat.slug === categoryParam);
+
+    const categoryBySlug = categories.find((cat) => cat.slug === categoryParam);
     return categoryBySlug ? categoryBySlug.id : undefined;
   };
 
   const actualCategoryId = getCategoryId(selectedCategory);
 
-  const { data: productsData, isLoading: productsLoading, error: productsError } = useProductSearch({
+  const {
+    data: productsData,
+    isLoading: productsLoading,
+    error: productsError,
+  } = useProductSearch({
     page,
     size: 20,
     sortBy: sortBy === 'name' ? 'name' : 'price',
     sortDirection: sortBy === 'price-high' ? 'DESC' : 'ASC',
     search: searchTerm || undefined,
-    categoryId: actualCategoryId
+    categoryId: actualCategoryId,
   });
 
-  const products: Product[] = productsData?.data?.content?.map(ProductUtils.toLegacyFormat) || [];
+  const products: Product[] =
+    productsData?.data?.content?.map(ProductUtils.toLegacyFormat) || [];
 
   console.log('URL category param:', category);
   console.log('Selected category:', selectedCategory);
@@ -104,7 +114,7 @@ const ProductsPage = () => {
   if (productsLoading && page === 0) {
     return (
       <ThemeProvider theme={theme}>
-        <div className="min-h-screen bg-cream py-8">
+        <div className="min-h-screen bg-white py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center items-center h-64">
               <div className="text-lg text-gray-600">{t('common.loading')}</div>
@@ -118,7 +128,7 @@ const ProductsPage = () => {
   if (productsError) {
     return (
       <ThemeProvider theme={theme}>
-        <div className="min-h-screen bg-cream py-8">
+        <div className="min-h-screen bg-white py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center items-center h-64">
               <div className="text-lg text-red-600">
@@ -133,12 +143,16 @@ const ProductsPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="min-h-screen bg-cream py-8">
+      <div className="min-h-screen bg-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">{t('products.headerTitle')}</h1>
-            <p className="text-lg text-gray-600">{t('products.headerSubtitle')}</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
+              {t('products.headerTitle')}
+            </h1>
+            <p className="text-lg text-gray-600">
+              {t('products.headerSubtitle')}
+            </p>
           </div>
 
           {/* Filters and Search - Using MUI */}
@@ -164,7 +178,10 @@ const ProductsPage = () => {
               {/* Filters - Using MUI Select */}
               <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
                 {/* Category Filter */}
-                <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
+                <FormControl
+                  size={isSmall ? 'medium' : 'small'}
+                  sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}
+                >
                   <InputLabel>{t('products.category')}</InputLabel>
                   <Select
                     value={selectedCategory}
@@ -174,15 +191,22 @@ const ProductsPage = () => {
                       disableScrollLock: true,
                     }}
                   >
-                    <MenuItem value="all">{t('products.allCategories')}</MenuItem>
+                    <MenuItem value="all">
+                      {t('products.allCategories')}
+                    </MenuItem>
                     {categories.map((cat: any) => (
-                      <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
+                      <MenuItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
 
                 {/* Product Sort Filter */}
-                <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
+                <FormControl
+                  size={isSmall ? 'medium' : 'small'}
+                  sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}
+                >
                   <InputLabel>{t('products.sort')}</InputLabel>
                   <Select
                     value={sortBy}
@@ -193,58 +217,81 @@ const ProductsPage = () => {
                     }}
                   >
                     <MenuItem value="name">{t('products.sortName')}</MenuItem>
-                    <MenuItem value="price-low">{t('products.sortPriceLow')}</MenuItem>
-                    <MenuItem value="price-high">{t('products.sortPriceHigh')}</MenuItem>
+                    <MenuItem value="price-low">
+                      {t('products.sortPriceLow')}
+                    </MenuItem>
+                    <MenuItem value="price-high">
+                      {t('products.sortPriceHigh')}
+                    </MenuItem>
                   </Select>
                 </FormControl>
 
                 {/* View Mode - Giữ nguyên Tailwind buttons */}
-                <div className="inline-flex self-start sm:self-start rounded-md shadow-sm isolate" role="group">
+                <div
+                  className="inline-flex self-start sm:self-start rounded-md shadow-sm isolate"
+                  role="group"
+                >
                   <button
                     onClick={() => setViewMode('grid')}
                     type="button"
-                    className={`relative rounded-l-md px-3 py-2 text-sm font-semibold ring-1 ring-inset focus:z-10 ${viewMode === 'grid'
+                    className={`relative rounded-l-md px-3 py-2 text-sm font-semibold ring-1 ring-inset focus:z-10 ${
+                      viewMode === 'grid'
                         ? 'bg-primary-green text-white hover:bg-primary-green/90 ring-primary-green'
                         : 'bg-white text-gray-700 hover:bg-gray-50 ring-gray-300'
-                      }`}
+                    }`}
                   >
                     <Grid className="h-4 w-4" />
                   </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  type="button"
-                  className={`relative -ml-px rounded-r-md px-3 py-2 text-sm font-semibold ring-1 ring-inset focus:z-10 ${viewMode === 'list'
+                  <button
+                    onClick={() => setViewMode('list')}
+                    type="button"
+                    className={`relative -ml-px rounded-r-md px-3 py-2 text-sm font-semibold ring-1 ring-inset focus:z-10 ${
+                      viewMode === 'list'
                         ? 'bg-primary-green text-white hover:bg-primary-green/90 ring-primary-green'
                         : 'bg-white text-gray-700 hover:bg-gray-50 ring-gray-300'
-                      }`}
+                    }`}
+                  >
+                    <List className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Create Combo Button */}
+                <FormControl
+                  size={isSmall ? 'medium' : 'small'}
+                  sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}
                 >
-                  <List className="h-4 w-4" />
-                </button>
-              </div>
-              
-              {/* Create Combo Button */}
-              <FormControl size={isSmall ? 'medium' : 'small'} sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}>
-                <button
-                  onClick={() => setOpenCombo(true)}
-                  className="w-full h-full inline-flex items-center justify-center gap-2 px-4 py-[7px] bg-primary-green text-white font-medium text-sm rounded-lg hover:bg-primary-green/90 transition-colors"
-                  style={{ minHeight: isSmall ? '56px' : '40px' }}
-                >
-                  <Gift className="h-4 w-4" />
-                  {t('products.createCombo')}
-                </button>
-              </FormControl>
+                  <button
+                    onClick={() => setOpenCombo(true)}
+                    className="w-full h-full inline-flex items-center justify-center gap-2 px-4 py-[7px] bg-primary-green text-white font-medium text-sm rounded-lg hover:bg-primary-green/90 transition-colors"
+                    style={{ minHeight: isSmall ? '56px' : '40px' }}
+                  >
+                    <Gift className="h-4 w-4" />
+                    {t('products.createCombo')}
+                  </button>
+                </FormControl>
               </div>
 
               {/* Active Filters - Using MUI Chips */}
               {(searchTerm || selectedCategory !== 'all') && (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', pt: 1 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    alignItems: 'center',
+                    pt: 1,
+                  }}
+                >
                   <Typography variant="caption" color="text.secondary">
                     {t('products.activeFilters')}:
                   </Typography>
 
                   {selectedCategory !== 'all' && (
                     <Chip
-                      label={categories.find((c: any) => c.id === selectedCategory)?.name || selectedCategory}
+                      label={
+                        categories.find((c: any) => c.id === selectedCategory)
+                          ?.name || selectedCategory
+                      }
                       onDelete={() => setSelectedCategory('all')}
                       color="primary"
                       variant="outlined"
@@ -269,20 +316,37 @@ const ProductsPage = () => {
           {/* Results Count */}
           <div className="mb-6">
             <p className="text-gray-600">
-              {t('products.showing').replace('{count}', String(products.length))}
+              {t('products.showing').replace(
+                '{count}',
+                String(products.length)
+              )}
               {selectedCategory !== 'all' && productsData?.data?.content && (
-                <span> {t('products.inCategory').replace('{category}', categories.find((c: any) => c.id === selectedCategory)?.name || selectedCategory)}</span>
+                <span>
+                  {' '}
+                  {t('products.inCategory').replace(
+                    '{category}',
+                    categories.find((c: any) => c.id === selectedCategory)
+                      ?.name || selectedCategory
+                  )}
+                </span>
               )}
             </p>
           </div>
 
           {/* Products Grid */}
-          <div className={`grid gap-6 ${viewMode === 'grid'
-              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-              : 'grid-cols-1'
-            }`}>
-            {products.map(product => (
-              <ProductCard key={product.id} product={product} hoverActionText={t('product.addToCart')} />
+          <div
+            className={`grid gap-6 ${
+              viewMode === 'grid'
+                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                : 'grid-cols-1'
+            }`}
+          >
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                hoverActionText={t('product.addToCart')}
+              />
             ))}
           </div>
 
@@ -292,7 +356,9 @@ const ProductsPage = () => {
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Filter className="h-12 w-12 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">{t('products.noResultsTitle')}</h3>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                {t('products.noResultsTitle')}
+              </h3>
               <p className="text-gray-500">{t('products.noResultsSubtitle')}</p>
             </div>
           )}

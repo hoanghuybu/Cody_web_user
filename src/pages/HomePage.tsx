@@ -1,13 +1,15 @@
 import { ChevronRight, Instagram } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import lblImg from '../assets/images/lbl-img.jpg';
-
 import { images } from '../assets/images';
+import banner1 from '../assets/images/banner-1.jpg';
+import cusPrize from '../assets/images/custom-prize.png';
+import cusSticker from '../assets/images/custom-sticker.png';
+import lblImg from '../assets/images/lbl-img.jpg';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
-import { useProductSearch } from '../hooks/useProducts';
 import { useAllCategories } from '../hooks/useCategories';
+import { useProductSearch } from '../hooks/useProducts';
 import { Category } from '../types/category';
 import { ProductUtils } from '../utils/product';
 const HomePage = () => {
@@ -19,16 +21,13 @@ const HomePage = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
   const [selectedPost, setSelectedPost] = useState<null | number>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
 
-  // Fetch all categories from API, but only show a fixed set on the horizontal nav
   const { data: categoriesData } = useAllCategories();
   const rawCategories: Category[] = categoriesData?.data?.content || [];
 
-  // Keep this exact ordered list for the horizontal nav. New categories created in
-  // the backend will NOT appear here unless added to this list.
-  // Use the actual slugs from backend so the nav matches your CMS entries.
-  // Order here determines order in the horizontal nav.
   const allowedNav = [
     { slug: 'keo-dua-truyen-thong', key: 'products.original' },
     { slug: 'keo-dua-la-dua', key: 'products.pandan' },
@@ -39,10 +38,8 @@ const HomePage = () => {
     { slug: 'keo-dua-sau-rieng-dau-phong', key: 'products.durianPeanut' },
     { slug: 'keo-dua-sau-rieng', key: 'products.durian' },
     { slug: 'bo-qua-tang-cao-cap', key: 'products.giftSet' },
-    
   ];
 
-  // Build nav items in the allowed order; only include items that exist in API
   const categories = allowedNav
     .map((a) => {
       const found = rawCategories.find(
@@ -70,8 +67,6 @@ const HomePage = () => {
   const featuredProducts =
     productsData?.data?.content?.map(ProductUtils.toLegacyFormat).slice(0, 4) ||
     [];
-
-  useEffect(() => {}, []);
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -139,6 +134,31 @@ const HomePage = () => {
     setIsDragging(true);
   };
 
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault(); // chặn cuộn dọc
+      setScrollProgress((prev) => {
+        let newProgress = prev + e.deltaY * 0.2; // điều chỉnh tốc độ cuộn
+        if (newProgress < 0) newProgress = 0;
+        if (newProgress > 100) newProgress = 100;
+        return newProgress;
+      });
+
+      if (scrollContainerRef.current) {
+        const container = scrollContainerRef.current;
+        container.scrollLeft += e.deltaY; // e.deltaY vì cuộn chuột là dọc
+      }
+    };
+
+    track.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      track.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging && trackRef.current && scrollContainerRef.current) {
       const trackRect = trackRef.current.getBoundingClientRect();
@@ -186,42 +206,56 @@ const HomePage = () => {
     'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
   ];
 
+  useEffect(() => {
+    // Preload ảnh footer để đảm bảo load sẵn trong bộ nhớ
+    const img = new Image();
+    img.src = banner1;
+  }, []);
+
   return (
     <div className="bg-white overflow-x-hidden">
       {/* Hero Section - Bold & Minimal */}
       <section className="relative overflow-hidden flex flex-col">
         {/* Coconut and Traditional Sweets Background */}
-        <div className="relative min-h-[500px] h-[100svh] flex items-center">
+        <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[700px] flex items-center overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage:
-                'url("https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+              backgroundImage: `url(${banner1})`,
               backgroundSize: 'cover',
+              transform: 'translateZ(0)',
+              willChange: 'transform',
             }}
           >
             {/* Overlay for text readability and brand color */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-green/80 via-accent-green/70 to-light-green/60"></div>
+            {/* <div className="absolute inset-0 bg-gradient-to-br from-primary-green/80 via-accent-green/70 to-light-green/60"></div> */}
           </div>
 
           <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 flex flex-col items-center">
             {/* Hero Title */}
-            <div className="text-center mb-10 sm:mb-20">
+            {/* <div className="text-center mb-10 sm:mb-20">
               <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white font-montserrat mb-2 sm:mb-4 leading-none tracking-tight">
                 CODY
               </h1>
               <p className="text-base sm:text-3xl md:text-4xl font-light text-cream font-inter italic">
                 {t('hero.subtitleCandy')}
               </p>
-            </div>
+            </div> */}
 
             {/* Responsive button */}
-            <div className="text-center">
+            <div className="flex justify-center gap-4 mt-4">
               <Link
                 to="/products"
-                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-full hover:bg-cream transition-all duration-300 group shadow-lg"
+                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-cream transition-all duration-300 group shadow-lg"
               >
                 {t('hero.explore')}
+              </Link>
+
+              <Link
+                to="/products"
+                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-cream transition-all duration-300 group shadow-lg"
+              >
+                {t('hero.special')}
               </Link>
             </div>
           </div>
@@ -235,7 +269,7 @@ const HomePage = () => {
 
             <Link
               to="/brand-story"
-              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-full hover:bg-cream transition-colors"
+              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-cream transition-colors"
             >
               {t('hero.journeyCta')}
             </Link>
@@ -243,8 +277,8 @@ const HomePage = () => {
         </div>
       </section>
 
-  {/* Featured Products Section */}
-  <section className="py-20 bg-white">
+      {/* Featured Products Section */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <div className="mb-8">
@@ -273,7 +307,11 @@ const HomePage = () => {
                   {categories.map((category) => (
                     <button
                       key={category.id}
-                      className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-full hover:bg-primary-green/10 ${selectedCategoryId === category.id ? 'bg-primary-green text-white' : ''}`}
+                      className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-md hover:bg-primary-green/10 ${
+                        selectedCategoryId === category.id
+                          ? 'bg-primary-green text-white'
+                          : ''
+                      }`}
                       onClick={() => setSelectedCategoryId(category.id)}
                     >
                       {category.label}
@@ -336,7 +374,7 @@ const HomePage = () => {
           <div className="text-center">
             <Link
               to="/products"
-              className="inline-block bg-primary-green text-white px-8 py-3 font-bold tracking-wider rounded-full hover:bg-primary-green/90 transition-colors shadow-lg"
+              className="inline-block bg-primary-green text-white px-8 py-3 font-bold tracking-wider rounded-md hover:bg-primary-green/90 transition-colors shadow-lg"
             >
               {t('products.shopFull')}
             </Link>
@@ -365,7 +403,7 @@ const HomePage = () => {
               <div className="relative">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
-                    src="https://images.pexels.com/photos/6697264/pexels-photo-6697264.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    src={cusPrize}
                     alt="Corporate Gifts"
                     className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
                     loading="lazy"
@@ -382,7 +420,7 @@ const HomePage = () => {
                   </h3>
                   <Link
                     to="/personalize-gift"
-                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors inline-block"
+                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md  hover:bg-cream transition-colors inline-block"
                   >
                     {t('custom.learnMore')}
                   </Link>
@@ -395,7 +433,7 @@ const HomePage = () => {
               <div className="relative">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
-                    src="https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    src={cusSticker}
                     alt="Celebration Cakes"
                     className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
                     loading="lazy"
@@ -409,7 +447,7 @@ const HomePage = () => {
                   <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight">
                     {t('custom.customizeStickers')}
                   </h3>
-                  <button className="uppercase bg-white text-accent-green px-6 py-3 font-bold tracking-wider hover:bg-cream transition-colors">
+                  <button className="uppercase bg-white text-accent-green px-6 py-3 font-bold rounded-md tracking-wider hover:bg-cream transition-colors">
                     {t('custom.learnMore')}
                   </button>
                 </div>
