@@ -420,14 +420,13 @@ const translations: Record<Language, TranslationDict> = {
     'about.getToKnow': 'GET TO KNOW',
 
     // Instagram Section
-    'instagram.title': 'FIND US ON\nINSTAGRAM',
+    'instagram.title': 'FIND US ON\nFACEBOOK',
     'instagram.subtitle': '& SHARE OUR CODY ADVENTURE',
-    'instagram.handle': '@CODY_COCONUT_CANDY',
+    'instagram.handle': 'CODY - Coconut Candy ',
     'contact.placeholder.name': 'Enter your full name',
     'contact.placeholder.email': 'Enter your email address',
     'contact.placeholder.phone': 'Enter phone number',
-    'contact.instagramBanner':
-      'FIND US ON INSTAGRAM & SHARE OUR CODY ADVENTURE',
+    'contact.instagramBanner': 'FIND US ON FACEBOOK & SHARE OUR CODY ADVENTURE',
     'contact.reachOut': 'Reach out to us',
 
     // Footer
@@ -868,14 +867,14 @@ const translations: Record<Language, TranslationDict> = {
     'about.getToKnow': 'TÌM HIỂU THÊM',
 
     // Instagram Section
-    'instagram.title': 'TÌM CHÚNG TÔI TRÊN\nINSTAGRAM',
+    'instagram.title': 'TÌM CHÚNG TÔI TRÊN\nFACEBOOK',
     'instagram.subtitle': '& CHIA SẺ HÀNH TRÌNH CODY',
-    'instagram.handle': '@CODY_COCONUT_CANDY',
+    'instagram.handle': 'CODY - Coconut Candy ',
     'contact.placeholder.name': 'Nhập họ và tên của bạn',
     'contact.placeholder.email': 'Nhập địa chỉ email',
     'contact.placeholder.phone': 'Nhập số điện thoại',
     'contact.instagramBanner':
-      'TÌM CHÚNG TÔI TRÊN INSTAGRAM & CHIA SẺ HÀNH TRÌNH CODY',
+      'TÌM CHÚNG TÔI TRÊN FACEBOOK & CHIA SẺ HÀNH TRÌNH CODY',
     'contact.reachOut': 'Liên hệ chúng tôi',
 
     // Footer

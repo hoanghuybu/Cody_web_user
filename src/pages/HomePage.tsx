@@ -231,7 +231,7 @@ const HomePage = () => {
             {/* <div className="absolute inset-0 bg-gradient-to-br from-primary-green/80 via-accent-green/70 to-light-green/60"></div> */}
           </div>
 
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 flex flex-col items-center">
+          <div className="absolute bottom-44 left-1/2 -translate-x-1/2 z-10 w-full max-w-7xl px-3 sm:px-4 lg:px-8 flex flex-col items-center">
             {/* Hero Title */}
             {/* <div className="text-center mb-10 sm:mb-20">
               <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white font-montserrat mb-2 sm:mb-4 leading-none tracking-tight">
@@ -246,14 +246,14 @@ const HomePage = () => {
             <div className="flex justify-center gap-4 mt-4">
               <Link
                 to="/products"
-                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-cream transition-all duration-300 group shadow-lg"
+                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300 group shadow-lg"
               >
                 {t('hero.explore')}
               </Link>
 
               <Link
                 to="/products"
-                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-cream transition-all duration-300 group shadow-lg"
+                className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300 group shadow-lg"
               >
                 {t('hero.special')}
               </Link>
@@ -552,7 +552,7 @@ const HomePage = () => {
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-2 px-2">
               <a
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61552538454281"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-primary-green font-montserrat tracking-tight hover:text-accent-green transition-colors break-all sm:break-normal overflow-hidden"
