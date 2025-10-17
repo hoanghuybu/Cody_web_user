@@ -10,12 +10,12 @@ import BrandStoryPage from './pages/BrandStoryPage';
 import CartPage from './pages/CartPage';
 import ContactPage from './pages/ContactPage';
 import CustomPage from './pages/CustomPage';
-import EnterInfoPage from './pages/EnterInfoPage';
 import HomePage from './pages/HomePage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductsPage from './pages/ProductsPage';
+import CheckoutInfoPage from './pages/CheckOutInfoPage';
 
 function App() {
   ///Main Route
@@ -38,7 +38,7 @@ function App() {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/order-success" element={<OrderSuccessPage />} />
                 <Route path="/order/:orderId" element={<OrderDetailPage />} />
-                <Route path="/enter-info" element={<EnterInfoPage />} />
+<Route path="/checkout-info" element={<CheckoutInfoPage />} />
               </Routes>
             </main>
             <Footer />

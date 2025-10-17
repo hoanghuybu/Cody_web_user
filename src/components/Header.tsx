@@ -11,7 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logoCody from '../assets/images/logo-cody.png';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -27,6 +27,7 @@ const Header = () => {
   const [showBanner, setShowBanner] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { items, openCart } = useCart();
   const { language, setLanguage, t } = useLanguage();
   const [authOpen, setAuthOpen] = useState(false);
@@ -229,6 +230,10 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSearchClick = () => {
+    navigate('/products?focus=search');
+  };
+
   const navigation = [
     { name: t('nav.culture'), href: '/brand-story' },
     { name: t('nav.special'), href: '/custom' },
@@ -334,7 +339,10 @@ const Header = () => {
 
               {/* Icons */}
               <div className="flex items-center space-x-2 lg:space-x-4 ml-2 lg:ml-8">
-                <button className="p-2 text-warm-brown hover:text-primary-green transition-colors">
+                <button 
+                  onClick={handleSearchClick}
+                  className="p-2 text-warm-brown hover:text-primary-green transition-colors"
+                >
                   <Search className="h-5 w-5" />
                 </button>
 
@@ -398,7 +406,10 @@ const Header = () => {
 
             {/* Icons for Mobile - Improved spacing */}
             <div className="flex items-center space-x-1 flex-shrink-0">
-              <button className="p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors">
+              <button 
+                onClick={handleSearchClick}
+                className="p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors"
+              >
                 <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
