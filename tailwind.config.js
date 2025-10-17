@@ -11,7 +11,8 @@ export default {
     extend: {
       colors: {
         // CODY brand palette
-        'primary-green': '#387944', // Pantone 7731 C
+        'primary-green': '#387944',
+        'dark-green': '#174528', // Pantone 7731 C
         'accent-green': '#8DC057', // Pantone 7488 C
         'light-green': '#4DA76B', // Pantone 7479 C
         'olive-green': '#787C3D', // Pantone 105 C
