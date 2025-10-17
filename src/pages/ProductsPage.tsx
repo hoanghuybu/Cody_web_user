@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Filter, Gift, Grid, List, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import CustomComboModal from '../components/CustomComboModal';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
@@ -51,6 +51,8 @@ const theme = createTheme({
 
 const ProductsPage = () => {
   const { category } = useParams();
+  const [searchParams] = useSearchParams();
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState(category || 'all');
   const [sortBy, setSortBy] = useState('name');
@@ -106,6 +108,16 @@ const ProductsPage = () => {
   console.log('Categories data:', categoriesData);
   console.log('Categories from API:', categories);
   console.log('Products data:', productsData);
+
+  // Auto-focus search input when navigating from header search icon
+  useEffect(() => {
+    if (searchParams.get('focus') === 'search' && searchInputRef.current) {
+      // Small delay to ensure the page is fully rendered
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     setPage(0);
@@ -164,6 +176,7 @@ const ProductsPage = () => {
                 placeholder={t('products.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                inputRef={searchInputRef}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -254,21 +267,6 @@ const ProductsPage = () => {
                     <List className="h-4 w-4" />
                   </button>
                 </div>
-
-                {/* Create Combo Button */}
-                <FormControl
-                  size={isSmall ? 'medium' : 'small'}
-                  sx={{ minWidth: 200, width: { xs: '100%', sm: 'auto' } }}
-                >
-                  <button
-                    onClick={() => setOpenCombo(true)}
-                    className="w-full h-full inline-flex items-center justify-center gap-2 px-4 py-[7px] bg-primary-green text-white font-medium text-sm rounded-lg hover:bg-primary-green/90 transition-colors"
-                    style={{ minHeight: isSmall ? '56px' : '40px' }}
-                  >
-                    <Gift className="h-4 w-4" />
-                    {t('products.createCombo')}
-                  </button>
-                </FormControl>
               </div>
 
               {/* Active Filters - Using MUI Chips */}

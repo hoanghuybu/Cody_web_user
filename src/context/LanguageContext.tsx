@@ -207,6 +207,7 @@ const translations: Record<Language, TranslationDict> = {
   'experience.p1': 'Make your own coconut candy with local artisans and witness every stage – from melting sugar and stirring the mixture to cutting and wrapping by hand.',
   'experience.p2': 'Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories.',
   'experience.p3': 'Where human connection and the taste of home melt together in every bite.',
+  'auth.logout': 'LOGOUT',
 
       // Cart
     'cart.title': 'Your Cart',
@@ -585,6 +586,8 @@ const translations: Record<Language, TranslationDict> = {
   'experience.p1': 'Tự tay làm kẹo dừa cùng nghệ nhân địa phương, tận mắt chứng kiến từng công đoạn – từ nấu đường, khuấy kẹo, đến cắt và gói bằng tay.',
   'experience.p2': 'Hãy để hương dừa ngọt ngào, tiếng cười vui và những câu chuyện ấm áp đưa bạn trở lại ký ức tuổi thơ.',
   'experience.p3': 'Nơi con người và hương vị quê hương hòa quyện trong từng viên kẹo.',
+
+  'auth.logout': 'ĐĂNG XUẤT',
 
     // Category names
     'categories.traditional': 'Truyền thống',
