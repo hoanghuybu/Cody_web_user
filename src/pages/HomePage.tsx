@@ -487,7 +487,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-cream transition-all duration-300"
                   >
                     {t('workshop.discover')}
                   </Link>
@@ -535,7 +535,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-cream transition-all duration-300"
                   >
                     {t('about.getToKnow')}
                   </Link>
