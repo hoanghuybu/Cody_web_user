@@ -456,6 +456,40 @@ const translations: Record<Language, TranslationDict> = {
     'common.currency': 'VND',
     'common.readMore': 'Read more',
     'common.learnMore': 'Learn more',
+
+    'sticker.title':
+      'CUSTOMIZE STICKERS – PERSONALIZE YOUR STICKERS WITH YOUR STYLE',
+    'sticker.intro': 'Add a Special Message Through Customized Stickers',
+    'sticker.introDes':
+      'We understand that every gift carries its own unique message, and sometimes, that message is best conveyed not just through words, but also through images. With our Customize Stickers service, you can create personalized stickers to accompany your gifts, delivering a special message of love, gratitude, or any personal note you wish to share with the recipient.',
+
+    'sticker.reasonTitle': 'Why Choose Customize Stickers?',
+    'sticker.reasonCustomize': 'Fully Customizable Stickers',
+    'sticker.reasonCustomizeDes':
+      'Choose from a range of available sticker designs or create your own with personalized images, colors, and messages. Each sticker can carry a meaningful and creative message that reflects your style and thoughtfulness.',
+    'sticker.reasonMessage': 'Unique Personal Messages',
+    'sticker.reasonMessageDes':
+      'In addition to the available sticker designs, you can add your own favorite quotes, congratulations, or any other personal message you want to send to the recipient. This is a wonderful way to make your gift truly unique and thoughtful.',
+    'sticker.reasonQuality': 'Premium Quality Stickers',
+    'sticker.reasonQualityDes':
+      'Our stickers are printed on high-quality material, ensuring vibrant colors that won’t fade over time, making your gift stand out and remain impressive.',
+
+    'sticker.customizationTitle': 'Easily Customize and Add to Your Gift',
+    'sticker.chooseDesign': 'Choose a Sticker Design',
+    'sticker.chooseDesignDes':
+      'You can pick from a wide variety of cute, lively, and diverse stickers we offer. Alternatively, if you have a specific design in mind, feel free to upload your own, and we will print it for you.',
+    'sticker.addToGift': 'Add Stickers to Your Gift',
+    'sticker.addToGiftDes':
+      'Once you’ve selected your stickers, you can easily add them to your gift basket or set. The stickers will be carefully packed and sent along with your gift to surprise and delight the recipient.',
+    'sticker.addPersonalMessage': 'Personalized Messages',
+    'sticker.addPersonalMessageDes':
+      'You can request us to print a personal message along with your stickers to make the gift even more meaningful. Whether it’s a congratulatory message, a thank-you note, or any special message, we will help convey it in an elegant and beautiful way.',
+
+    'sticker.finalTitle': 'Create a Unique Gift with Customized Stickers',
+    'sticker.finalDes':
+      'We believe that every gift is not just an item to be given but a way for you to express your feelings and care. Let Customize Stickers help you convey your message of love and create a truly meaningful gift.',
+    'sticker.cta':
+      'Start customizing your stickers today to add a special touch to your gifts, filled with love and creativity!',
   },
   vn: {
     // Common
@@ -904,6 +938,41 @@ const translations: Record<Language, TranslationDict> = {
     'common.currency': 'VND',
     'common.readMore': 'Đọc tiếp',
     'common.learnMore': 'Tìm hiểu thêm',
+
+    'sticker.title':
+      'CUSTOMIZE STICKERS – THÊM CÁC MẪU STICKER THEO Ý THÍCH CỦA BẠN',
+    'sticker.intro': 'Thêm Lời Nhắn Đặc Biệt Qua Những Chiếc Sticker Tùy Chỉnh',
+    'sticker.introDes':
+      'Chúng tôi hiểu rằng mỗi món quà đều chứa đựng một thông điệp riêng biệt, và đôi khi, lời nhắn không chỉ cần truyền tải qua lời nói mà còn qua hình ảnh. Với dịch vụ Customize Stickers, bạn có thể tạo ra những chiếc sticker mang đậm dấu ấn cá nhân để gửi kèm quà, thể hiện thông điệp yêu thương, cảm ơn hoặc bất kỳ lời nhắn nào bạn muốn gửi đến người nhận.',
+
+    'sticker.reasonTitle': 'Lý Do Nên Chọn Customize Stickers?',
+    'sticker.reasonCustomize': 'Tùy Chỉnh Sticker Theo Ý Muốn',
+    'sticker.reasonCustomizeDes':
+      'Chọn từ các mẫu sticker có sẵn hoặc tự thiết kế sticker của riêng bạn với hình ảnh, màu sắc và thông điệp riêng biệt. Mỗi sticker có thể mang đến một thông điệp đầy ý nghĩa và sự sáng tạo cho người nhận.',
+    'sticker.reasonMessage': 'Lời Nhắn Độc Đáo',
+    'sticker.reasonMessageDes':
+      'Bên cạnh các mẫu sticker được thiết kế sẵn, bạn còn có thể thêm các câu nói yêu thích, lời chúc mừng, hay bất kỳ thông điệp nào bạn muốn gửi đến người nhận. Đây là cách tuyệt vời để tạo ra món quà cá nhân hóa thật sự ý nghĩa.',
+    'sticker.reasonQuality': 'Chất Lượng Sticker Cao Cấp',
+    'sticker.reasonQualityDes':
+      'Các mẫu sticker được in trên chất liệu cao cấp, bền đẹp, sắc nét, đảm bảo không bị phai màu theo thời gian, giúp món quà của bạn luôn tươi mới và ấn tượng.',
+
+    'sticker.customizationTitle': 'Dễ Dàng Tùy Chỉnh Và Thêm Vào Quà Tặng',
+    'sticker.chooseDesign': 'Chọn Mẫu Sticker',
+    'sticker.chooseDesignDes':
+      'Bạn có thể chọn từ nhiều mẫu sticker dễ thương, sinh động và phong phú mà chúng tôi cung cấp. Hoặc, nếu có ý tưởng riêng, bạn hoàn toàn có thể tải lên thiết kế của mình và chúng tôi sẽ in cho bạn.',
+    'sticker.addToGift': 'Thêm Sticker Vào Quà Tặng',
+    'sticker.addToGiftDes':
+      'Sau khi lựa chọn mẫu sticker, bạn có thể dễ dàng thêm chúng vào giỏ quà hoặc bộ quà tặng của mình. Sticker sẽ được gói cẩn thận và gửi kèm với món quà để tạo thêm sự bất ngờ và thú vị cho người nhận.',
+    'sticker.addPersonalMessage': 'Lời Nhắn Cá Nhân',
+    'sticker.addPersonalMessageDes':
+      'Bạn có thể yêu cầu chúng tôi in một lời nhắn cá nhân kèm theo sticker để tạo thêm sự đặc biệt. Lời nhắn này có thể là một câu chúc mừng, một lời cảm ơn hoặc bất kỳ thông điệp nào bạn muốn gửi gắm.',
+
+    'sticker.finalTitle':
+      'Tạo Ra Món Quà Đặc Biệt Với Những Chiếc Sticker Tùy Chỉnh',
+    'sticker.finalDes':
+      'Chúng tôi tin rằng mỗi món quà không chỉ là vật phẩm trao tặng mà còn là cách để bạn bày tỏ tình cảm và sự quan tâm. Hãy để những chiếc Customize Stickers giúp bạn truyền tải thông điệp yêu thương và tạo nên một món quà thật sự ý nghĩa.',
+    'sticker.cta':
+      'Hãy bắt đầu tùy chỉnh sticker ngay hôm nay để mang đến những món quà tuyệt vời, đầy ắp tình cảm và sự sáng tạo!',
   },
 };
 
