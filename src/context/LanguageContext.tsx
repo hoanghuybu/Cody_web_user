@@ -84,6 +84,24 @@ const translations: Record<Language, TranslationDict> = {
     'i.coconutMilk': 'Coconut milk',
     'i.coconutBiscuit': 'Toasted coconut biscuit',
     'i.coconutJam': 'Coconut jam',
+
+    'cultural.title': 'The Cultural Story of Ben Tre & Coconut Candy',
+  'cultural.p1': 'Known as the Land of Coconuts, Ben Tre is where generations have turned simple ingredients into timeless flavors. Coconut candy represents more than sweetness — it embodies the craftsmanship, warmth, and resilience of the people who make it.',
+  'cultural.p2': 'At CODY, we preserve that legacy while giving it a modern identity. Our candies celebrate the harmony between tradition and innovation, offering a taste that feels both nostalgic and refreshingly new.',
+  'cultural.p3': 'Through each piece of candy, we tell the story of creativity, culture, and connection — from Vietnam to the world.',
+
+        // The Mind Behind The CODY section
+    'mind.title': 'The Mind Behind The CODY',
+    'mind.subtitle': 'The story, values, and purpose behind our journey.',
+    'mind.name': 'Le Bao Long',
+    'mind.role': 'Founder & CEO of CODY',
+    'mind.story':
+      'Le Bao Long is a Vietnamese student who founded CODY with a mission to modernize the traditional Ben Tre coconut candy. What started as a high school idea has grown into a movement celebrating sustainability, culture, and compassion.',
+    'mind.quote':
+      '“We want people to taste more than candy — we want them to taste the story of Vietnam, humble yet full of hope.”',
+    'mind.mission':
+      'Through every candy, CODY connects people worldwide with the craftsmanship and warmth of Vietnamese tradition.',
+
     // Products Page
     'products.headerTitle': 'All Products',
     'products.headerSubtitle':
@@ -182,7 +200,16 @@ const translations: Record<Language, TranslationDict> = {
       'Le Bao Long, a Vietnamese student studying in California, is driven by a mission to bridge cultures through entrepreneurship. From selling 1,200+ handmade products in Phase I to building scholarship programs for students in need, Long’s vision is to redefine what a “sweet” brand can mean — a symbol of culture, sustainability, and compassion.',
     'meet.quote':
       '“We want people to taste more than candy. We want them to taste the story of Vietnam — one that’s humble, hopeful, and beautifully human.”',
-    // Cart
+    
+
+        'experience.title': 'Experience Ben Tre',
+  'experience.subtitle': 'We invite travelers and culture lovers to explore Ben Tre through the CODY Experience – a hands-on journey into the art of coconut.',
+  'experience.p1': 'Make your own coconut candy with local artisans and witness every stage – from melting sugar and stirring the mixture to cutting and wrapping by hand.',
+  'experience.p2': 'Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories.',
+  'experience.p3': 'Where human connection and the taste of home melt together in every bite.',
+  'auth.logout': 'LOGOUT',
+
+      // Cart
     'cart.title': 'Your Cart',
     'cart.itemsCount': '{count} items in your cart',
     'cart.emptyTitle': 'Your cart is empty',
@@ -582,6 +609,20 @@ const translations: Record<Language, TranslationDict> = {
     'products.noResultsSubtitle':
       'Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.',
     'products.createCombo': 'Tạo hộp quà',
+
+  'cultural.title': 'Câu Chuyện Văn Hóa Về Bến Tre & Kẹo Dừa',
+  'cultural.p1': 'Bến Tre – “xứ dừa” của Việt Nam – là nơi bao thế hệ đã biến những nguyên liệu giản dị thành hương vị vượt thời gian. Kẹo dừa không chỉ là vị ngọt mà còn là sự khéo léo, ấm áp và bền bỉ của những con người làm nên nó.',
+  'cultural.p2': 'Tại CODY, chúng tôi gìn giữ di sản ấy, đồng thời thổi vào đó hơi thở hiện đại. Mỗi viên kẹo là sự hòa quyện giữa truyền thống và sáng tạo, mang đến cảm giác vừa thân thuộc vừa mới mẻ.',
+  'cultural.p3': 'Qua từng viên kẹo, CODY kể câu chuyện về sáng tạo, văn hóa và sự gắn kết – từ Việt Nam vươn ra thế giới.',
+    
+      'experience.title': 'Trải Nghiệm Bến Tre',
+  'experience.subtitle': 'Chúng tôi mời bạn đến khám phá Bến Tre thông qua hành trình “CODY Experience” – một chuyến đi thực hành đầy cảm hứng về nghệ thuật kẹo dừa.',
+  'experience.p1': 'Tự tay làm kẹo dừa cùng nghệ nhân địa phương, tận mắt chứng kiến từng công đoạn – từ nấu đường, khuấy kẹo, đến cắt và gói bằng tay.',
+  'experience.p2': 'Hãy để hương dừa ngọt ngào, tiếng cười vui và những câu chuyện ấm áp đưa bạn trở lại ký ức tuổi thơ.',
+  'experience.p3': 'Nơi con người và hương vị quê hương hòa quyện trong từng viên kẹo.',
+
+  'auth.logout': 'ĐĂNG XUẤT',
+
     // Category names
     'categories.traditional': 'Truyền thống',
     'categories.premium': 'Cao cấp',
@@ -848,6 +889,18 @@ const translations: Record<Language, TranslationDict> = {
     'customWhy.description':
       'Thiết kế món quà đẹp và ý nghĩa — chọn hương vị, sắp xếp set, và thêm lời nhắn cá nhân.',
 
+          // The Mind Behind The CODY section
+    'mind.title': 'Tâm Hồn Đằng Sau CODY',
+    'mind.subtitle': 'Câu chuyện, giá trị và mục đích của hành trình này.',
+    'mind.name': 'Lê Bảo Long',
+    'mind.role': 'Nhà sáng lập & Chủ tịch CODY',
+    'mind.story':
+      'Lê Bảo Long, nhà sáng lập thương hiệu CODY, khởi đầu từ một ý tưởng nhỏ thời trung học — mang hơi thở hiện đại đến món kẹo dừa truyền thống Bến Tre. Hành trình ấy giờ đây đã trở thành một sứ mệnh tôn vinh sự bền vững, văn hóa và lòng nhân ái.',
+    'mind.quote':
+      '“Chúng tôi không chỉ muốn mọi người nếm vị kẹo, mà còn cảm nhận được câu chuyện Việt Nam — mộc mạc nhưng đầy hy vọng.”',
+    'mind.mission':
+      'Qua từng viên kẹo, CODY kết nối con người khắp nơi với tinh hoa và sự ấm áp của văn hóa Việt Nam.',
+
     // Custom Combo Modal
     'customCombo.errorNameRequired': 'Vui lòng đặt tên cho hộp quà của bạn',
     'customCombo.errorNameMin': 'Tên phải có ít nhất 3 ký tự',
@@ -931,6 +984,8 @@ const translations: Record<Language, TranslationDict> = {
       'Theo dõi chúng tôi để cập nhật những sản phẩm mới và câu chuyện về hành trình bền vững từ Bến Tre.',
     'footer.copyright': '© 2025 CODY - KẸO DỪA. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.',
 
+
+    
     // Product Card
     'product.addToCart': 'THÊM VÀO GIỎ',
 
