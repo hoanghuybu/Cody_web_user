@@ -67,7 +67,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             compact
             onSubmit={onSignIn}
             onSwitchToSignUp={() => onSwitch("signup")}
-            forgotPassword={() => console.log("forgot password")}
+            forgotPassword={() => {}}
           />
         ) : (
           <SignUpForm

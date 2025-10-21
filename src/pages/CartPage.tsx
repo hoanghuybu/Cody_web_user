@@ -12,6 +12,7 @@ import { AuthUtils } from '../utils/auth';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import AuthModal from '../components/auth/AuthModal';
+import Toast from '../components/Toast';
 import useLogin from '../hook/useLogin';
 import useRegister from '../hook/useRegister';
 import { isApiError } from '../lib/ApiError';
@@ -24,7 +25,22 @@ const CartPage = () => {
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState('');
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [buyerPhone, setBuyerPhone] = useState('');
+  const [buyerAddress, setBuyerAddress] = useState('');
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [toast, setToast] = useState<{
+    open: boolean;
+    type: 'success' | 'error';
+    title: string;
+    message: string;
+  }>({
+    open: false,
+    type: 'success',
+    title: '',
+    message: '',
+  });
   const { mutateAsync: doLogin } = useLogin();
   const { mutateAsync: doRegister } = useRegister();
 
@@ -36,27 +52,50 @@ const CartPage = () => {
 
   const FREE_SHIPPING_THRESHOLD = 300000;
 
+  const showToast = (type: 'success' | 'error', title: string, message: string) => {
+    setToast({ open: true, type, title, message });
+  };
+
   useEffect(() => {
     const token = AuthUtils.getAccessToken();
     if (!token) return;
+    
+    // Load user info from sessionStorage if exists
+    const savedUserInfo = sessionStorage.getItem('user_info');
+    if (savedUserInfo) {
+      try {
+        const parsed = JSON.parse(savedUserInfo);
+        setUserInfo(parsed);
+      } catch (error) {
+        // Silent error handling
+      }
+    }
   }, []);
 
   // 🔐 Handle sign in
   const handleSignIn = async (d: { email: string; password: string }) => {
     try {
       const res = (await doLogin(d)) as any;
-      console.log('Login response:', res);
-      console.log('User info saved:', res?.data?.user);
       
       if (res?.status === 200 && res?.data?.accessToken) {
+        // Save tokens
         AuthUtils.saveAuthData(
           res.data.accessToken,
-          res.data.refreshToken,
-          res.data.user
+          res.data.refreshToken
         );
+        // Save user info to sessionStorage AND state
+        if (res.data.info) {
+          sessionStorage.setItem('user_info', JSON.stringify(res.data.info));
+          setUserInfo(res.data.info);
+        }
         setShowLoginModal(false);
+        showToast('success', 'Đăng nhập thành công', `Chào mừng ${res.data.info?.name || 'bạn'} đến với Cody!`);
+        // Reload page after successful login
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
-        alert('Đăng nhập thất bại. Vui lòng thử lại.');
+        showToast('error', 'Đăng nhập thất bại', 'Vui lòng kiểm tra lại thông tin đăng nhập.');
       }
     } catch (e: any) {
       let msg = 'Đăng nhập thất bại.';
@@ -64,7 +103,7 @@ const CartPage = () => {
         const detail = (e.data as any)?.error?.detail || (e.data as any)?.message;
         if (detail) msg = detail;
       }
-      alert(msg);
+      showToast('error', 'Đăng nhập thất bại', msg);
     }
   };
 
@@ -83,14 +122,14 @@ const CartPage = () => {
       const res = (await doRegister(registerData)) as any;
       
       if (res?.status === 200) {
-        alert('Đăng kí thành công! Đang chuyển sang đăng nhập...');
+        showToast('success', 'Đăng ký thành công!', 'Vui lòng đăng nhập để tiếp tục mua sắm.');
         // Auto-switch to signin mode
         setAuthMode('signin');
       } else {
-        alert('Đăng kí thất bại. Vui lòng thử lại.');
+        showToast('error', 'Đăng ký thất bại', 'Vui lòng thử lại sau.');
       }
     } catch (e: any) {
-      let msg = 'Đăng kí thất bại.';
+      let msg = 'Đăng ký thất bại.';
       if (isApiError(e)) {
         const data: any = e.data;
         const fieldErrors = data?.errors || data?.error?.fields;
@@ -104,32 +143,51 @@ const CartPage = () => {
           if (detail) msg = detail;
         }
       }
-      alert(msg);
+      showToast('error', 'Đăng ký thất bại', msg);
     }
   };
 
   // 🧾 Handle checkout
   const handleCheckout = async () => {
     const token = AuthUtils.getAccessToken();
+    
     if (!token) {
       setShowLoginModal(true);
       return;
     }
-
-    const userInfo = AuthUtils.getUserInfo();
+    
     if (!userInfo) {
-      alert('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.');
+      showToast('error', 'Chưa đăng nhập', 'Vui lòng đăng nhập để tiếp tục đặt hàng.');
       AuthUtils.clearAuthData();
       setShowLoginModal(true);
       return;
     }
 
-    console.log('User info from AuthUtils:', userInfo);
+    // Validate phone and address
+    if (!buyerPhone.trim()) {
+      showToast('error', 'Thiếu thông tin', 'Vui lòng nhập số điện thoại.');
+      return;
+    }
+
+    if (!buyerAddress.trim()) {
+      showToast('error', 'Thiếu thông tin', 'Vui lòng nhập địa chỉ giao hàng.');
+      return;
+    }
+
+    // Show confirmation modal
+    setShowConfirmModal(true);
+  };
+
+  // 🧾 Confirm and create order
+  const confirmCreateOrder = async () => {
+    setShowConfirmModal(false);
+    
+    const token = AuthUtils.getAccessToken();
 
     const orderPayload = {
-      buyerName: `${userInfo.lastName || ''} ${userInfo.firstName || ''}`.trim(),
-      buyerPhone: userInfo.phone || userInfo.phoneNumber || '',
-      addressUrl: userInfo.address || '',
+      buyerName: userInfo.name || `${userInfo.lastName || ''} ${userInfo.firstName || ''}`.trim(),
+      buyerPhone: buyerPhone.trim(),
+      addressUrl: buyerAddress.trim(),
       paymentMethod: 'COD',
       items: items.map((item) => ({
         productId: item.id,
@@ -151,16 +209,13 @@ const CartPage = () => {
         body: JSON.stringify(orderPayload),
       });
 
-      console.log('Order payload being sent:', orderPayload);
       const text = await res.text();
-      console.log('Order response status:', res.status);
-      console.log('Order response body:', text);
       let data: any = null;
       if (text) {
         try {
           data = JSON.parse(text);
         } catch {
-          console.error('Response parse error:', text);
+          // Silent error handling
         }
       }
 
@@ -168,14 +223,16 @@ const CartPage = () => {
         const orderId =
           data?.data?.orderId || data?.orderId || data?.data?.id || data?.id;
         clearCart();
-        navigate(orderId ? `/order/${orderId}` : '/order-success');
+        showToast('success', 'Đặt hàng thành công!', 'Đơn hàng của bạn đã được xác nhận. Cảm ơn bạn đã tin tùng Cody!');
+        setTimeout(() => {
+          navigate(orderId ? `/order/${orderId}` : '/order-success');
+        }, 1500);
       } else {
         const msg = data?.message || text || 'Đặt hàng thất bại.';
-        alert(msg);
+        showToast('error', 'Đặt hàng thất bại', msg);
       }
     } catch (err) {
-      console.error('Checkout error:', err);
-      alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.');
+      showToast('error', 'Có lỗi xảy ra', 'Vui lòng thử lại hoặc liên hệ hỗ trợ.');
     }
   };
 
@@ -191,6 +248,58 @@ const CartPage = () => {
         onSignIn={handleSignIn}
         onSignUp={handleSignUp}
       />
+    );
+  };
+
+  // ✅ Confirmation modal
+  const renderConfirmModal = () => {
+    if (!showConfirmModal) return null;
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slideInUp">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShoppingBag className="h-8 w-8 text-amber-600" />
+            </div>
+            <h3 className="text-xl font-bold text-warm-brown mb-2 font-playfair">
+              Xác nhận đặt hàng
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Bạn có chắc chắn muốn đặt hàng với tổng giá trị <span className="font-semibold text-amber-600">{formatPrice(total)}</span>?
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Số lượng sản phẩm:</span>
+              <span className="font-semibold">{items.length} sản phẩm</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Người nhận:</span>
+              <span className="font-semibold">{userInfo?.name || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Số điện thoại:</span>
+              <span className="font-semibold">{buyerPhone}</span>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowConfirmModal(false)}
+              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={confirmCreateOrder}
+              className="flex-1 px-6 py-3 bg-primary-green text-white font-semibold rounded-lg hover:bg-primary-green/90 transition-colors"
+            >
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -396,6 +505,61 @@ const CartPage = () => {
 
             {/* Summary */}
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-warm-brown mb-4">
+                Thông tin giao hàng
+              </h3>
+              
+              {/* Buyer Name (from login) */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tên người nhận *
+                </label>
+                <input
+                  type="text"
+                  value={
+                    userInfo?.name || 
+                    `${userInfo?.lastName || ''} ${userInfo?.firstName || ''}`.trim() ||
+                    ''
+                  }
+                  disabled
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-50 cursor-not-allowed"
+                  placeholder="Đăng nhập để hiển thị tên"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Tên được lấy từ tài khoản đăng nhập
+                </p>
+              </div>
+
+              {/* Phone Input */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Số điện thoại *
+                </label>
+                <input
+                  type="tel"
+                  value={buyerPhone}
+                  onChange={(e) => setBuyerPhone(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                  placeholder="Nhập số điện thoại"
+                  required
+                />
+              </div>
+
+              {/* Address Input */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Địa chỉ giao hàng *
+                </label>
+                <textarea
+                  value={buyerAddress}
+                  onChange={(e) => setBuyerAddress(e.target.value)}
+                  rows={3}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                  placeholder="Nhập địa chỉ giao hàng đầy đủ"
+                  required
+                />
+              </div>
+
               <p className="text-sm text-gray-700 mb-4">
                 {t('cart.taxShipping')}
               </p>
@@ -412,6 +576,18 @@ const CartPage = () => {
 
       {/* 🟢 Modal đăng nhập */}
       {renderLoginModal()}
+
+      {/* ✅ Modal xác nhận đặt hàng */}
+      {renderConfirmModal()}
+
+      {/* 🎨 Toast Notification */}
+      <Toast
+        open={toast.open}
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, open: false })}
+      />
     </div>
   );
 };

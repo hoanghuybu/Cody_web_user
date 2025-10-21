@@ -100,15 +100,6 @@ const ProductsPage = () => {
   const products: Product[] =
     productsData?.data?.content?.map(ProductUtils.toLegacyFormat) || [];
 
-  console.log('URL category param:', category);
-  console.log('Selected category:', selectedCategory);
-  console.log('Actual category ID for API:', actualCategoryId);
-  console.log('Categories loading:', categoriesLoading);
-  console.log('Categories error:', categoriesError);
-  console.log('Categories data:', categoriesData);
-  console.log('Categories from API:', categories);
-  console.log('Products data:', productsData);
-
   // Auto-focus search input when navigating from header search icon
   useEffect(() => {
     if (searchParams.get('focus') === 'search' && searchInputRef.current) {

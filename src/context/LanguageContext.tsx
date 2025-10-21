@@ -314,6 +314,21 @@ const translations: Record<Language, TranslationDict> = {
     'nav.culture': 'EXPLORE CULTURE',
     'nav.home': 'HOME',
     'nav.special': 'SPECIAL EDITION',
+    'nav.orderHistory': 'Order History',
+    'nav.wishlist': 'Wishlist',
+
+    // Wishlist
+    'wishlist.title': 'My Wishlist',
+    'wishlist.empty': 'Your wishlist is empty',
+    'wishlist.emptyDesc': 'Start adding your favorite products!',
+    'wishlist.browseProd': 'Browse Products',
+    'wishlist.items': 'items',
+    'wishlist.inStock': 'In Stock',
+    'wishlist.outStock': 'Out of Stock',
+    'wishlist.addCart': 'Add to Cart',
+    'wishlist.remove': 'Remove from wishlist',
+    'wishlist.added': 'Added to wishlist',
+    'wishlist.removed': 'Removed from wishlist',
 
     // Hero Section
     'hero.title': 'CODY',
@@ -773,6 +788,21 @@ const translations: Record<Language, TranslationDict> = {
     'nav.culture': 'KHÁM PHÁ VĂN HÓA',
     'nav.home': 'TRANG CHỦ',
     'nav.special': 'PHIÊN BẢN ĐẶC BIỆT',
+    'nav.wishlist': 'Yêu Thích',
+
+    // Wishlist
+    'wishlist.title': 'Danh Sách Yêu Thích',
+    'wishlist.empty': 'Danh sách yêu thích trống',
+    'wishlist.emptyDesc': 'Hãy bắt đầu thêm sản phẩm yêu thích của bạn!',
+    'wishlist.browseProd': 'Xem Sản Phẩm',
+    'wishlist.items': 'sản phẩm',
+    'wishlist.inStock': 'Còn Hàng',
+    'wishlist.outStock': 'Hết Hàng',
+    'wishlist.addCart': 'Thêm Vào Giỏ',
+    'wishlist.remove': 'Xóa khỏi danh sách',
+    'wishlist.added': 'Đã thêm vào yêu thích',
+    'wishlist.removed': 'Đã xóa khỏi yêu thích',
+    'nav.orderHistory': 'Lịch Sử Đơn Hàng',
 
     // Hero Section
     'hero.title': 'CODY',
