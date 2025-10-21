@@ -26,35 +26,15 @@ const HomePage = () => {
     null
   );
 
-  const { data: categoriesData } = useAllCategories();
+  const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useAllCategories();
   const rawCategories: Category[] = categoriesData?.data?.content || [];
 
-  const allowedNav = [
-    { slug: 'keo-dua-truyen-thong', key: 'products.original' },
-    { slug: 'keo-dua-la-dua', key: 'products.pandan' },
-    { slug: 'keo-dua-xoai', key: 'products.mango' },
-    { slug: 'keo-dua-chocolate', key: 'products.chocolate' },
-    { slug: 'keo-dua-dau-tay', key: 'products.strawberry' },
-    { slug: 'keo-dua-ca-phe', key: 'products.coffee' },
-    { slug: 'keo-dua-sau-rieng-dau-phong', key: 'products.durianPeanut' },
-    { slug: 'keo-dua-sau-rieng', key: 'products.durian' },
-    { slug: 'bo-qua-tang-cao-cap', key: 'products.giftSet' },
-  ];
-
-  const categories = allowedNav
-    .map((a) => {
-      const found = rawCategories.find(
-        (c) => (c.slug || '').toLowerCase() === a.slug.toLowerCase()
-      );
-      return found
-        ? {
-            id: found.id,
-            slug: found.slug,
-            label: t(a.key),
-          }
-        : null;
-    })
-    .filter((x): x is { id: string; slug: string; label: string } => !!x);
+  // Use all categories from API directly
+  const categories = rawCategories.map((category) => ({
+    id: category.id,
+    slug: category.slug,
+    label: category.name, // Use the name from API directly
+  }));
 
   // Fetch products by selected category
   const { data: productsData, isLoading: productsLoading } = useProductSearch({
@@ -295,54 +275,68 @@ const HomePage = () => {
             </div>
             {/* Product Categories Navigation */}
             <div className="mb-4 sm:mb-6 max-w-full mx-auto overflow-hidden">
-              <div className="px-2 sm:px-4">
-                <div
-                  ref={scrollContainerRef}
-                  className="flex gap-4 sm:gap-8 overflow-x-auto scrollbar-hide pb-4 max-w-full"
-                  style={{
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none',
-                    WebkitOverflowScrolling: 'touch',
-                  }}
-                >
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-md hover:bg-primary-green/10 ${
-                        selectedCategoryId === category.id
-                          ? 'bg-primary-green text-white'
-                          : ''
-                      }`}
-                      onClick={() => setSelectedCategoryId(category.id)}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
+              {categoriesLoading ? (
+                <div className="text-center py-4">
+                  <p className="text-gray-500">Loading categories...</p>
                 </div>
-                {/* Scrollbar */}
-                <div className="w-full mt-4">
+              ) : categoriesError ? (
+                <div className="text-center py-4">
+                  <p className="text-red-500">Error loading categories</p>
+                </div>
+              ) : categories.length === 0 ? (
+                <div className="text-center py-4">
+                  <p className="text-gray-500">No categories available</p>
+                </div>
+              ) : (
+                <div className="px-2 sm:px-4">
                   <div
-                    ref={trackRef}
-                    className="w-full h-4 bg-gray-200 rounded-sm cursor-pointer relative select-none"
-                    onMouseDown={handleTrackMouseDown}
-                    onTouchStart={(e) => {
-                      const touch = e.touches[0];
-                      handleTrackMouseDown({
-                        clientX: touch.clientX,
-                      } as React.MouseEvent);
+                    ref={scrollContainerRef}
+                    className="flex gap-4 sm:gap-8 overflow-x-auto scrollbar-hide pb-4 max-w-full"
+                    style={{
+                      scrollbarWidth: 'none',
+                      msOverflowStyle: 'none',
+                      WebkitOverflowScrolling: 'touch',
                     }}
                   >
+                    {categories.map((category) => (
+                      <button
+                        key={category.id}
+                        className={`text-sm font-medium text-warm-brown hover:text-primary-green transition-colors tracking-wide whitespace-nowrap flex-shrink-0 px-2 py-1 rounded-md hover:bg-primary-green/10 ${
+                          selectedCategoryId === category.id
+                            ? 'bg-primary-green text-white'
+                            : ''
+                        }`}
+                        onClick={() => setSelectedCategoryId(category.id)}
+                      >
+                        {category.label}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Scrollbar */}
+                  <div className="w-full mt-4">
                     <div
-                      ref={thumbRef}
-                      className="h-4 bg-primary-green rounded-sm absolute top-0 transition-none"
-                      style={{
-                        left: `${(scrollProgress * (100 - 20)) / 100}%`,
-                        width: '20%',
+                      ref={trackRef}
+                      className="w-full h-4 bg-gray-200 rounded-sm cursor-pointer relative select-none"
+                      onMouseDown={handleTrackMouseDown}
+                      onTouchStart={(e) => {
+                        const touch = e.touches[0];
+                        handleTrackMouseDown({
+                          clientX: touch.clientX,
+                        } as React.MouseEvent);
                       }}
-                    />
+                    >
+                      <div
+                        ref={thumbRef}
+                        className="h-4 bg-primary-green rounded-sm absolute top-0 transition-none"
+                        style={{
+                          left: `${(scrollProgress * (100 - 20)) / 100}%`,
+                          width: '20%',
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">

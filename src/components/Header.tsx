@@ -3,6 +3,7 @@
 import {
   ChevronRight,
   Globe,
+  Heart,
   Leaf,
   Menu,
   Search,
@@ -15,6 +16,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logoCody from '../assets/images/logo-cody.png';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useWishlist } from '../context/WishlistContext';
 import useLogin from '../hook/useLogin';
 import useRegister from '../hook/useRegister';
 import { isApiError } from '../lib/ApiError';
@@ -26,9 +28,11 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { items, openCart } = useCart();
+  const { wishlistItems } = useWishlist();
   const { language, setLanguage, t } = useLanguage();
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -70,27 +74,38 @@ const Header = () => {
 
   const handleLogout = () => {
     AuthUtils.clearAuthData();
+    // Also clear user info from sessionStorage
+    sessionStorage.removeItem('user_info');
     showToast(
       'success',
       t('auth.logoutSuccess'),
       t('auth.logoutSuccessMessage')
     );
+    // Navigate to home page after logout
+    navigate('/');
+    // Open auth modal after a short delay to allow navigation
+    setTimeout(() => {
+      openAuth('signin');
+    }, 500);
   };
 
   const handleSignIn = async (d: { email: string; password: string }) => {
     try {
-      console.log('Login payload:', d);
       const res = (await doLogin(d)) as any;
-      console.log('Login response:', res);
 
       if (res?.status === 200 && res?.data?.accessToken) {
         AuthUtils.saveAuthData(
           res.data.accessToken,
-          res.data.refreshToken,
-          res.data.user
+          res.data.refreshToken
         );
 
-        const userName = AuthUtils.getUserFullName();
+        // Save user info to sessionStorage for CartPage
+        if (res.data.info) {
+          sessionStorage.setItem('user_info', JSON.stringify(res.data.info));
+        }
+
+        const userName = res.data.info?.name || 
+                        `${res.data.info?.lastName || ''} ${res.data.info?.firstName || ''}`.trim();
         if (userName) {
           showToast(
             'success',
@@ -106,28 +121,18 @@ const Header = () => {
         }
 
         setAuthOpen(false);
-        // Notify any listeners that auth succeeded
-        try {
-          window.dispatchEvent(new CustomEvent('auth-success'));
-        } catch {}
+        // Reload page after successful login
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else if (res?.status && res?.status !== 200) {
         // Show generic error message instead of backend details
         showToast('error', t('auth.loginFailed'), t('auth.genericError'));
       } else {
-        console.warn('Unexpected response structure:', res);
         showToast('error', t('auth.loginFailed'), t('auth.genericError'));
       }
     } catch (e: any) {
-      // Log server detail for debugging but show generic message to user
-      let serverDetail: string | undefined;
-      if (isApiError(e)) {
-        serverDetail =
-          (e.data as any)?.error?.detail || (e.data as any)?.message;
-      }
-      if (serverDetail) {
-        console.warn('Login error detail:', serverDetail);
-      }
-
+      // Show generic message to user
       showToast('error', t('auth.loginFailed'), t('auth.genericError'));
     }
   };
@@ -142,9 +147,7 @@ const Header = () => {
         ...d,
         confirmPassword: d.password,
       };
-      console.log('Register payload:', registerData);
       const res = (await doRegister(registerData)) as any;
-      console.log('Register response:', res);
       if (res?.status === 200) {
         setAuthMode('signin');
         showToast(
@@ -159,7 +162,6 @@ const Header = () => {
           t('auth.genericError')
         );
       } else {
-        console.warn('Unexpected registration response:', res);
         showToast(
           'error',
           t('auth.registrationFailed'),
@@ -173,8 +175,7 @@ const Header = () => {
         if (fieldErrors && typeof fieldErrors === 'object') {
           const firstKey = Object.keys(fieldErrors)[0];
           if (firstKey) {
-            const backendFieldError = fieldErrors[firstKey];
-            console.warn('Register field error:', backendFieldError);
+            // Field validation error occurred
             showToast(
               'error',
               t('auth.registrationFailed'),
@@ -191,7 +192,7 @@ const Header = () => {
         }
         const detail = data?.error?.detail || data?.message;
         if (detail) {
-          console.warn('Register error detail:', detail);
+          // Error detail received
         }
         showToast(
           'error',
@@ -269,6 +270,24 @@ const Header = () => {
       document.body.style.overflow = originalOverflow;
     };
   }, [isMenuOpen, isMobile]);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (userDropdownOpen && !target.closest('.user-dropdown-container')) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    if (userDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userDropdownOpen]);
 
   return (
     <>
@@ -358,21 +377,80 @@ const Header = () => {
                   )}
                 </button>
 
-                {AuthUtils.isAuthenticated() ? (
+                {/* User Dropdown */}
+                <div className="relative user-dropdown-container">
                   <button
-                    onClick={handleLogout}
-                    className="p-2 text-warm-brown hover:text-primary-green transition-colors"
-                  >
-                    {t('auth.logout')}
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => openAuth('signin')}
-                    className="p-2 text-warm-brown hover:text-primary-green transition-colors"
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="p-2 text-warm-brown hover:text-primary-green transition-colors relative"
                   >
                     <User className="h-5 w-5" />
+                    {wishlistItems.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                        {wishlistItems.length}
+                      </span>
+                    )}
                   </button>
-                )}
+
+                  {/* Dropdown Menu */}
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 animate-fadeIn">
+                      {/* Wishlist - Always visible */}
+                      <Link
+                        to="/wishlist"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-warm-brown hover:bg-primary-green/10 hover:text-primary-green transition-colors"
+                      >
+                        <Heart className="h-4 w-4" />
+                        <span>{t('nav.wishlist')}</span>
+                        {wishlistItems.length > 0 && (
+                          <span className="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {wishlistItems.length}
+                          </span>
+                        )}
+                      </Link>
+
+                      {AuthUtils.isAuthenticated() ? (
+                        <>
+                          {/* Order History - Only when authenticated */}
+                          <Link
+                            to="/order-success"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-warm-brown hover:bg-primary-green/10 hover:text-primary-green transition-colors"
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                            <span>{t('nav.orderHistory')}</span>
+                          </Link>
+                          <div className="border-t border-gray-200 my-2"></div>
+                          <button
+                            onClick={() => {
+                              handleLogout();
+                              setUserDropdownOpen(false);
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                            <span>{t('auth.logout')}</span>
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          {/* Login button - Only when not authenticated */}
+                          <div className="border-t border-gray-200 my-2"></div>
+                          <button
+                            onClick={() => {
+                              openAuth('signin');
+                              setUserDropdownOpen(false);
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-warm-brown hover:bg-primary-green/10 hover:text-primary-green transition-colors"
+                          >
+                            <User className="h-4 w-4" />
+                            <span>{t('auth.login')}</span>
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 <button
                   onClick={() => setLanguage(language === 'en' ? 'vn' : 'en')}
@@ -412,6 +490,20 @@ const Header = () => {
               >
                 <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
+
+              {AuthUtils.isAuthenticated() && (
+                <Link
+                  to="/wishlist"
+                  className="relative p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors"
+                >
+                  <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                  {wishlistItems.length > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs">
+                      {wishlistItems.length}
+                    </span>
+                  )}
+                </Link>
+              )}
 
               <button
                 onClick={openCart}
@@ -482,16 +574,26 @@ const Header = () => {
                   </Link>
                 ))}
                 {AuthUtils.isAuthenticated() ? (
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
-                  >
-                    <span>{t('auth.logout')}</span>
-                    <ChevronRight className="h-4 w-4 opacity-60" />
-                  </button>
+                  <>
+                    <Link
+                      to="/order-success"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
+                    >
+                      <span>{(t('nav.orderHistory') || 'ORDER HISTORY').toUpperCase()}</span>
+                      <ChevronRight className="h-4 w-4 opacity-60" />
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
+                    >
+                      <span>{t('auth.logout')}</span>
+                      <ChevronRight className="h-4 w-4 opacity-60" />
+                    </button>
+                  </>
                 ) : (
                   <button
                     onClick={() => {
@@ -546,13 +648,12 @@ const Header = () => {
         onSignIn={handleSignIn}
         onSignUp={handleSignUp}
         onSignUpFieldErrors={(errs) => {
-          // Log field validation errors for debugging but show generic message to user
+          // Field validation errors - show generic message to user
           const firstKey = Object.keys(errs)[0] as
             | keyof typeof errs
             | undefined;
           if (firstKey) {
-            const backendFieldError = errs[firstKey];
-            console.warn('Signup field validation error:', backendFieldError);
+            // Field validation error occurred
             showToast(
               'error',
               t('auth.registrationFailed'),

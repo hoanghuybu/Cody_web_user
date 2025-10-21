@@ -25,9 +25,6 @@ async function request<TRes, TReq = unknown>(
 ): Promise<TRes> {
   const url = buildUrl(path, query);
   
-  // Log API calls for debugging
-  console.log(`API ${method} ${url}`, body ? { body } : '');
-  
   // Get authentication token
   const token = AuthUtils.getAccessToken();
   
@@ -46,9 +43,6 @@ async function request<TRes, TReq = unknown>(
 
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
-  
-  // Log response for debugging
-  console.log(`API ${method} ${url} Response:`, { status: res.status, data });
   
   if (!res.ok) {
     throw new ApiError(res.status, data);

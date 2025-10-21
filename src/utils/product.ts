@@ -51,8 +51,9 @@ export class ProductUtils {
       ...product,
       originalName: product.name,
       originalDescription: product.description,
-      name: `p.${product.id}.name`,
-      description: `p.${product.id}.desc`,
+      // Keep the actual name and description, don't convert to translation keys
+      // name: `p.${product.id}.name`,
+      // description: `p.${product.id}.desc`,
       image: ProductUtils.getMainImage(product),
       category: ProductUtils.getPrimaryCategory(product),
       inStock: ProductUtils.isInStock(product),
