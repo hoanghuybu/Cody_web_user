@@ -6,6 +6,7 @@ import banner1 from '../assets/images/banner-1.jpg';
 import cusPrize from '../assets/images/custom-prize.png';
 import cusSticker from '../assets/images/custom-sticker.png';
 import lblImg from '../assets/images/lbl-img.jpg';
+
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useAllCategories } from '../hooks/useCategories';
