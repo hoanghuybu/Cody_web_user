@@ -22,6 +22,18 @@ const translations: Record<Language, TranslationDict> = {
     'common.close': 'Close',
     'common.cancel': 'Cancel',
     'common.save': 'Save',
+    cart: 'Shopping cart',
+    noItem: 'There are no products.',
+    specialNotes: 'Special notes',
+    'placeholder.note': 'Enter your special request...',
+    'custom.name.gift': 'Name gift',
+    'custom.placeholder.gift': 'Enter your gift name...',
+    'custom.name.sticker': 'Name sticker',
+    'custom.selected.gift': 'Select Products',
+    'custom.selected.sticker': 'Select sticker',
+    'custom.placeholder.sticker': 'Enter your sticker name...',
+    'custom.selected': 'selected',
+    'custom.button.order': 'Order now',
     // Product Detail
     'productDetail.notFound': 'Product not found',
     'productDetail.backToList': 'Back to product list',
@@ -86,11 +98,14 @@ const translations: Record<Language, TranslationDict> = {
     'i.coconutJam': 'Coconut jam',
 
     'cultural.title': 'The Cultural Story of Ben Tre & Coconut Candy',
-  'cultural.p1': 'Known as the Land of Coconuts, Ben Tre is where generations have turned simple ingredients into timeless flavors. Coconut candy represents more than sweetness — it embodies the craftsmanship, warmth, and resilience of the people who make it.',
-  'cultural.p2': 'At CODY, we preserve that legacy while giving it a modern identity. Our candies celebrate the harmony between tradition and innovation, offering a taste that feels both nostalgic and refreshingly new.',
-  'cultural.p3': 'Through each piece of candy, we tell the story of creativity, culture, and connection — from Vietnam to the world.',
+    'cultural.p1':
+      'Known as the Land of Coconuts, Ben Tre is where generations have turned simple ingredients into timeless flavors. Coconut candy represents more than sweetness — it embodies the craftsmanship, warmth, and resilience of the people who make it.',
+    'cultural.p2':
+      'At CODY, we preserve that legacy while giving it a modern identity. Our candies celebrate the harmony between tradition and innovation, offering a taste that feels both nostalgic and refreshingly new.',
+    'cultural.p3':
+      'Through each piece of candy, we tell the story of creativity, culture, and connection — from Vietnam to the world.',
 
-        // The Mind Behind The CODY section
+    // The Mind Behind The CODY section
     'mind.title': 'The Mind Behind The CODY',
     'mind.subtitle': 'The story, values, and purpose behind our journey.',
     'mind.name': 'Le Bao Long',
@@ -200,16 +215,19 @@ const translations: Record<Language, TranslationDict> = {
       'Le Bao Long, a Vietnamese student studying in California, is driven by a mission to bridge cultures through entrepreneurship. From selling 1,200+ handmade products in Phase I to building scholarship programs for students in need, Long’s vision is to redefine what a “sweet” brand can mean — a symbol of culture, sustainability, and compassion.',
     'meet.quote':
       '“We want people to taste more than candy. We want them to taste the story of Vietnam — one that’s humble, hopeful, and beautifully human.”',
-    
 
-        'experience.title': 'Experience Ben Tre',
-  'experience.subtitle': 'We invite travelers and culture lovers to explore Ben Tre through the CODY Experience – a hands-on journey into the art of coconut.',
-  'experience.p1': 'Make your own coconut candy with local artisans and witness every stage – from melting sugar and stirring the mixture to cutting and wrapping by hand.',
-  'experience.p2': 'Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories.',
-  'experience.p3': 'Where human connection and the taste of home melt together in every bite.',
-  'auth.logout': 'LOGOUT',
+    'experience.title': 'Experience Ben Tre',
+    'experience.subtitle':
+      'We invite travelers and culture lovers to explore Ben Tre through the CODY Experience – a hands-on journey into the art of coconut.',
+    'experience.p1':
+      'Make your own coconut candy with local artisans and witness every stage – from melting sugar and stirring the mixture to cutting and wrapping by hand.',
+    'experience.p2':
+      'Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories.',
+    'experience.p3':
+      'Where human connection and the taste of home melt together in every bite.',
+    'auth.logout': 'LOGOUT',
 
-      // Cart
+    // Cart
     'cart.title': 'Your Cart',
     'cart.itemsCount': '{count} items in your cart',
     'cart.emptyTitle': 'Your cart is empty',
@@ -517,6 +535,12 @@ const translations: Record<Language, TranslationDict> = {
       'We believe that every gift is not just an item to be given but a way for you to express your feelings and care. Let Customize Stickers help you convey your message of love and create a truly meaningful gift.',
     'sticker.cta':
       'Start customizing your stickers today to add a special touch to your gifts, filled with love and creativity!',
+
+    'error.nameCombo': 'Please enter the combo name.',
+    'error.noteCombo': 'Please enter a note.',
+    'error.buyerName': "Please enter the buyer's name.",
+    'error.buyerPhone': 'Please enter the phone number.',
+    'error.addressUrl': 'Please enter the address.',
   },
   vn: {
     // Common
@@ -525,6 +549,18 @@ const translations: Record<Language, TranslationDict> = {
     'common.close': 'Đóng',
     'common.cancel': 'Hủy',
     'common.save': 'Lưu',
+    cart: 'Giỏ hàng',
+    noItem: 'Không có sản phẩm nào.',
+    specialNotes: 'Ghi chú đặc biệt',
+    'placeholder.note': 'Nhập yêu cầu đặc biệt của bạn...',
+    'custom.name.gift': 'Tên quà tặng',
+    'custom.placeholder.gift': 'Nhập tên quà tặng của bạn...',
+    'custom.name.sticker': 'Tên sticker',
+    'custom.selected.gift': 'Chọn Sản phẩm',
+    'custom.selected.sticker': 'Chọn sticker',
+    'custom.placeholder.sticker': 'Nhập tên sticker của bạn...',
+    'custom.selected': 'đã chọn',
+    'custom.button.order': 'Đặt hàng ngay',
     // Product Detail
     'productDetail.notFound': 'Không tìm thấy sản phẩm',
     'productDetail.backToList': 'Quay lại danh sách sản phẩm',
@@ -610,18 +646,25 @@ const translations: Record<Language, TranslationDict> = {
       'Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.',
     'products.createCombo': 'Tạo hộp quà',
 
-  'cultural.title': 'Câu Chuyện Văn Hóa Về Bến Tre & Kẹo Dừa',
-  'cultural.p1': 'Bến Tre – “xứ dừa” của Việt Nam – là nơi bao thế hệ đã biến những nguyên liệu giản dị thành hương vị vượt thời gian. Kẹo dừa không chỉ là vị ngọt mà còn là sự khéo léo, ấm áp và bền bỉ của những con người làm nên nó.',
-  'cultural.p2': 'Tại CODY, chúng tôi gìn giữ di sản ấy, đồng thời thổi vào đó hơi thở hiện đại. Mỗi viên kẹo là sự hòa quyện giữa truyền thống và sáng tạo, mang đến cảm giác vừa thân thuộc vừa mới mẻ.',
-  'cultural.p3': 'Qua từng viên kẹo, CODY kể câu chuyện về sáng tạo, văn hóa và sự gắn kết – từ Việt Nam vươn ra thế giới.',
-    
-      'experience.title': 'Trải Nghiệm Bến Tre',
-  'experience.subtitle': 'Chúng tôi mời bạn đến khám phá Bến Tre thông qua hành trình “CODY Experience” – một chuyến đi thực hành đầy cảm hứng về nghệ thuật kẹo dừa.',
-  'experience.p1': 'Tự tay làm kẹo dừa cùng nghệ nhân địa phương, tận mắt chứng kiến từng công đoạn – từ nấu đường, khuấy kẹo, đến cắt và gói bằng tay.',
-  'experience.p2': 'Hãy để hương dừa ngọt ngào, tiếng cười vui và những câu chuyện ấm áp đưa bạn trở lại ký ức tuổi thơ.',
-  'experience.p3': 'Nơi con người và hương vị quê hương hòa quyện trong từng viên kẹo.',
+    'cultural.title': 'Câu Chuyện Văn Hóa Về Bến Tre & Kẹo Dừa',
+    'cultural.p1':
+      'Bến Tre – “xứ dừa” của Việt Nam – là nơi bao thế hệ đã biến những nguyên liệu giản dị thành hương vị vượt thời gian. Kẹo dừa không chỉ là vị ngọt mà còn là sự khéo léo, ấm áp và bền bỉ của những con người làm nên nó.',
+    'cultural.p2':
+      'Tại CODY, chúng tôi gìn giữ di sản ấy, đồng thời thổi vào đó hơi thở hiện đại. Mỗi viên kẹo là sự hòa quyện giữa truyền thống và sáng tạo, mang đến cảm giác vừa thân thuộc vừa mới mẻ.',
+    'cultural.p3':
+      'Qua từng viên kẹo, CODY kể câu chuyện về sáng tạo, văn hóa và sự gắn kết – từ Việt Nam vươn ra thế giới.',
 
-  'auth.logout': 'ĐĂNG XUẤT',
+    'experience.title': 'Trải Nghiệm Bến Tre',
+    'experience.subtitle':
+      'Chúng tôi mời bạn đến khám phá Bến Tre thông qua hành trình “CODY Experience” – một chuyến đi thực hành đầy cảm hứng về nghệ thuật kẹo dừa.',
+    'experience.p1':
+      'Tự tay làm kẹo dừa cùng nghệ nhân địa phương, tận mắt chứng kiến từng công đoạn – từ nấu đường, khuấy kẹo, đến cắt và gói bằng tay.',
+    'experience.p2':
+      'Hãy để hương dừa ngọt ngào, tiếng cười vui và những câu chuyện ấm áp đưa bạn trở lại ký ức tuổi thơ.',
+    'experience.p3':
+      'Nơi con người và hương vị quê hương hòa quyện trong từng viên kẹo.',
+
+    'auth.logout': 'ĐĂNG XUẤT',
 
     // Category names
     'categories.traditional': 'Truyền thống',
@@ -889,7 +932,7 @@ const translations: Record<Language, TranslationDict> = {
     'customWhy.description':
       'Thiết kế món quà đẹp và ý nghĩa — chọn hương vị, sắp xếp set, và thêm lời nhắn cá nhân.',
 
-          // The Mind Behind The CODY section
+    // The Mind Behind The CODY section
     'mind.title': 'Tâm Hồn Đằng Sau CODY',
     'mind.subtitle': 'Câu chuyện, giá trị và mục đích của hành trình này.',
     'mind.name': 'Lê Bảo Long',
@@ -984,8 +1027,6 @@ const translations: Record<Language, TranslationDict> = {
       'Theo dõi chúng tôi để cập nhật những sản phẩm mới và câu chuyện về hành trình bền vững từ Bến Tre.',
     'footer.copyright': '© 2025 CODY - KẸO DỪA. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.',
 
-
-    
     // Product Card
     'product.addToCart': 'THÊM VÀO GIỎ',
 
@@ -1028,6 +1069,12 @@ const translations: Record<Language, TranslationDict> = {
       'Chúng tôi tin rằng mỗi món quà không chỉ là vật phẩm trao tặng mà còn là cách để bạn bày tỏ tình cảm và sự quan tâm. Hãy để những chiếc Customize Stickers giúp bạn truyền tải thông điệp yêu thương và tạo nên một món quà thật sự ý nghĩa.',
     'sticker.cta':
       'Hãy bắt đầu tùy chỉnh sticker ngay hôm nay để mang đến những món quà tuyệt vời, đầy ắp tình cảm và sự sáng tạo!',
+
+    'error.nameCombo': 'Vui lòng nhập tên combo.',
+    'error.noteCombo': 'Vui lòng nhập ghi chú',
+    'error.buyerName': 'Vui lòng nhập tên người mua.',
+    'error.buyerPhone': 'Vui lòng nhập số điện thoại.',
+    'error.addressUrl': 'Vui lòng nhập địa chỉ',
   },
 };
 

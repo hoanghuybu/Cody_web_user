@@ -1,5 +1,6 @@
 export const endpoints = {
-  login: "/auth/login",
-  register: "/auth/register",
-  chatbot: "/chatbot"
+  login: '/auth/login',
+  register: '/auth/register',
+  chatbot: '/chatbot',
+  create_combo: '/orders/create',
 } as const;

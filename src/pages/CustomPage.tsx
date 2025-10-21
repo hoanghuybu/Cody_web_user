@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Heart,
+  Loader2,
   Minus,
   Package,
   Plus,
@@ -10,22 +11,7 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-
-// Mock data types
-interface Sticker {
-  id: string;
-  name: string;
-  image: string;
-  price: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-}
+import { useCreateCombo, useProductSearch } from '../hooks/useProducts';
 
 interface CartItem {
   id: string;
@@ -36,118 +22,39 @@ interface CartItem {
   quantity: number;
 }
 
-// Mock API functions
-const fetchStickers = async (): Promise<Sticker[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  return [
-    {
-      id: 'sticker-1',
-      name: 'Coconut Palm Sticker',
-      image:
-        'https://images.pexels.com/photos/2872418/pexels-photo-2872418.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 15000,
-    },
-    {
-      id: 'sticker-2',
-      name: 'Ben Tre Logo Sticker',
-      image:
-        'https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 12000,
-    },
-    {
-      id: 'sticker-3',
-      name: 'Traditional Pattern Sticker',
-      image:
-        'https://images.pexels.com/photos/11406167/pexels-photo-11406167.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 18000,
-    },
-    {
-      id: 'sticker-4',
-      name: 'Coconut Candy Sticker',
-      image:
-        'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 20000,
-    },
-    {
-      id: 'sticker-5',
-      name: 'Vintage CODY Sticker',
-      image:
-        'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 25000,
-    },
-    {
-      id: 'sticker-6',
-      name: 'Eco-Friendly Sticker',
-      image:
-        'https://images.pexels.com/photos/7525184/pexels-photo-7525184.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 22000,
-    },
-  ];
-};
-
-const fetchProducts = async (): Promise<Product[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return [
-    {
-      id: 'product-1',
-      name: 'Kẹo Dừa Truyền Thống',
-      image:
-        'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Kẹo dừa nguyên chất theo công thức truyền thống',
-      price: 45000,
-    },
-    {
-      id: 'product-2',
-      name: 'Kẹo Dừa Sầu Riêng',
-      image:
-        'https://images.pexels.com/photos/7525184/pexels-photo-7525184.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Hương vị độc đáo của sầu riêng kết hợp dừa',
-      price: 65000,
-    },
-    {
-      id: 'product-3',
-      name: 'Combo Mix 3 Vị',
-      image:
-        'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Combo 3 vị: truyền thống, cà phê và sầu riêng',
-      price: 125000,
-    },
-    {
-      id: 'product-4',
-      name: 'Hộp Quà Cao Cấp',
-      image:
-        'https://images.pexels.com/photos/6697264/pexels-photo-6697264.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Hộp quà sang trọng với 6 loại kẹo dừa đặc biệt',
-      price: 280000,
-    },
-    {
-      id: 'product-5',
-      name: 'Kẹo Dừa Cà Phê',
-      image:
-        'https://images.pexels.com/photos/8835098/pexels-photo-8835098.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Hương vị đậm đà của cà phê Arabica',
-      price: 55000,
-    },
-    {
-      id: 'product-6',
-      name: 'Giỏ Quà Bến Tre',
-      image:
-        'https://images.pexels.com/photos/1028637/pexels-photo-1028637.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Giỏ quà đặc sản với nhiều sản phẩm từ dừa',
-      price: 350000,
-    },
-  ];
-};
-
 const CustomPage: React.FC = () => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'gift' | 'sticker'>('gift');
-  const [stickers, setStickers] = useState<Sticker[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loadingStickers, setLoadingStickers] = useState(false);
-  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [page, setPage] = useState(0);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('CANDY');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errors, setErrors] = useState({
+    name: '',
+    note: '',
+    items: '',
+    buyerName: '',
+    buyerPhone: '',
+    addressUrl: '',
+  });
+
+  const [buyerInfo, setBuyerInfo] = useState({
+    buyerName: '',
+    buyerPhone: '',
+    addressUrl: '',
+  });
+  const size = 6;
+  const { data: productsData, isLoading: productsLoading } = useProductSearch({
+    page,
+    size,
+    sortBy: 'name',
+    sortDirection: 'ASC',
+    categoryId: selectedCategoryId || undefined,
+  });
+  const { onCreateCombo, isLoading: isLoadingCreate } = useCreateCombo();
+
+  const products = productsData?.data?.content ?? [];
+  const totalPages = productsData?.data?.totalPages ?? 1;
+  const currentPage = productsData?.data?.number ?? 0;
 
   // Form data for each tab (preserved when switching)
   const [giftData, setGiftData] = useState({
@@ -164,36 +71,6 @@ const CustomPage: React.FC = () => {
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [note, setNote] = useState('');
-
-  // Load data on component mount
-  useEffect(() => {
-    loadStickers();
-    loadProducts();
-  }, []);
-
-  const loadStickers = async () => {
-    setLoadingStickers(true);
-    try {
-      const data = await fetchStickers();
-      setStickers(data);
-    } catch (error) {
-      console.error('Error loading stickers:', error);
-    } finally {
-      setLoadingStickers(false);
-    }
-  };
-
-  const loadProducts = async () => {
-    setLoadingProducts(true);
-    try {
-      const data = await fetchProducts();
-      setProducts(data);
-    } catch (error) {
-      console.error('Error loading products:', error);
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
 
   const getCurrentData = () => (activeTab === 'gift' ? giftData : stickerData);
   const setCurrentData = (data: any) => {
@@ -221,13 +98,13 @@ const CustomPage: React.FC = () => {
         ...currentData,
         selectedStickers: [...currentData.selectedStickers, stickerId],
       });
-      const sticker = stickers.find((s) => s.id === stickerId);
+      const sticker = products?.find((s) => s.id === stickerId);
       if (sticker) {
         addToCart({
           id: sticker.id,
           type: 'sticker',
           name: sticker.name,
-          image: sticker.image,
+          image: sticker?.image ?? '',
           price: sticker.price,
           quantity: 1,
         });
@@ -258,7 +135,7 @@ const CustomPage: React.FC = () => {
           id: product.id,
           type: 'product',
           name: product.name,
-          image: product.image,
+          image: product?.image ?? '',
           price: product.price,
           quantity: 1,
         });
@@ -305,6 +182,115 @@ const CustomPage: React.FC = () => {
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         )
       );
+    }
+  };
+
+  const handleOrder = () => {
+    // validate currentData.name, note, items
+    const currentData = getCurrentData();
+    // const totalItems = getTotalItems();
+    const newErrors: any = { name: '', note: '', items: '' };
+    let hasError = false;
+
+    if (!currentData.name.trim()) {
+      newErrors.name = t('error.nameCombo');
+      hasError = true;
+    }
+
+    if (!note.trim()) {
+      newErrors.note = t('error.noteCombo');
+      hasError = true;
+    }
+
+    // if (totalItems < 5) {
+    //   newErrors.items = 'Cần chọn ít nhất 5 sản phẩm hoặc sticker.';
+    //   hasError = true;
+    // }
+
+    setErrors(newErrors);
+
+    if (!hasError) {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleConfirm = async () => {
+    const currentData = getCurrentData();
+    const newErrors: any = { buyerName: '', buyerPhone: '', addressUrl: '' };
+    let hasError = false;
+
+    if (!buyerInfo.buyerName.trim()) {
+      newErrors.buyerName = t('error.buyerName');
+      hasError = true;
+    }
+
+    if (!buyerInfo.buyerPhone.trim()) {
+      newErrors.buyerPhone = t('error.buyerPhone');
+      hasError = true;
+    }
+
+    if (!buyerInfo.addressUrl.trim()) {
+      newErrors.addressUrl = t('error.addressUrl');
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!hasError) {
+      const body = {
+        items: cart.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+        buyerName: buyerInfo.buyerName,
+        buyerPhone: buyerInfo.buyerPhone,
+        addressUrl: buyerInfo.addressUrl,
+        customComboName: currentData.name,
+        note: note,
+        isCombo: true,
+        paymentMethod: 'COD',
+        sellerId: 'S9R2-005242',
+      };
+
+      try {
+        await onCreateCombo(body);
+
+        setBuyerInfo({
+          buyerName: '',
+          buyerPhone: '',
+          addressUrl: '',
+        });
+
+        // ✅ Reset current tab’s data
+        if (activeTab === 'gift') {
+          setGiftData({
+            name: '',
+            selectedStickers: [],
+            selectedProducts: [],
+          });
+        } else {
+          setStickerData({
+            name: '',
+            selectedStickers: [],
+            selectedProducts: [],
+          });
+        }
+
+        // ✅ Reset common form state
+        setNote('');
+        setCart([]);
+        setErrors({
+          name: '',
+          note: '',
+          items: '',
+          buyerName: '',
+          buyerPhone: '',
+          addressUrl: '',
+        });
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error creating combo:', error);
+      }
     }
   };
 
@@ -504,7 +490,9 @@ const CustomPage: React.FC = () => {
         {/* Name Input */}
         <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            Tên {activeTab === 'gift' ? 'quà tặng' : 'sticker'}
+            {activeTab === 'gift'
+              ? t('custom.name.gift')
+              : t('custom.name.sticker')}
           </h3>
           <input
             type="text"
@@ -512,11 +500,16 @@ const CustomPage: React.FC = () => {
             onChange={(e) =>
               setCurrentData({ ...currentData, name: e.target.value })
             }
-            placeholder={`Nhập tên ${
-              activeTab === 'gift' ? 'quà tặng' : 'sticker'
-            } của bạn...`}
+            placeholder={`${
+              activeTab === 'gift'
+                ? t('custom.placeholder.gift')
+                : t('custom.placeholder.sticker')
+            } `}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-2">{errors.name}</p>
+          )}
         </div>
 
         {/* Stickers Selection */}
@@ -524,10 +517,11 @@ const CustomPage: React.FC = () => {
           <>
             <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
               <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-                Chọn Sticker ({currentData.selectedStickers.length} đã chọn)
+                {t('custom.name.sticker')} (
+                {currentData.selectedStickers.length} {t('custom.selected')})
               </h3>
 
-              {loadingStickers ? (
+              {productsLoading ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {[...Array(6)].map((_, index) => (
                     <div
@@ -538,7 +532,7 @@ const CustomPage: React.FC = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {stickers.map((sticker) => (
+                  {products?.map((sticker) => (
                     <div
                       key={sticker.id}
                       onClick={() => handleStickerSelect(sticker.id)}
@@ -550,7 +544,7 @@ const CustomPage: React.FC = () => {
                     >
                       <div className="aspect-square">
                         <img
-                          src={sticker.image}
+                          src={sticker.images?.[0]?.imageUrl}
                           alt={sticker.name}
                           className="w-full h-full object-cover"
                         />
@@ -582,10 +576,11 @@ const CustomPage: React.FC = () => {
         {activeTab === 'gift' && (
           <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
             <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-              Chọn Sản phẩm ({currentData.selectedProducts.length} đã chọn)
+              {t('custom.name.gift')} ({currentData.selectedProducts.length}{' '}
+              {t('custom.selected')})
             </h3>
 
-            {loadingProducts ? (
+            {productsLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[...Array(6)].map((_, index) => (
                   <div
@@ -603,7 +598,7 @@ const CustomPage: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {products.map((product) => (
+                {products?.map((product) => (
                   <div
                     key={product.id}
                     onClick={() => handleProductSelect(product.id)}
@@ -614,7 +609,7 @@ const CustomPage: React.FC = () => {
                     }`}
                   >
                     <img
-                      src={product.image}
+                      src={product.images?.[0]?.imageUrl}
                       alt={product.name}
                       className="w-20 h-20 object-cover rounded-lg"
                     />
@@ -642,9 +637,59 @@ const CustomPage: React.FC = () => {
             )}
           </div>
         )}
+        {!productsLoading && products.length > 0 && (
+          <div className="flex justify-center items-center mt-6 space-x-4">
+            {/* Trang trước */}
+            <button
+              onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Trang trước
+            </button>
+
+            {/* Số trang */}
+            <div className="flex space-x-2">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i)}
+                  className={`px-3 py-1 rounded ${
+                    i === currentPage
+                      ? 'bg-primary-green text-white'
+                      : 'bg-gray-200 hover:bg-gray-300'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+
+            {/* Trang sau */}
+            <button
+              onClick={() =>
+                setPage((prev) => Math.min(prev + 1, totalPages - 1))
+              }
+              disabled={currentPage >= totalPages - 1}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Trang sau
+            </button>
+          </div>
+        )}
       </div>
     );
   };
+
+  useEffect(() => {
+    if (activeTab && activeTab === 'gift') {
+      setPage(0);
+      setSelectedCategoryId('CANDY');
+    } else {
+      setPage(0);
+      setSelectedCategoryId('STICKER');
+    }
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-white py-8">
@@ -710,7 +755,7 @@ const CustomPage: React.FC = () => {
               <div className=" rounded-2xl shadow-xl p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-warm-brown font-playfair">
-                    Giỏ hàng
+                    {t('cart')}
                   </h3>
                   <div className="flex items-center space-x-2">
                     <ShoppingCart className="h-5 w-5 text-primary-green" />
@@ -723,7 +768,7 @@ const CustomPage: React.FC = () => {
                 {cart.length === 0 ? (
                   <div className="text-center py-8">
                     <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">Chưa có sản phẩm nào</p>
+                    <p className="text-gray-500">{t('noItem')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4 mb-6">
@@ -783,22 +828,25 @@ const CustomPage: React.FC = () => {
                 {/* Note Input */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ghi chú đặc biệt
+                    {t('specialNotes')}
                   </label>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    placeholder="Nhập yêu cầu đặc biệt của bạn..."
+                    placeholder={t('placeholder.note')}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent resize-none text-sm"
                   />
+                  {errors.note && (
+                    <p className="text-red-500 text-sm mt-2">{errors.note}</p>
+                  )}
                 </div>
 
                 {/* Total */}
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-semibold text-warm-brown">
-                      Tổng cộng:
+                      {t('cart.total')}
                     </span>
                     <span className="text-xl font-bold text-primary-green">
                       {formatPrice(getTotalPrice())}
@@ -807,9 +855,10 @@ const CustomPage: React.FC = () => {
 
                   <button
                     disabled={cart.length === 0}
+                    onClick={handleOrder}
                     className="w-full bg-primary-green text-white py-3 rounded-xl font-semibold hover:bg-primary-green/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
-                    Đặt hàng ngay
+                    {t('custom.button.order')}
                   </button>
                 </div>
               </div>
@@ -818,6 +867,79 @@ const CustomPage: React.FC = () => {
         </div>
       </div>
 
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white w-11/12 max-w-md rounded-xl p-6 shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-center">
+              {t('orderInfo')}
+            </h2>
+
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder={t('buyerName')}
+                value={buyerInfo.buyerName}
+                onChange={(e) =>
+                  setBuyerInfo({ ...buyerInfo, buyerName: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
+              />
+              {errors.buyerName && (
+                <p className="text-red-500 text-sm mt-2">{errors.buyerName}</p>
+              )}
+              <input
+                type="text"
+                placeholder={t('buyerPhone')}
+                value={buyerInfo.buyerPhone}
+                onChange={(e) =>
+                  setBuyerInfo({ ...buyerInfo, buyerPhone: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
+              />
+              {errors.buyerPhone && (
+                <p className="text-red-500 text-sm mt-2">{errors.buyerPhone}</p>
+              )}
+              <input
+                type="text"
+                placeholder={t('addressUrl')}
+                value={buyerInfo.addressUrl}
+                onChange={(e) =>
+                  setBuyerInfo({ ...buyerInfo, addressUrl: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
+              />
+              {errors.addressUrl && (
+                <p className="text-red-500 text-sm mt-2">{errors.addressUrl}</p>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                disabled={isLoadingCreate}
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                {isLoadingCreate ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  t('cancel')
+                )}
+              </button>
+              <button
+                disabled={isLoadingCreate}
+                onClick={handleConfirm}
+                className="px-4 py-2 text-sm font-medium bg-primary-green text-white rounded-lg hover:bg-primary-green/90"
+              >
+                {isLoadingCreate ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  t('confirm')
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <style>{`
         @keyframes fadeIn {
           from {
