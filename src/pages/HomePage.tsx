@@ -6,6 +6,7 @@ import banner1 from '../assets/images/banner-1.jpg';
 import cusPrize from '../assets/images/custom-prize.png';
 import cusSticker from '../assets/images/custom-sticker.png';
 import lblImg from '../assets/images/lbl-img.jpg';
+
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useAllCategories } from '../hooks/useCategories';
@@ -481,7 +482,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-cream transition-all duration-300"
                   >
                     {t('workshop.discover')}
                   </Link>
@@ -529,7 +530,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-cream transition-all duration-300"
                   >
                     {t('about.getToKnow')}
                   </Link>
