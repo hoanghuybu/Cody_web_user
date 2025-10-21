@@ -35,7 +35,11 @@ interface OrderDetail {
     quantity: number;
     price: number;
   }>;
-  buyer: any;
+  buyer: {
+    id: string;
+    name: string;
+    buyerPhone: string;
+  };
 }
 
 const OrderDetailPage = () => {
@@ -70,7 +74,7 @@ const OrderDetailPage = () => {
     fetch(`https://www.cody-be.online/api/v1/orders/${orderId}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
       },
     })
       .then(res => {
@@ -80,6 +84,7 @@ const OrderDetailPage = () => {
         return res.json();
       })
       .then(data => {
+        console.log('Order data:', data.data); // Debug log
         setOrder(data.data);
         setLoading(false);
       })
@@ -156,11 +161,6 @@ const OrderDetailPage = () => {
                   <h2 className="text-lg font-semibold text-warm-brown">
                     Mã đơn hàng: <span className="text-primary-green">{order.orderId}</span>
                   </h2>
-                  {order.note && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      <span className="font-medium">Ghi chú:</span> {order.note}
-                    </p>
-                  )}
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-amber-600">
@@ -221,11 +221,26 @@ const OrderDetailPage = () => {
                   </svg>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Số điện thoại:</p>
-                    <p className="text-gray-900 font-medium">{order.buyer?.phone || 'N/A'}</p>
+                    <p className="text-gray-900 font-medium">{order.buyer?.buyerPhone || 'N/A'}</p>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Order Note (if exists) */}
+            {order.note && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 className="font-semibold text-warm-brown mb-3 flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Ghi chú đơn hàng
+                </h3>
+                <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                  <p className="text-gray-700 italic">"{order.note}"</p>
+                </div>
+              </div>
+            )}
 
             {/* Products */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
