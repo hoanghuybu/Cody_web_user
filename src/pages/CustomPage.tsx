@@ -176,7 +176,7 @@ const CustomPage: React.FC = () => {
       const data = await fetchStickers();
       setStickers(data);
     } catch (error) {
-      console.error('Error loading stickers:', error);
+      // Error loading stickers
     } finally {
       setLoadingStickers(false);
     }
@@ -188,7 +188,7 @@ const CustomPage: React.FC = () => {
       const data = await fetchProducts();
       setProducts(data);
     } catch (error) {
-      console.error('Error loading products:', error);
+      // Error loading products
     } finally {
       setLoadingProducts(false);
     }

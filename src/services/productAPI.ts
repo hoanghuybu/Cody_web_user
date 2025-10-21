@@ -50,7 +50,6 @@ export class ProductAPI {
       const data: ProductSearchResponse = await response.json();
       return data;
     } catch (error) {
-      console.error('Product API Error:', error);
       throw error;
     }
   }

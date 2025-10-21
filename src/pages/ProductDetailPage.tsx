@@ -6,22 +6,53 @@ import {
   Shield,
   ShoppingCart,
   Truck,
+  Link as LinkIcon,
+  Facebook,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import Toast from '../components/Toast';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useWishlist } from '../context/WishlistContext';
 import { useProduct, useProductSearch } from '../hooks/useProducts';
 import { ProductUtils } from '../utils/product';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [toast, setToast] = useState<{
+    open: boolean;
+    type: 'success' | 'error' | 'info';
+    title: string;
+    message: string;
+  }>({ open: false, type: 'success', title: '', message: '' });
 
   const { t } = useLanguage();
+
+  const showToast = (type: 'success' | 'error' | 'info', title: string, message: string) => {
+    setToast({ open: true, type, title, message });
+  };
+
+  // Close share dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (shareMenuOpen && !target.closest('.share-dropdown-container')) {
+        setShareMenuOpen(false);
+      }
+    };
+    if (shareMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [shareMenuOpen]);
 
   // Fetch product by ID from API
   const {
@@ -97,6 +128,21 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleCopyLink = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      showToast('success', 'Đã sao chép!', 'Link sản phẩm đã được sao chép vào clipboard.');
+      setShareMenuOpen(false);
+    });
+  };
+
+  const handleShareFacebook = () => {
+    const currentUrl = window.location.href;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+    setShareMenuOpen(false);
+  };
+
   const badgeKeyMap: Record<string, string> = {
     Mới: 'badges.new',
     'Bán chạy': 'badges.bestSeller',
@@ -111,6 +157,32 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-white py-8">
+      {/* Open Graph Meta Tags for Social Sharing */}
+      <Helmet>
+        <title>{product.originalName || product.name} - Cody Coconut Candy</title>
+        <meta name="description" content={product.description} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:title" content={`${product.originalName || product.name} - Cody Coconut Candy`} />
+        <meta property="og:description" content={product.description} />
+        <meta property="og:image" content={ProductUtils.getMainImage(product)} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        
+        {/* Product specific */}
+        <meta property="product:price:amount" content={product.price.toString()} />
+        <meta property="product:price:currency" content="VND" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={window.location.href} />
+        <meta name="twitter:title" content={`${product.originalName || product.name} - Cody Coconut Candy`} />
+        <meta name="twitter:description" content={product.description} />
+        <meta name="twitter:image" content={ProductUtils.getMainImage(product)} />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
@@ -255,14 +327,63 @@ const ProductDetailPage = () => {
 
             {/* Action Buttons */}
             <div className="flex space-x-4">
-              <button className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
-                <Heart className="h-4 w-4 mr-2" />
-                {t('productDetail.favorite')}
+              <button 
+                onClick={() => {
+                  if (product) {
+                    if (isInWishlist(product.id)) {
+                      removeFromWishlist(product.id);
+                      showToast('success', t('wishlist.removed'), `${product.name} đã được xóa khỏi yêu thích.`);
+                    } else {
+                      addToWishlist(product);
+                      showToast('success', t('wishlist.added'), `${product.name} đã được thêm vào yêu thích.`);
+                    }
+                  }
+                }}
+                className={`flex items-center px-4 py-2 border rounded-full transition-colors ${
+                  product && isInWishlist(product.id)
+                    ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100'
+                    : 'border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <Heart 
+                  className={`h-4 w-4 mr-2 ${
+                    product && isInWishlist(product.id) ? 'fill-red-500' : ''
+                  }`} 
+                />
+                {product && isInWishlist(product.id) ? 'Đã yêu thích' : t('productDetail.favorite')}
               </button>
-              <button className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
-                <Share2 className="h-4 w-4 mr-2" />
-                {t('productDetail.share')}
-              </button>
+              
+              {/* Share Button with Dropdown */}
+              <div className="relative share-dropdown-container">
+                <button 
+                  onClick={() => setShareMenuOpen(!shareMenuOpen)}
+                  className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  {t('productDetail.share')}
+                </button>
+
+                {/* Share Dropdown Menu */}
+                {shareMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <button
+                      onClick={handleCopyLink}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-warm-brown hover:bg-gray-50 transition-colors"
+                    >
+                      <LinkIcon className="h-5 w-5 text-gray-600" />
+                      <span>Sao chép link</span>
+                    </button>
+                    <div className="border-t border-gray-200 my-1"></div>
+                    <button
+                      onClick={handleShareFacebook}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-warm-brown hover:bg-blue-50 transition-colors"
+                    >
+                      <Facebook className="h-5 w-5 text-blue-600" />
+                      <span>Chia sẻ lên Facebook</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Features */}
@@ -303,6 +424,14 @@ const ProductDetailPage = () => {
           </section>
         )}
       </div>
+
+      <Toast
+        open={toast.open}
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, open: false })}
+      />
     </div>
   );
 };
