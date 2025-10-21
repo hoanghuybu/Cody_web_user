@@ -29,6 +29,16 @@ const CartPage = () => {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [buyerPhone, setBuyerPhone] = useState('');
   const [buyerAddress, setBuyerAddress] = useState('');
+  
+  // Address selection states
+  const [provinces, setProvinces] = useState<any[]>([]);
+  const [districts, setDistricts] = useState<any[]>([]);
+  const [wards, setWards] = useState<any[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<any>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
+  const [selectedWard, setSelectedWard] = useState<any>(null);
+  const [houseNumber, setHouseNumber] = useState('');
+  
   const [userInfo, setUserInfo] = useState<any>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -71,6 +81,68 @@ const CartPage = () => {
       }
     }
   }, []);
+
+  // Fetch provinces on mount
+  useEffect(() => {
+    fetch('https://provinces.open-api.vn/api/p/')
+      .then(res => res.json())
+      .then(data => {
+        console.log('Provinces data:', data); // Debug log
+        setProvinces(data || []);
+      })
+      .catch(err => console.error('Error fetching provinces:', err));
+  }, []);
+
+  // Fetch districts when province changes
+  useEffect(() => {
+    if (!selectedProvince) {
+      setDistricts([]);
+      setSelectedDistrict(null);
+      setWards([]);
+      setSelectedWard(null);
+      return;
+    }
+    
+    fetch(`https://provinces.open-api.vn/api/p/${selectedProvince.code}?depth=2`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('Districts data:', data); // Debug log
+        setDistricts(data.districts || []);
+        setSelectedDistrict(null);
+        setWards([]);
+        setSelectedWard(null);
+      })
+      .catch(err => console.error('Error fetching districts:', err));
+  }, [selectedProvince]);
+
+  // Fetch wards when district changes
+  useEffect(() => {
+    if (!selectedDistrict) {
+      setWards([]);
+      setSelectedWard(null);
+      return;
+    }
+    
+    fetch(`https://provinces.open-api.vn/api/d/${selectedDistrict.code}?depth=2`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('Wards data:', data); // Debug log
+        setWards(data.wards || []);
+        setSelectedWard(null);
+      })
+      .catch(err => console.error('Error fetching wards:', err));
+  }, [selectedDistrict]);
+
+  // Build complete address whenever any part changes
+  useEffect(() => {
+    const parts = [];
+    if (houseNumber.trim()) parts.push(houseNumber.trim());
+    if (selectedWard) parts.push(selectedWard.name);
+    if (selectedDistrict) parts.push(selectedDistrict.name);
+    if (selectedProvince) parts.push(selectedProvince.name);
+    
+    setBuyerAddress(parts.join(', '));
+  }, [houseNumber, selectedWard, selectedDistrict, selectedProvince]);
 
   // 🔐 Handle sign in
   const handleSignIn = async (d: { email: string; password: string }) => {
@@ -169,8 +241,28 @@ const CartPage = () => {
       return;
     }
 
+    if (!houseNumber.trim()) {
+      showToast('error', 'Thiếu thông tin', 'Vui lòng nhập số nhà, tên đường.');
+      return;
+    }
+
+    if (!selectedProvince) {
+      showToast('error', 'Thiếu thông tin', 'Vui lòng chọn Tỉnh/Thành phố.');
+      return;
+    }
+
+    if (!selectedDistrict) {
+      showToast('error', 'Thiếu thông tin', 'Vui lòng chọn Quận/Huyện.');
+      return;
+    }
+
+    if (!selectedWard) {
+      showToast('error', 'Thiếu thông tin', 'Vui lòng chọn Phường/Xã.');
+      return;
+    }
+
     if (!buyerAddress.trim()) {
-      showToast('error', 'Thiếu thông tin', 'Vui lòng nhập địa chỉ giao hàng.');
+      showToast('error', 'Thiếu thông tin', 'Vui lòng nhập địa chỉ giao hàng đầy đủ.');
       return;
     }
 
@@ -256,7 +348,7 @@ const CartPage = () => {
     if (!showConfirmModal) return null;
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slideInUp">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 animate-slideInUp max-h-[90vh] overflow-y-auto">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShoppingBag className="h-8 w-8 text-amber-600" />
@@ -269,19 +361,33 @@ const CartPage = () => {
             </p>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Số lượng sản phẩm:</span>
-              <span className="font-semibold">{items.length} sản phẩm</span>
+          <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-3 text-sm">
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-gray-600 whitespace-nowrap">Số lượng:</span>
+              <span className="font-semibold text-right">{items.length} sản phẩm</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Người nhận:</span>
-              <span className="font-semibold">{userInfo?.name || 'N/A'}</span>
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-gray-600 whitespace-nowrap">Người nhận:</span>
+              <span className="font-semibold text-right">{userInfo?.name || 'N/A'}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Số điện thoại:</span>
-              <span className="font-semibold">{buyerPhone}</span>
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-gray-600 whitespace-nowrap">Số điện thoại:</span>
+              <span className="font-semibold text-right">{buyerPhone}</span>
             </div>
+            <div className="border-t border-gray-200 pt-3">
+              <div className="flex items-start gap-4">
+                <span className="text-gray-600 whitespace-nowrap">Địa chỉ:</span>
+                <span className="font-semibold text-right flex-1 break-words">{buyerAddress}</span>
+              </div>
+            </div>
+            {note && (
+              <div className="border-t border-gray-200 pt-3">
+                <div className="flex items-start gap-4">
+                  <span className="text-gray-600 whitespace-nowrap">Ghi chú:</span>
+                  <span className="font-semibold text-right flex-1 break-words italic text-gray-700">{note}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3">
@@ -550,14 +656,97 @@ const CartPage = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Địa chỉ giao hàng *
                 </label>
-                <textarea
-                  value={buyerAddress}
-                  onChange={(e) => setBuyerAddress(e.target.value)}
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
-                  placeholder="Nhập địa chỉ giao hàng đầy đủ"
-                  required
-                />
+                
+                {/* House Number */}
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    value={houseNumber}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 50) {
+                        setHouseNumber(value);
+                      }
+                    }}
+                    maxLength={50}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                    placeholder="Số nhà, tên đường (tối đa 50 ký tự)"
+                    required
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    {houseNumber.length}/50 ký tự
+                  </p>
+                </div>
+
+                {/* Province Select */}
+                <div className="mb-3">
+                  <select
+                    value={selectedProvince?.code || ''}
+                    onChange={(e) => {
+                      const province = provinces.find(p => p.code === Number(e.target.value));
+                      setSelectedProvince(province || null);
+                    }}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                    required
+                  >
+                    <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                    {provinces.map(province => (
+                      <option key={province.code} value={province.code}>
+                        {province.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* District Select */}
+                <div className="mb-3">
+                  <select
+                    value={selectedDistrict?.code || ''}
+                    onChange={(e) => {
+                      const district = districts.find(d => d.code === Number(e.target.value));
+                      setSelectedDistrict(district || null);
+                    }}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                    disabled={!selectedProvince}
+                    required
+                  >
+                    <option value="">-- Chọn Quận/Huyện --</option>
+                    {districts.map(district => (
+                      <option key={district.code} value={district.code}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Ward Select */}
+                <div className="mb-3">
+                  <select
+                    value={selectedWard?.code || ''}
+                    onChange={(e) => {
+                      const ward = wards.find(w => w.code === Number(e.target.value));
+                      setSelectedWard(ward || null);
+                    }}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                    disabled={!selectedDistrict}
+                    required
+                  >
+                    <option value="">-- Chọn Phường/Xã --</option>
+                    {wards.map(ward => (
+                      <option key={ward.code} value={ward.code}>
+                        {ward.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Display Full Address */}
+                {buyerAddress && (
+                  <div className="mt-2 p-2 bg-gray-50 rounded-md border border-gray-200">
+                    <p className="text-xs text-gray-500 mb-1">Địa chỉ đầy đủ:</p>
+                    <p className="text-sm text-gray-700 font-medium">{buyerAddress}</p>
+                  </div>
+                )}
               </div>
 
               <p className="text-sm text-gray-700 mb-4">

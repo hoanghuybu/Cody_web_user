@@ -46,11 +46,11 @@ const OrderSuccessPage = () => {
   const fetchOrders = (page: number) => {
     setLoading(true);
     const token = AuthUtils.getAccessToken();
-    
-    fetch(`https://www.cody-be.online/api/v1/orders/?page=${page}&size=5`, {
+
+    fetch(`https://www.cody-be.online/api/v1/orders/?page=${page}&size=5&sortBy=createdAt&sortDirection=DESC`, {
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
       },
     })
       .then(res => {
