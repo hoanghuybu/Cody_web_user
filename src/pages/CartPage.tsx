@@ -1,21 +1,15 @@
-import { Link } from 'react-router-dom';
-import {
-  ArrowLeft,
-  ShoppingBag,
-  Minus,
-  Plus,
-  Trash2,
-} from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthUtils } from '../utils/auth';
-import { useCart } from '../context/CartContext';
-import { useLanguage } from '../context/LanguageContext';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ArrowLeft, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthModal from '../components/auth/AuthModal';
 import Toast from '../components/Toast';
+import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import useLogin from '../hook/useLogin';
 import useRegister from '../hook/useRegister';
 import { isApiError } from '../lib/ApiError';
+import { AuthUtils } from '../utils/auth';
 
 const CartPage = () => {
   const { items, total, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -29,7 +23,7 @@ const CartPage = () => {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [buyerPhone, setBuyerPhone] = useState('');
   const [buyerAddress, setBuyerAddress] = useState('');
-  
+
   // Address selection states
   const [provinces, setProvinces] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
@@ -38,7 +32,7 @@ const CartPage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
   const [selectedWard, setSelectedWard] = useState<any>(null);
   const [houseNumber, setHouseNumber] = useState('');
-  
+
   const [userInfo, setUserInfo] = useState<any>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -62,14 +56,18 @@ const CartPage = () => {
 
   const FREE_SHIPPING_THRESHOLD = 300000;
 
-  const showToast = (type: 'success' | 'error', title: string, message: string) => {
+  const showToast = (
+    type: 'success' | 'error',
+    title: string,
+    message: string
+  ) => {
     setToast({ open: true, type, title, message });
   };
 
   useEffect(() => {
     const token = AuthUtils.getAccessToken();
     if (!token) return;
-    
+
     // Load user info from sessionStorage if exists
     const savedUserInfo = sessionStorage.getItem('user_info');
     if (savedUserInfo) {
@@ -85,12 +83,12 @@ const CartPage = () => {
   // Fetch provinces on mount
   useEffect(() => {
     fetch('https://provinces.open-api.vn/api/p/')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Provinces data:', data); // Debug log
         setProvinces(data || []);
       })
-      .catch(err => console.error('Error fetching provinces:', err));
+      .catch((err) => console.error('Error fetching provinces:', err));
   }, []);
 
   // Fetch districts when province changes
@@ -102,17 +100,19 @@ const CartPage = () => {
       setSelectedWard(null);
       return;
     }
-    
-    fetch(`https://provinces.open-api.vn/api/p/${selectedProvince.code}?depth=2`)
-      .then(res => res.json())
-      .then(data => {
+
+    fetch(
+      `https://provinces.open-api.vn/api/p/${selectedProvince.code}?depth=2`
+    )
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Districts data:', data); // Debug log
         setDistricts(data.districts || []);
         setSelectedDistrict(null);
         setWards([]);
         setSelectedWard(null);
       })
-      .catch(err => console.error('Error fetching districts:', err));
+      .catch((err) => console.error('Error fetching districts:', err));
   }, [selectedProvince]);
 
   // Fetch wards when district changes
@@ -122,15 +122,17 @@ const CartPage = () => {
       setSelectedWard(null);
       return;
     }
-    
-    fetch(`https://provinces.open-api.vn/api/d/${selectedDistrict.code}?depth=2`)
-      .then(res => res.json())
-      .then(data => {
+
+    fetch(
+      `https://provinces.open-api.vn/api/d/${selectedDistrict.code}?depth=2`
+    )
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Wards data:', data); // Debug log
         setWards(data.wards || []);
         setSelectedWard(null);
       })
-      .catch(err => console.error('Error fetching wards:', err));
+      .catch((err) => console.error('Error fetching wards:', err));
   }, [selectedDistrict]);
 
   // Build complete address whenever any part changes
@@ -140,7 +142,7 @@ const CartPage = () => {
     if (selectedWard) parts.push(selectedWard.name);
     if (selectedDistrict) parts.push(selectedDistrict.name);
     if (selectedProvince) parts.push(selectedProvince.name);
-    
+
     setBuyerAddress(parts.join(', '));
   }, [houseNumber, selectedWard, selectedDistrict, selectedProvince]);
 
@@ -148,31 +150,37 @@ const CartPage = () => {
   const handleSignIn = async (d: { email: string; password: string }) => {
     try {
       const res = (await doLogin(d)) as any;
-      
+
       if (res?.status === 200 && res?.data?.accessToken) {
         // Save tokens
-        AuthUtils.saveAuthData(
-          res.data.accessToken,
-          res.data.refreshToken
-        );
+        AuthUtils.saveAuthData(res.data.accessToken, res.data.refreshToken);
         // Save user info to sessionStorage AND state
         if (res.data.info) {
           sessionStorage.setItem('user_info', JSON.stringify(res.data.info));
           setUserInfo(res.data.info);
         }
         setShowLoginModal(false);
-        showToast('success', 'Đăng nhập thành công', `Chào mừng ${res.data.info?.name || 'bạn'} đến với Cody!`);
+        showToast(
+          'success',
+          'Đăng nhập thành công',
+          `Chào mừng ${res.data.info?.name || 'bạn'} đến với Cody!`
+        );
         // Reload page after successful login
         setTimeout(() => {
           window.location.reload();
         }, 500);
       } else {
-        showToast('error', 'Đăng nhập thất bại', 'Vui lòng kiểm tra lại thông tin đăng nhập.');
+        showToast(
+          'error',
+          'Đăng nhập thất bại',
+          'Vui lòng kiểm tra lại thông tin đăng nhập.'
+        );
       }
     } catch (e: any) {
       let msg = 'Đăng nhập thất bại.';
       if (isApiError(e)) {
-        const detail = (e.data as any)?.error?.detail || (e.data as any)?.message;
+        const detail =
+          (e.data as any)?.error?.detail || (e.data as any)?.message;
         if (detail) msg = detail;
       }
       showToast('error', 'Đăng nhập thất bại', msg);
@@ -192,9 +200,13 @@ const CartPage = () => {
         confirmPassword: d.password,
       };
       const res = (await doRegister(registerData)) as any;
-      
+
       if (res?.status === 200) {
-        showToast('success', 'Đăng ký thành công!', 'Vui lòng đăng nhập để tiếp tục mua sắm.');
+        showToast(
+          'success',
+          'Đăng ký thành công!',
+          'Vui lòng đăng nhập để tiếp tục mua sắm.'
+        );
         // Auto-switch to signin mode
         setAuthMode('signin');
       } else {
@@ -222,14 +234,18 @@ const CartPage = () => {
   // 🧾 Handle checkout
   const handleCheckout = async () => {
     const token = AuthUtils.getAccessToken();
-    
+
     if (!token) {
       setShowLoginModal(true);
       return;
     }
-    
+
     if (!userInfo) {
-      showToast('error', 'Chưa đăng nhập', 'Vui lòng đăng nhập để tiếp tục đặt hàng.');
+      showToast(
+        'error',
+        'Chưa đăng nhập',
+        'Vui lòng đăng nhập để tiếp tục đặt hàng.'
+      );
       AuthUtils.clearAuthData();
       setShowLoginModal(true);
       return;
@@ -262,7 +278,11 @@ const CartPage = () => {
     }
 
     if (!buyerAddress.trim()) {
-      showToast('error', 'Thiếu thông tin', 'Vui lòng nhập địa chỉ giao hàng đầy đủ.');
+      showToast(
+        'error',
+        'Thiếu thông tin',
+        'Vui lòng nhập địa chỉ giao hàng đầy đủ.'
+      );
       return;
     }
 
@@ -273,11 +293,13 @@ const CartPage = () => {
   // 🧾 Confirm and create order
   const confirmCreateOrder = async () => {
     setShowConfirmModal(false);
-    
+
     const token = AuthUtils.getAccessToken();
 
     const orderPayload = {
-      buyerName: userInfo.name || `${userInfo.lastName || ''} ${userInfo.firstName || ''}`.trim(),
+      buyerName:
+        userInfo.name ||
+        `${userInfo.lastName || ''} ${userInfo.firstName || ''}`.trim(),
       buyerPhone: buyerPhone.trim(),
       addressUrl: buyerAddress.trim(),
       paymentMethod: 'COD',
@@ -292,14 +314,17 @@ const CartPage = () => {
     };
 
     try {
-      const res = await fetch('https://www.cody-be.online/api/v1/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderPayload),
-      });
+      const res = await fetch(
+        'https://www.cody-be.online/api/v1/orders/create',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(orderPayload),
+        }
+      );
 
       const text = await res.text();
       let data: any = null;
@@ -315,7 +340,11 @@ const CartPage = () => {
         const orderId =
           data?.data?.orderId || data?.orderId || data?.data?.id || data?.id;
         clearCart();
-        showToast('success', 'Đặt hàng thành công!', 'Đơn hàng của bạn đã được xác nhận. Cảm ơn bạn đã tin tùng Cody!');
+        showToast(
+          'success',
+          'Đặt hàng thành công!',
+          'Đơn hàng của bạn đã được xác nhận. Cảm ơn bạn đã tin tùng Cody!'
+        );
         setTimeout(() => {
           navigate(orderId ? `/order/${orderId}` : '/order-success');
         }, 1500);
@@ -324,7 +353,11 @@ const CartPage = () => {
         showToast('error', 'Đặt hàng thất bại', msg);
       }
     } catch (err) {
-      showToast('error', 'Có lỗi xảy ra', 'Vui lòng thử lại hoặc liên hệ hỗ trợ.');
+      showToast(
+        'error',
+        'Có lỗi xảy ra',
+        'Vui lòng thử lại hoặc liên hệ hỗ trợ.'
+      );
     }
   };
 
@@ -357,34 +390,54 @@ const CartPage = () => {
               Xác nhận đặt hàng
             </h3>
             <p className="text-gray-600 text-sm">
-              Bạn có chắc chắn muốn đặt hàng với tổng giá trị <span className="font-semibold text-amber-600">{formatPrice(total)}</span>?
+              Bạn có chắc chắn muốn đặt hàng với tổng giá trị{' '}
+              <span className="font-semibold text-amber-600">
+                {formatPrice(total)}
+              </span>
+              ?
             </p>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-3 text-sm">
             <div className="flex justify-between items-start gap-4">
               <span className="text-gray-600 whitespace-nowrap">Số lượng:</span>
-              <span className="font-semibold text-right">{items.length} sản phẩm</span>
+              <span className="font-semibold text-right">
+                {items.length} sản phẩm
+              </span>
             </div>
             <div className="flex justify-between items-start gap-4">
-              <span className="text-gray-600 whitespace-nowrap">Người nhận:</span>
-              <span className="font-semibold text-right">{userInfo?.name || 'N/A'}</span>
+              <span className="text-gray-600 whitespace-nowrap">
+                Người nhận:
+              </span>
+              <span className="font-semibold text-right">
+                {userInfo?.name || 'N/A'}
+              </span>
             </div>
             <div className="flex justify-between items-start gap-4">
-              <span className="text-gray-600 whitespace-nowrap">Số điện thoại:</span>
+              <span className="text-gray-600 whitespace-nowrap">
+                Số điện thoại:
+              </span>
               <span className="font-semibold text-right">{buyerPhone}</span>
             </div>
             <div className="border-t border-gray-200 pt-3">
               <div className="flex items-start gap-4">
-                <span className="text-gray-600 whitespace-nowrap">Địa chỉ:</span>
-                <span className="font-semibold text-right flex-1 break-words">{buyerAddress}</span>
+                <span className="text-gray-600 whitespace-nowrap">
+                  Địa chỉ:
+                </span>
+                <span className="font-semibold text-right flex-1 break-words">
+                  {buyerAddress}
+                </span>
               </div>
             </div>
             {note && (
               <div className="border-t border-gray-200 pt-3">
                 <div className="flex items-start gap-4">
-                  <span className="text-gray-600 whitespace-nowrap">Ghi chú:</span>
-                  <span className="font-semibold text-right flex-1 break-words italic text-gray-700">{note}</span>
+                  <span className="text-gray-600 whitespace-nowrap">
+                    Ghi chú:
+                  </span>
+                  <span className="font-semibold text-right flex-1 break-words italic text-gray-700">
+                    {note}
+                  </span>
                 </div>
               </div>
             )}
@@ -591,7 +644,11 @@ const CartPage = () => {
                 <span className="font-semibold text-warm-brown">
                   {t('cart.addNote')}
                 </span>
-                {noteOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                {noteOpen ? (
+                  <Minus className="h-4 w-4" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
               </button>
               {noteOpen && (
                 <div className="px-5 pb-5">
@@ -614,7 +671,7 @@ const CartPage = () => {
               <h3 className="text-lg font-semibold text-warm-brown mb-4">
                 Thông tin giao hàng
               </h3>
-              
+
               {/* Buyer Name (from login) */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -623,8 +680,10 @@ const CartPage = () => {
                 <input
                   type="text"
                   value={
-                    userInfo?.name || 
-                    `${userInfo?.lastName || ''} ${userInfo?.firstName || ''}`.trim() ||
+                    userInfo?.name ||
+                    `${userInfo?.lastName || ''} ${
+                      userInfo?.firstName || ''
+                    }`.trim() ||
                     ''
                   }
                   disabled
@@ -656,7 +715,7 @@ const CartPage = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Địa chỉ giao hàng *
                 </label>
-                
+
                 {/* House Number */}
                 <div className="mb-3">
                   <input
@@ -683,14 +742,16 @@ const CartPage = () => {
                   <select
                     value={selectedProvince?.code || ''}
                     onChange={(e) => {
-                      const province = provinces.find(p => p.code === Number(e.target.value));
+                      const province = provinces.find(
+                        (p) => p.code === Number(e.target.value)
+                      );
                       setSelectedProvince(province || null);
                     }}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
                     required
                   >
                     <option value="">-- Chọn Tỉnh/Thành phố --</option>
-                    {provinces.map(province => (
+                    {provinces.map((province) => (
                       <option key={province.code} value={province.code}>
                         {province.name}
                       </option>
@@ -703,7 +764,9 @@ const CartPage = () => {
                   <select
                     value={selectedDistrict?.code || ''}
                     onChange={(e) => {
-                      const district = districts.find(d => d.code === Number(e.target.value));
+                      const district = districts.find(
+                        (d) => d.code === Number(e.target.value)
+                      );
                       setSelectedDistrict(district || null);
                     }}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
@@ -711,7 +774,7 @@ const CartPage = () => {
                     required
                   >
                     <option value="">-- Chọn Quận/Huyện --</option>
-                    {districts.map(district => (
+                    {districts.map((district) => (
                       <option key={district.code} value={district.code}>
                         {district.name}
                       </option>
@@ -724,7 +787,9 @@ const CartPage = () => {
                   <select
                     value={selectedWard?.code || ''}
                     onChange={(e) => {
-                      const ward = wards.find(w => w.code === Number(e.target.value));
+                      const ward = wards.find(
+                        (w) => w.code === Number(e.target.value)
+                      );
                       setSelectedWard(ward || null);
                     }}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
@@ -732,7 +797,7 @@ const CartPage = () => {
                     required
                   >
                     <option value="">-- Chọn Phường/Xã --</option>
-                    {wards.map(ward => (
+                    {wards.map((ward) => (
                       <option key={ward.code} value={ward.code}>
                         {ward.name}
                       </option>
@@ -743,8 +808,12 @@ const CartPage = () => {
                 {/* Display Full Address */}
                 {buyerAddress && (
                   <div className="mt-2 p-2 bg-gray-50 rounded-md border border-gray-200">
-                    <p className="text-xs text-gray-500 mb-1">Địa chỉ đầy đủ:</p>
-                    <p className="text-sm text-gray-700 font-medium">{buyerAddress}</p>
+                    <p className="text-xs text-gray-500 mb-1">
+                      Địa chỉ đầy đủ:
+                    </p>
+                    <p className="text-sm text-gray-700 font-medium">
+                      {buyerAddress}
+                    </p>
                   </div>
                 )}
               </div>

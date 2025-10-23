@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { useLanguage } from "../context/LanguageContext";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const CheckoutInfoPage = () => {
   const { items, total, clearCart } = useCart();
@@ -9,20 +9,23 @@ const CheckoutInfoPage = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    address: "",
-    note: "",
+    name: '',
+    phone: '',
+    address: '',
+    note: '',
   });
   const [loading, setLoading] = useState(false);
 
   const formatPrice = (price: number) =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
+    new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.phone || !form.address) {
-      alert("Vui lòng nhập đầy đủ thông tin.");
+      alert('Vui lòng nhập đầy đủ thông tin.');
       return;
     }
 
@@ -30,7 +33,7 @@ const CheckoutInfoPage = () => {
       buyerName: form.name,
       buyerPhone: form.phone,
       addressUrl: form.address,
-      paymentMethod: "COD",
+      paymentMethod: 'COD',
       items: items.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
@@ -43,21 +46,24 @@ const CheckoutInfoPage = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("https://www.cody-be.online/api/v1/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderPayload),
-      });
+      const res = await fetch(
+        'https://www.cody-be.online/api/v1/orders/create',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         clearCart();
         const orderId = data?.data?.orderId || data?.orderId;
-        navigate(orderId ? `/order/${orderId}` : "/order-success");
+        navigate(orderId ? `/order/${orderId}` : '/order-success');
       } else {
-        alert("Đặt hàng thất bại: " + data.message);
+        alert('Đặt hàng thất bại: ' + data.message);
       }
     } catch (err) {
-      alert("Đặt hàng thất bại, vui lòng thử lại.");
+      alert('Đặt hàng thất bại, vui lòng thử lại.');
     } finally {
       setLoading(false);
     }
@@ -69,12 +75,14 @@ const CheckoutInfoPage = () => {
         {/* LEFT: Checkout Form */}
         <div>
           <h1 className="text-3xl font-playfair font-bold text-warm-brown mb-6">
-            {t("checkout.title") || "Thông tin đặt hàng"}
+            {t('checkout.title') || 'Thông tin đặt hàng'}
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Họ và tên
+              </label>
               <input
                 type="text"
                 value={form.name}
@@ -85,7 +93,9 @@ const CheckoutInfoPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Số điện thoại
+              </label>
               <input
                 type="tel"
                 value={form.phone}
@@ -96,7 +106,9 @@ const CheckoutInfoPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Địa chỉ giao hàng</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Địa chỉ giao hàng
+              </label>
               <textarea
                 rows={3}
                 value={form.address}
@@ -107,7 +119,9 @@ const CheckoutInfoPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ghi chú (tuỳ chọn)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ghi chú (tuỳ chọn)
+              </label>
               <textarea
                 rows={2}
                 value={form.note}
@@ -122,11 +136,14 @@ const CheckoutInfoPage = () => {
               disabled={loading}
               className="w-full mt-6 bg-primary-green text-white font-semibold py-3 rounded-full hover:bg-primary-green/90 transition-colors"
             >
-              {loading ? "Đang xử lý..." : "Xác nhận đặt hàng"}
+              {loading ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
             </button>
 
             <div className="text-center mt-6">
-              <Link to="/cart" className="text-sm text-gray-500 hover:text-primary-green">
+              <Link
+                to="/cart"
+                className="text-sm text-gray-500 hover:text-primary-green"
+              >
                 ← Quay lại giỏ hàng
               </Link>
             </div>

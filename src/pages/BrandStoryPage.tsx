@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { images } from '../assets/images';
 import banner2 from '../assets/images/banner-2.jpg';
 import experience from '../assets/images/experience.jpg';
 import founder1 from '../assets/images/founder-1.jpg';
@@ -43,57 +42,23 @@ const BrandStoryPage = () => {
     };
   }, []);
 
-  const milestones = [
-    {
-      year: '2018',
-      title: t('brand.milestone1Title'),
-      description: t('brand.milestone1Desc'),
-      image: images.milestone1,
-    },
-    {
-      year: '2019',
-      title: t('brand.milestone2Title'),
-      description: t('brand.milestone2Desc'),
-      image: images.milestone2,
-    },
-    {
-      year: '2021',
-      title: t('brand.milestone3Title'),
-      description: t('brand.milestone3Desc'),
-      image: images.milestone3,
-    },
-    {
-      year: '2024',
-      title: t('brand.milestone4Title'),
-      description: t('brand.milestone4Desc'),
-      image: images.milestone4,
-    },
-  ];
+  const instagramPosts = [time1, time2, time3, time4];
+  const instagramPosts2 = [time5, time6, time7, time8];
 
-  const instagramPosts = [
-    time1,
-    time2,
-    time3,
-    time4,
-    time5,
-    time6,
-    time7,
-    time8,
-  ];
+  // useEffect(() => {
+  //   const img = new Image();
+  //   img.src = banner2;
+  // }, []);
 
   return (
     <div className="min-h-screen bg-cream">
       {/* 🌿 HERO SECTION: Explore Culture */}
-      <section className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[700px] flex items-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${banner2})`,
-            backgroundSize: 'cover',
-            transform: 'translateZ(0)',
-            willChange: 'transform',
-          }}
-        ></div>
+      <section className="relative w-full h-fit flex items-center overflow-hidden">
+        <img
+          src={banner2}
+          alt="banner"
+          className=" w-full h-full object-contain"
+        />
         {/* <div className="relative text-center px-6 max-w-5xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-playfair font-bold text-white mb-4">
             {t("brand.heroTitle")}
@@ -121,10 +86,10 @@ const BrandStoryPage = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-6">
           {/* LEFT: Text */}
           <div className="text-left lg:pr-8">
-            <h2 className="text-4xl md:text-5xl font-playfair font-bold text-warm-brown mb-6">
+            <h2 className="text-4xl  md:text-5xl font-playfair font-bold text-warm-brown mb-6">
               {t('cultural.title')}
             </h2>
-            <div className="text-lg text-gray-700 leading-relaxed space-y-4">
+            <div className="text-lg text-justify text-gray-700 leading-relaxed space-y-4">
               <p>{t('cultural.p1')}</p>
               <p>{t('cultural.p2')}</p>
               <p>{t('cultural.p3')}</p>
@@ -151,15 +116,15 @@ const BrandStoryPage = () => {
             {t('purpose.des')}
           </p>
           <div className="text-left max-w-4xl mx-auto text-white text-lg space-y-5">
-            <p>
+            <p className="text-justify">
               <b className="text-cream">{t('purpose.label1')}:</b>{' '}
               {t('purpose.labelDes1')}
             </p>
-            <p>
+            <p className="text-justify">
               <b className="text-cream">{t('purpose.label2')}:</b>{' '}
               {t('purpose.labelDes2')}
             </p>
-            <p>
+            <p className="text-justify">
               <b className="text-cream">{t('purpose.label3')}:</b>{' '}
               {t('purpose.labelDes3')}
             </p>
@@ -188,7 +153,7 @@ const BrandStoryPage = () => {
         </div>
       </section>
       {/*  OUR TIMELINE */}
-      <section className="py-20 bg-[#fffdea]">
+      <section className="py-20  bg-[#fffdea]">
         <div className="max-w-6xl mx-auto text-center px-6">
           <h2 className="text-4xl md:text-5xl font-playfair font-bold text-warm-brown mb-6">
             {t('brand.timelineTitle').toUpperCase()}
@@ -201,6 +166,26 @@ const BrandStoryPage = () => {
               <b className="text-warm-brown">{t('brand.milestone1Title')}:</b>{' '}
               {t('brand.milestone1Desc')}
             </p>
+            <div className="mt-16 flex flex-col sm:flex-row gap-8 justify-center items-center max-w-6xl mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
+                {instagramPosts.map((image, index) => (
+                  <div
+                    key={index}
+                    className="aspect-square overflow-hidden group cursor-pointer"
+                    // onClick={() => openModal(index)}
+                  >
+                    <img
+                      src={image}
+                      alt={`Instagram post ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      width="800"
+                      height="600"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
             <p>
               <b className="text-warm-brown">{t('brand.milestone2Title')}:</b>{' '}
               {t('brand.milestone2Desc')}
@@ -209,32 +194,30 @@ const BrandStoryPage = () => {
               <b className="text-warm-brown">{t('brand.milestone3Title')}:</b>{' '}
               {t('brand.milestone3Desc')}
             </p>
+            <div className="mt-16 flex flex-col sm:flex-row gap-8 justify-center items-center max-w-6xl mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
+                {instagramPosts2.map((image, index) => (
+                  <div
+                    key={index}
+                    className="aspect-square overflow-hidden group cursor-pointer"
+                    // onClick={() => openModal(index)}
+                  >
+                    <img
+                      src={image}
+                      alt={`Instagram post ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      width="800"
+                      height="600"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
             <p>
               <b className="text-warm-brown">{t('brand.milestone4Title')}:</b>{' '}
               {t('brand.milestone4Desc')}
             </p>
-          </div>
-
-          {/* 🎥 VIDEOS */}
-          <div className="mt-16 flex flex-col sm:flex-row gap-8 justify-center items-center max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
-              {instagramPosts.map((image, index) => (
-                <div
-                  key={index}
-                  className="aspect-square overflow-hidden group cursor-pointer"
-                  // onClick={() => openModal(index)}
-                >
-                  <img
-                    src={image}
-                    alt={`Instagram post ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    width="800"
-                    height="600"
-                  />
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -323,19 +306,21 @@ const RightFounderPanel: React.FC = () => {
   }, [gallery.length]);
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-2xl md:text-3xl font-semibold text-warm-brown font-playfair">
-        {t('mind.name')}
-      </h3>
-      <p className="text-primary-green font-medium">{t('mind.role')}</p>
-      <p className="text-gray-700 leading-relaxed">{t('mind.story')}</p>
-      <blockquote className="border-l-4 border-primary-green pl-4 italic text-gray-600">
-        {t('mind.quote')}
-      </blockquote>
-      <p className="text-gray-700 leading-relaxed">{t('mind.mission')}</p>
+    <div className="flex flex-col justify-between h-full">
+      <div className="space-y-9">
+        <h3 className="text-2xl md:text-3xl font-semibold text-warm-brown font-playfair">
+          {t('mind.name')}
+        </h3>
+        <p className="text-primary-green font-medium">{t('mind.role')}</p>
+        <p className="text-gray-700 leading-relaxed">{t('mind.story')}</p>
+        <blockquote className="border-l-4 border-primary-green pl-4 italic text-gray-600">
+          {t('mind.quote')}
+        </blockquote>
+        <p className="text-gray-700 leading-relaxed">{t('mind.mission')}</p>
+      </div>
 
-      {/* Auto-fading overlapped gallery */}
-      <div className="relative h-48 sm:h-56 md:h-64 w-full">
+      {/* Gallery luôn nằm ở đáy */}
+      <div className="relative h-48 sm:h-56 md:h-64 w-full mt-8">
         {gallery.map((src, i) => (
           <img
             key={i}
@@ -347,7 +332,6 @@ const RightFounderPanel: React.FC = () => {
             ].join(' ')}
           />
         ))}
-        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-black/5"></div>
       </div>
     </div>
   );

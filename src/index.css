@@ -13,10 +13,14 @@
 
 :root {
   font-family: 'GanhType', sans-serif;
+  font-feature-settings: "liga" 0, "clig" 0;
+  font-variant-ligatures: none;
 }
 
 body {
   font-family: 'GanhType', sans-serif;
+  font-feature-settings: "liga" 0, "clig" 0;
+  font-variant-ligatures: none;
 }
 
 /* Hide scrollbar for webkit browsers */
@@ -76,4 +80,11 @@ body {
 
 .animate-shrink {
   animation: shrink linear forwards;
+}
+
+@layer base {
+  /* Áp dụng font GanhType cho tất cả phần tử có class chứa 'fl' */
+  [class*="fl"] {
+    font-family: 'GanhType', sans-serif !important;
+  }
 }

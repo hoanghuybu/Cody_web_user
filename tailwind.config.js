@@ -32,5 +32,15 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase }) {
+      addBase({
+        // Áp dụng toàn cục cho font GanhType
+        '.font-ganh': {
+          'font-variant-ligatures': 'none',
+          'font-feature-settings': '"liga" 0, "clig" 0',
+        },
+      });
+    },
+  ],
 };
