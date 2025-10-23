@@ -292,7 +292,7 @@ const CartPage = () => {
     };
 
     try {
-      const res = await fetch('https://www.cody-be.online/api/v1/create', {
+      const res = await fetch('https://www.cody-be.online/api/v1/orders/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
