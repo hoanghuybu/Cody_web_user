@@ -394,37 +394,37 @@ const translations: Record<Language, TranslationDict> = {
     'personalize.intro':
       "We understand a gift is more than an item — it is the message and feeling you want to send. With Personalized Gift service, you can handcraft unique presents that carry your personal touch. Whether it's a birthday, holiday, or any special occasion, we are here to help you express care and thoughtfulness through every detail.",
     'personalize.whyTitle': 'Why Choose Personalized Gift?',
-    'personalize.why.p1.title': 'Freedom to create',
+    'personalize.why.p1.title': 'Freedom to Create a Gift of Your Choice',
     'personalize.why.p1.desc':
-      "Customize your gift set: choose products, packaging, and basket styles to match the recipient's taste.",
-    'personalize.why.p2.title': 'Add a personal touch',
+      "You can fully customize your gift set, from selecting the products in the set to choosing the packaging and gift basket style that best suits the recipient's preferences.",
+    'personalize.why.p2.title': 'Create a Personal Touch',
     'personalize.why.p2.desc':
-      'Each product can be personalized — from favorite candy flavors to add-on accessories like coconut-fiber cups and wooden utensils, showing care in every selection.',
+      ' Every product in the gift basket can be personalized, from selecting your favorite candy flavor to choosing accessories like coconut husk cups, coconut wood spoons and forks. Every detail shows the care and attention you put into choosing the perfect gift for the recipient.',
     'personalize.why.p3.title': 'Special meaning',
     'personalize.why.p3.desc':
-      'A thoughtfully designed, customized gift feels warm, intimate, and truly special to the recipient.',
-    'personalize.customTitle': 'Customize Your Gift',
+      'Gifts that are designed and selected just for you bring a sense of closeness, warmth, and uniqueness, making the recipient feel truly special.',
+    'personalize.customTitle': 'Customize Your Gift to Your Liking',
     'personalize.customIntro':
-      'With Personalized Gift, you can pick your favorite items to create a meaningful set. You can also request additional customizations such as:',
-    'personalize.custom.p1.title': 'Choose products in your combo',
+      'With the Personalized Gift service, you can select your favorite products to create a unique and meaningful gift set. You can also request adjustments to factors such as:',
+    'personalize.custom.p1.title': 'Selecting Products in a Gift Set',
     'personalize.custom.p1.desc':
-      "Swap flavors or add/remove accessory items in the basket to suit the recipient's preferences.",
-    'personalize.custom.p2.title': 'Customize packaging and baskets',
+      'You can change the candy flavors or add/remove accessories in the gift basket to better match the recipient’s preferences.',
+    'personalize.custom.p2.title': 'Customize Packaging and Gift Baskets',
     'personalize.custom.p2.desc':
-      'We offer a variety of baskets and boxes — request shape, material, and color to match your personal taste.',
-    'personalize.custom.p3.title': 'Include a personal message',
+      'We offer a variety of gift baskets and boxes, allowing you to request a gift basket tailored to your personal style, from the shape and material to the color.',
+    'personalize.custom.p3.title': 'Add a Personal Message',
     'personalize.custom.p3.desc':
-      'Attach a heartfelt note or message. We will present it elegantly to enhance the emotional value of your gift.',
-    'personalize.reasonsTitle': 'Why Choose Us?',
-    'personalize.reasons.p1.title': 'Quality assured',
+      'You can include a loving message or a special note to make the gift even more meaningful. We will help you convey this message in a delicate and beautiful wa.',
+    'personalize.reasonsTitle': 'Why Choose Personalized Gift from Us?',
+    'personalize.reasons.p1.title': 'Guaranteed Quality',
     'personalize.reasons.p1.desc':
-      'All gift products are made from natural ingredients and are quality-assured and safe.',
-    'personalize.reasons.p2.title': 'Professional service',
+      'All of our gift products are made from natural ingredients, ensuring quality and safety for health.',
+    'personalize.reasons.p2.title': 'Professional Service',
     'personalize.reasons.p2.desc':
-      'Our team is ready to support you in creating the perfect gift to your satisfaction.',
+      'Our team is always ready to support you in creating the gift of your dreams, ensuring total satisfaction for our customers.',
     'personalize.reasons.p3.title': 'Unique gifts',
     'personalize.reasons.p3.desc':
-      'Each customized gift is a unique item that creates strong surprise and impression.',
+      'With each personalized gift, you will create a product that bears a strong personal mark, leaving a lasting impression on the recipient.',
 
     // Custom Combo Modal
     'customCombo.errorNameRequired': 'Please enter a name for your combo',

@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ChevronRight,
@@ -94,18 +93,18 @@ const Header = () => {
       const res = (await doLogin(d)) as any;
 
       if (res?.status === 200 && res?.data?.accessToken) {
-        AuthUtils.saveAuthData(
-          res.data.accessToken,
-          res.data.refreshToken
-        );
+        AuthUtils.saveAuthData(res.data.accessToken, res.data.refreshToken);
 
         // Save user info to sessionStorage for CartPage
         if (res.data.info) {
           sessionStorage.setItem('user_info', JSON.stringify(res.data.info));
         }
 
-        const userName = res.data.info?.name || 
-                        `${res.data.info?.lastName || ''} ${res.data.info?.firstName || ''}`.trim();
+        const userName =
+          res.data.info?.name ||
+          `${res.data.info?.lastName || ''} ${
+            res.data.info?.firstName || ''
+          }`.trim();
         if (userName) {
           showToast(
             'success',
@@ -341,12 +340,12 @@ const Header = () => {
             </Link>
 
             {/* Right Navigation */}
-            <nav className="flex items-center flex-1 justify-end">
+            <nav className="flex items-center flex-1 justify-center">
               {navigation.slice(2, 4).map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex flex-1 justify-end whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
+                  className={`flex flex-1 justify-center whitespace-nowrap text-sm font-medium tracking-tight lg:tracking-wide transition-colors hover:text-primary-green ${
                     isActive(item.href)
                       ? 'text-primary-green'
                       : 'text-warm-brown'
@@ -358,7 +357,7 @@ const Header = () => {
 
               {/* Icons */}
               <div className="flex items-center space-x-2 lg:space-x-4 ml-2 lg:ml-8">
-                <button 
+                <button
                   onClick={handleSearchClick}
                   className="p-2 text-warm-brown hover:text-primary-green transition-colors"
                 >
@@ -484,7 +483,7 @@ const Header = () => {
 
             {/* Icons for Mobile - Improved spacing */}
             <div className="flex items-center space-x-1 flex-shrink-0">
-              <button 
+              <button
                 onClick={handleSearchClick}
                 className="p-1 sm:p-2 text-warm-brown hover:text-primary-green transition-colors"
               >
@@ -580,7 +579,11 @@ const Header = () => {
                       onClick={() => setIsMenuOpen(false)}
                       className="flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wider text-warm-brown hover:bg-primary-green/5 hover:text-primary-green transition"
                     >
-                      <span>{(t('nav.orderHistory') || 'ORDER HISTORY').toUpperCase()}</span>
+                      <span>
+                        {(
+                          t('nav.orderHistory') || 'ORDER HISTORY'
+                        ).toUpperCase()}
+                      </span>
                       <ChevronRight className="h-4 w-4 opacity-60" />
                     </Link>
                     <button

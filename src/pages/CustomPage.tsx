@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Heart,
@@ -10,8 +11,14 @@ import {
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import AuthModal from '../components/auth/AuthModal';
 import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../context/ToastContext';
+import useLogin from '../hook/useLogin';
+import useRegister from '../hook/useRegister';
 import { useCreateCombo, useProductSearch } from '../hooks/useProducts';
+import { isApiError } from '../lib/ApiError';
+import { AuthUtils } from '../utils/auth';
 
 interface CartItem {
   id: string;
@@ -24,7 +31,10 @@ interface CartItem {
 
 const CustomPage: React.FC = () => {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<'gift' | 'sticker'>('gift');
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [page, setPage] = useState(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState('CANDY');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,6 +81,9 @@ const CustomPage: React.FC = () => {
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [note, setNote] = useState('');
+
+  const { mutateAsync: doLogin } = useLogin();
+  const { mutateAsync: doRegister } = useRegister();
 
   const getCurrentData = () => (activeTab === 'gift' ? giftData : stickerData);
   const setCurrentData = (data: any) => {
@@ -135,7 +148,7 @@ const CustomPage: React.FC = () => {
           id: product.id,
           type: 'product',
           name: product.name,
-          image: product?.image ?? '',
+          image: product?.images?.[0]?.imageUrl ?? '',
           price: product.price,
           quantity: 1,
         });
@@ -186,6 +199,7 @@ const CustomPage: React.FC = () => {
   };
 
   const handleOrder = () => {
+    const token = AuthUtils.getAccessToken();
     // validate currentData.name, note, items
     const currentData = getCurrentData();
     // const totalItems = getTotalItems();
@@ -202,12 +216,12 @@ const CustomPage: React.FC = () => {
       hasError = true;
     }
 
-    // if (totalItems < 5) {
-    //   newErrors.items = 'Cần chọn ít nhất 5 sản phẩm hoặc sticker.';
-    //   hasError = true;
-    // }
-
     setErrors(newErrors);
+
+    if (!token) {
+      setAuthOpen(true);
+      return;
+    }
 
     if (!hasError) {
       setIsModalOpen(true);
@@ -290,6 +304,138 @@ const CustomPage: React.FC = () => {
         setIsModalOpen(false);
       } catch (error) {
         console.error('Error creating combo:', error);
+      }
+    }
+  };
+
+  const handleSignIn = async (d: { email: string; password: string }) => {
+    try {
+      const res = (await doLogin(d)) as any;
+
+      if (res?.status === 200 && res?.data?.accessToken) {
+        AuthUtils.saveAuthData(res.data.accessToken, res.data.refreshToken);
+
+        // Save user info to sessionStorage for CartPage
+        if (res.data.info) {
+          sessionStorage.setItem('user_info', JSON.stringify(res.data.info));
+        }
+
+        const userName =
+          res.data.info?.name ||
+          `${res.data.info?.lastName || ''} ${
+            res.data.info?.firstName || ''
+          }`.trim();
+        if (userName) {
+          showToast({
+            type: 'success',
+            title: t('auth.loginSuccess'),
+            message: `${t('auth.welcome')} ${userName}!`,
+          });
+        } else {
+          showToast({
+            type: 'success',
+            title: t('auth.loginSuccess'),
+            message: t('auth.loginSuccessMessage'),
+          });
+        }
+
+        setAuthOpen(false);
+        // Reload page after successful login
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      } else if (res?.status && res?.status !== 200) {
+        // Show generic error message instead of backend details
+        showToast({
+          type: 'error',
+          title: t('auth.loginFailed'),
+          message: t('auth.genericError'),
+        });
+      } else {
+        showToast({
+          type: 'error',
+          title: t('auth.loginFailed'),
+          message: t('auth.genericError'),
+        });
+      }
+    } catch (e: any) {
+      // Show generic message to user
+      showToast({
+        type: 'error',
+        title: t('auth.loginFailed'),
+        message: t('auth.genericError'),
+      });
+    }
+  };
+  const handleSignUp = async (d: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) => {
+    try {
+      const registerData = {
+        ...d,
+        confirmPassword: d.password,
+      };
+      const res = (await doRegister(registerData)) as any;
+      if (res?.status === 200) {
+        setAuthMode('signin');
+        showToast({
+          type: 'success',
+          title: t('auth.registrationSuccess'),
+          message: t('auth.registrationSuccessMessage'),
+        });
+      } else if (res?.status && res?.status !== 200) {
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      } else {
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      }
+    } catch (e: any) {
+      if (isApiError(e)) {
+        const data: any = e.data;
+        const fieldErrors = data?.errors || data?.error?.fields;
+        if (fieldErrors && typeof fieldErrors === 'object') {
+          const firstKey = Object.keys(fieldErrors)[0];
+          if (firstKey) {
+            // Field validation error occurred
+            showToast({
+              type: 'error',
+              title: t('auth.registrationFailed'),
+              message: t('auth.genericError'),
+            });
+          } else {
+            showToast({
+              type: 'error',
+              title: t('auth.registrationFailed'),
+              message: t('auth.genericError'),
+            });
+          }
+          return;
+        }
+        const detail = data?.error?.detail || data?.message;
+        if (detail) {
+          // Error detail received
+        }
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      } else {
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
       }
     }
   };
@@ -389,14 +535,16 @@ const CustomPage: React.FC = () => {
     return (
       <div className="space-y-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-6">
             {title}
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subTitle}</p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+            {subTitle}
+          </p>
           <div className="w-4/5 h-1 bg-primary-green mx-auto"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
           {/* 1️⃣ WHY SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-accent-green/10 rounded-xl flex items-center justify-center mb-4">
@@ -438,7 +586,7 @@ const CustomPage: React.FC = () => {
           </div>
 
           {/* 3️⃣ FINAL / CTA SECTION */}
-          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow md:col-span-2">
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center mb-4">
               <Heart className="h-6 w-6 text-primary-green" />
             </div>
@@ -447,16 +595,16 @@ const CustomPage: React.FC = () => {
                 ? t('personalize.reasonsTitle')
                 : t('sticker.finalTitle')}
             </h3>
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="space-y-4">
               {activeTab === 'gift' ? (
                 <>
                   {[1, 2, 3].map((i) => (
                     <div key={i}>
                       <p className="font-semibold text-gray-800 mb-1">
-                        • {t(`personalize.custom.p${i}.title`)}
+                        • {t(`personalize.reasons.p${i}.title`)}
                       </p>
                       <p className="text-gray-600 leading-relaxed">
-                        {t(`personalize.custom.p${i}.desc`)}
+                        {t(`personalize.reasons.p${i}.desc`)}
                       </p>
                     </div>
                   ))}
@@ -866,6 +1014,29 @@ const CustomPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <AuthModal
+        open={authOpen}
+        mode={authMode}
+        onClose={() => setAuthOpen(false)}
+        onSwitch={(m) => setAuthMode(m)}
+        onSignIn={handleSignIn}
+        onSignUp={handleSignUp}
+        onSignUpFieldErrors={(errs) => {
+          // Field validation errors - show generic message to user
+          const firstKey = Object.keys(errs)[0] as
+            | keyof typeof errs
+            | undefined;
+          if (firstKey) {
+            // Field validation error occurred
+            showToast({
+              type: 'error',
+              title: t('auth.registrationFailed'),
+              message: t('auth.genericError'),
+            });
+          }
+        }}
+      />
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
