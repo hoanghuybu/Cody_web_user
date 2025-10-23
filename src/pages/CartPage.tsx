@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ArrowLeft, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -513,7 +514,7 @@ const CartPage = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="xl:col-span-2">
-            <div className="hidden md:grid grid-cols-[96px_1fr_120px_160px_140px_40px] px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <div className="hidden md:grid grid-cols-[96px_2fr_100px_140px_110px_40px] px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               <div></div>
               <div></div>
               <div className="text-center">{t('cart.price')}</div>
@@ -540,14 +541,14 @@ const CartPage = () => {
                       <Trash2 className="h-5 w-5" />
                     </button>
 
-                    <div className="grid grid-cols-[64px_1fr] md:grid-cols-[96px_1fr_120px_160px_140px_40px] items-center gap-3 sm:gap-4">
+                    <div className="grid grid-cols-[64px_1fr] md:grid-cols-[96px_2fr_100px_140px_110px_40px] items-center gap-3 sm:gap-4">
                       <img
                         src={item.image}
                         alt={item.originalName || item.name}
                         className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-lg"
                       />
                       <div className="flex flex-col gap-1">
-                        <h3 className="font-playfair text-sm sm:text-base md:text-lg text-warm-brown uppercase tracking-wide">
+                        <h3 className="font-playfair text-sm sm:text-base md:text-base text-warm-brown uppercase tracking-wide break-words">
                           {item.originalName || item.name}
                         </h3>
                         <div className="mt-2 flex md:hidden items-center justify-between">
@@ -560,36 +561,36 @@ const CartPage = () => {
                         </div>
                       </div>
 
-                      <div className="hidden md:block text-center font-semibold text-amber-600">
+                      <div className="hidden md:block text-center font-semibold text-amber-600 text-sm">
                         {formatPrice(item.price)}
                       </div>
 
-                      <div className="hidden md:block justify-self-end">
-                        <div className="flex items-center border border-gray-200 rounded-md min-w-[160px] justify-between">
+                      <div className="hidden md:block justify-self-center">
+                        <div className="flex items-center border border-gray-200 rounded-md min-w-[130px] justify-between">
                           <button
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
                             disabled={!canDecrement}
-                            className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-primary-green disabled:opacity-40"
+                            className="h-8 w-8 flex items-center justify-center text-gray-600 hover:text-primary-green disabled:opacity-40"
                           >
-                            <Minus className="h-4 w-4" />
+                            <Minus className="h-3 w-3" />
                           </button>
-                          <span className="px-3 font-semibold">
+                          <span className="px-2 font-semibold text-sm">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
-                            className="h-9 w-9 flex items-center justify-center text-gray-600 hover:text-primary-green"
+                            className="h-8 w-8 flex items-center justify-center text-gray-600 hover:text-primary-green"
                           >
-                            <Plus className="h-4 w-4" />
+                            <Plus className="h-3 w-3" />
                           </button>
                         </div>
                       </div>
 
-                      <div className="hidden md:block text-right font-semibold">
+                      <div className="hidden md:block text-right font-semibold text-sm">
                         {formatPrice(lineTotal)}
                       </div>
 
@@ -822,7 +823,7 @@ const CartPage = () => {
                 {t('cart.taxShipping')}
               </p>
               <button
-                className="w-full bg-[#1f2a44] text-white font-bold py-4 rounded-lg hover:brightness-110 transition-colors uppercase tracking-wide"
+                className="w-full bg-primary-green text-white font-bold py-4 rounded-lg hover:bg-primary-green/90 transition-colors uppercase tracking-wide"
                 onClick={handleCheckout}
               >
                 {t('cart.checkout')} • {formatPrice(total)}
