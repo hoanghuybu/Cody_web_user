@@ -16,6 +16,12 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 type TranslationDict = Record<string, string>;
 const translations: Record<Language, TranslationDict> = {
   en: {
+    //Contact:
+    'contact.address.company':
+      '123 Dua Street, An Hoa Ward, \n Ben Tre City, Ben Tre Province',
+    'contact.working.1': 'Monday - Friday: 8:00 AM - 5:00 PM',
+    'contact.working.2': 'Saturday: 8:00 AM - 12:00 PM',
+    'contact.working.3': 'Sunday: Closed',
     // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
@@ -558,6 +564,12 @@ const translations: Record<Language, TranslationDict> = {
     'error.addressUrl': 'Please enter the address.',
   },
   vn: {
+    //Contact:
+    'contact.address.company':
+      '123 Đường Dừa, Phường An Hòa \n TP. Bến Tre, Tỉnh Bến Tre',
+    'contact.working.1': 'Thứ 2 - Thứ 6: 8:00 - 17:00',
+    'contact.working.2': 'Thứ 7: 8:00 - 12:00',
+    'contact.working.3': 'Chủ nhật: Nghỉ',
     // Common
     'common.loading': 'Đang tải...',
     'common.error': 'Lỗi',
