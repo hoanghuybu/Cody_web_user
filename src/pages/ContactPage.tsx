@@ -75,9 +75,7 @@ const ContactPage = () => {
                       {t('contact.address')}
                     </h3>
                     <p className="text-gray-600">
-                      123 Đường Dừa, Phường An Hòa
-                      <br />
-                      TP. Bến Tre, Tỉnh Bến Tre
+                      {t('contact.address.company')}
                     </p>
                   </div>
                 </div>
@@ -116,9 +114,9 @@ const ContactPage = () => {
                     <h3 className="font-semibold text-warm-brown mb-1">
                       {t('contact.hours')}
                     </h3>
-                    <p className="text-gray-600">Thứ 2 - Thứ 6: 8:00 - 17:00</p>
-                    <p className="text-gray-600">Thứ 7: 8:00 - 12:00</p>
-                    <p className="text-gray-600">Chủ nhật: Nghỉ</p>
+                    <p className="text-gray-600">{t('contact.working.1')}</p>
+                    <p className="text-gray-600">{t('contact.working.2')}</p>
+                    <p className="text-gray-600">{t('contact.working.3')}</p>
                   </div>
                 </div>
               </div>
