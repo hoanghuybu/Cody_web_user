@@ -11,6 +11,7 @@ import useLogin from '../hook/useLogin';
 import useRegister from '../hook/useRegister';
 import { isApiError } from '../lib/ApiError';
 import { AuthUtils } from '../utils/auth';
+import phoneCountryCodes from '../../phone-country-codes.json';
 
 const CartPage = () => {
   const { items, total, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -24,7 +25,7 @@ const CartPage = () => {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [buyerPhone, setBuyerPhone] = useState('');
   const [buyerAddress, setBuyerAddress] = useState('');
-
+  
   // Address selection states
   const [provinces, setProvinces] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
@@ -33,7 +34,7 @@ const CartPage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
   const [selectedWard, setSelectedWard] = useState<any>(null);
   const [houseNumber, setHouseNumber] = useState('');
-
+    const [selectedCountryCode, setSelectedCountryCode] = useState('+84'); 
   const [userInfo, setUserInfo] = useState<any>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -298,10 +299,8 @@ const CartPage = () => {
     const token = AuthUtils.getAccessToken();
 
     const orderPayload = {
-      buyerName:
-        userInfo.name ||
-        `${userInfo.lastName || ''} ${userInfo.firstName || ''}`.trim(),
-      buyerPhone: buyerPhone.trim(),
+      buyerName: userInfo.name || `${userInfo.lastName || ''} ${userInfo.firstName || ''}`.trim(),
+      buyerPhone: `${selectedCountryCode}${buyerPhone.trim()}`,
       addressUrl: buyerAddress.trim(),
       paymentMethod: 'COD',
       items: items.map((item) => ({
@@ -388,14 +387,10 @@ const CartPage = () => {
               <ShoppingBag className="h-8 w-8 text-amber-600" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-2 font-playfair">
-              Xác nhận đặt hàng
+              {t('cart.confirmOrderTitle')}
             </h3>
             <p className="text-gray-600 text-sm">
-              Bạn có chắc chắn muốn đặt hàng với tổng giá trị{' '}
-              <span className="font-semibold text-amber-600">
-                {formatPrice(total)}
-              </span>
-              ?
+              Bạn có chắc chắn muốn đặt hàng với tổng giá trị <span className="font-semibold text-amber-600">{formatPrice(total)}</span>?
             </p>
           </div>
 
@@ -405,8 +400,12 @@ const CartPage = () => {
               <span className="font-semibold text-right">
                 {items.length} sản phẩm
               </span>
+              <span className="text-gray-600 whitespace-nowrap">{t('cart.itemCount')}</span>
+              <span className="font-semibold text-right">{items.length} {t('cart.products')}</span>
             </div>
             <div className="flex justify-between items-start gap-4">
+              <span className="text-gray-600 whitespace-nowrap">{t('cart.receiver')}</span>
+              <span className="font-semibold text-right">{userInfo?.name || 'N/A'}</span>
               <span className="text-gray-600 whitespace-nowrap">
                 Người nhận:
               </span>
@@ -415,6 +414,8 @@ const CartPage = () => {
               </span>
             </div>
             <div className="flex justify-between items-start gap-4">
+              <span className="text-gray-600 whitespace-nowrap">{t('cart.phoneNumber')}:</span>
+              <span className="font-semibold text-right">{selectedCountryCode}{buyerPhone}</span>
               <span className="text-gray-600 whitespace-nowrap">
                 Số điện thoại:
               </span>
@@ -422,6 +423,8 @@ const CartPage = () => {
             </div>
             <div className="border-t border-gray-200 pt-3">
               <div className="flex items-start gap-4">
+                <span className="text-gray-600 whitespace-nowrap">{t('cart.address')}</span>
+                <span className="font-semibold text-right flex-1 break-words">{buyerAddress}</span>
                 <span className="text-gray-600 whitespace-nowrap">
                   Địa chỉ:
                 </span>
@@ -449,13 +452,13 @@ const CartPage = () => {
               onClick={() => setShowConfirmModal(false)}
               className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Hủy
+              {t('cart.cancel')}
             </button>
             <button
               onClick={confirmCreateOrder}
               className="flex-1 px-6 py-3 bg-primary-green text-white font-semibold rounded-lg hover:bg-primary-green/90 transition-colors"
             >
-              Xác nhận
+              {t('cart.confirm')}
             </button>
           </div>
         </div>
@@ -670,13 +673,13 @@ const CartPage = () => {
             {/* Summary */}
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-warm-brown mb-4">
-                Thông tin giao hàng
+                {t('cart.deliveryInfo')}
               </h3>
 
               {/* Buyer Name (from login) */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tên người nhận *
+                  {t('cart.receiverName')} *
                 </label>
                 <input
                   type="text"
@@ -689,32 +692,58 @@ const CartPage = () => {
                   }
                   disabled
                   className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-50 cursor-not-allowed"
-                  placeholder="Đăng nhập để hiển thị tên"
+                  placeholder={t('cart.receiverNamePlaceholder')}
                 />
                 <p className="mt-1 text-xs text-gray-500">
-                  Tên được lấy từ tài khoản đăng nhập
+                  {t('cart.receiverNameHelp')}
                 </p>
               </div>
 
               {/* Phone Input */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Số điện thoại *
+                  {t('cart.phoneNumber')} *
                 </label>
-                <input
-                  type="tel"
-                  value={buyerPhone}
-                  onChange={(e) => setBuyerPhone(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
-                  placeholder="Nhập số điện thoại"
-                  required
-                />
+                <div className="flex gap-2">
+                  <div className="relative w-32">
+                    <select
+                      value={selectedCountryCode}
+                      onChange={(e) => setSelectedCountryCode(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-primary-green/40 appearance-none cursor-pointer pr-8"
+                    >
+                      {phoneCountryCodes.map((country) => (
+                        <option key={country.code} value={country.dial_code || ''}>
+                          {country.code} {country.dial_code}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                  <input
+                    type="tel"
+                    value={buyerPhone}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      setBuyerPhone(value);
+                    }}
+                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
+                    placeholder={t('cart.phoneNumberPlaceholder')}
+                    required
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  {t('cart.fullPhoneNumber')} {selectedCountryCode}{buyerPhone || 'xxxxxxxxxx'}
+                </p>
               </div>
 
               {/* Address Input */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Địa chỉ giao hàng *
+                  {t('cart.deliveryAddress')} *
                 </label>
 
                 {/* House Number */}
@@ -730,7 +759,7 @@ const CartPage = () => {
                     }}
                     maxLength={50}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-green/40"
-                    placeholder="Số nhà, tên đường (tối đa 50 ký tự)"
+                    placeholder={t('cart.houseNumber')}
                     required
                   />
                   <p className="mt-1 text-xs text-gray-500">
@@ -752,7 +781,7 @@ const CartPage = () => {
                     required
                   >
                     <option value="">-- Chọn Tỉnh/Thành phố --</option>
-                    {provinces.map((province) => (
+                    {provinces.map(province => (
                       <option key={province.code} value={province.code}>
                         {province.name}
                       </option>
@@ -775,7 +804,7 @@ const CartPage = () => {
                     required
                   >
                     <option value="">-- Chọn Quận/Huyện --</option>
-                    {districts.map((district) => (
+                    {districts.map(district => (
                       <option key={district.code} value={district.code}>
                         {district.name}
                       </option>
@@ -798,7 +827,7 @@ const CartPage = () => {
                     required
                   >
                     <option value="">-- Chọn Phường/Xã --</option>
-                    {wards.map((ward) => (
+                    {wards.map(ward => (
                       <option key={ward.code} value={ward.code}>
                         {ward.name}
                       </option>
@@ -810,7 +839,7 @@ const CartPage = () => {
                 {buyerAddress && (
                   <div className="mt-2 p-2 bg-gray-50 rounded-md border border-gray-200">
                     <p className="text-xs text-gray-500 mb-1">
-                      Địa chỉ đầy đủ:
+                      {t('cart.fullAddress')}
                     </p>
                     <p className="text-sm text-gray-700 font-medium">
                       {buyerAddress}
