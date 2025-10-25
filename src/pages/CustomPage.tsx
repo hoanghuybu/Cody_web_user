@@ -1,32 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Heart,
+  Loader2,
   Minus,
   Package,
-  Palette,
   Plus,
   ShoppingCart,
   Star,
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import AuthModal from '../components/auth/AuthModal';
 import { useLanguage } from '../context/LanguageContext';
-
-// Mock data types
-interface Sticker {
-  id: string;
-  name: string;
-  image: string;
-  price: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-}
+import { useToast } from '../context/ToastContext';
+import useLogin from '../hook/useLogin';
+import useRegister from '../hook/useRegister';
+import { useCreateCombo, useProductSearch } from '../hooks/useProducts';
+import { isApiError } from '../lib/ApiError';
+import { AuthUtils } from '../utils/auth';
 
 interface CartItem {
   id: string;
@@ -37,118 +29,42 @@ interface CartItem {
   quantity: number;
 }
 
-// Mock API functions
-const fetchStickers = async (): Promise<Sticker[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  return [
-    {
-      id: 'sticker-1',
-      name: 'Coconut Palm Sticker',
-      image:
-        'https://images.pexels.com/photos/2872418/pexels-photo-2872418.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 15000,
-    },
-    {
-      id: 'sticker-2',
-      name: 'Ben Tre Logo Sticker',
-      image:
-        'https://images.pexels.com/photos/8142081/pexels-photo-8142081.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 12000,
-    },
-    {
-      id: 'sticker-3',
-      name: 'Traditional Pattern Sticker',
-      image:
-        'https://images.pexels.com/photos/11406167/pexels-photo-11406167.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 18000,
-    },
-    {
-      id: 'sticker-4',
-      name: 'Coconut Candy Sticker',
-      image:
-        'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 20000,
-    },
-    {
-      id: 'sticker-5',
-      name: 'Vintage CODY Sticker',
-      image:
-        'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 25000,
-    },
-    {
-      id: 'sticker-6',
-      name: 'Eco-Friendly Sticker',
-      image:
-        'https://images.pexels.com/photos/7525184/pexels-photo-7525184.jpeg?auto=compress&cs=tinysrgb&w=300',
-      price: 22000,
-    },
-  ];
-};
-
-const fetchProducts = async (): Promise<Product[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return [
-    {
-      id: 'product-1',
-      name: 'Kẹo Dừa Truyền Thống',
-      image:
-        'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Kẹo dừa nguyên chất theo công thức truyền thống',
-      price: 45000,
-    },
-    {
-      id: 'product-2',
-      name: 'Kẹo Dừa Sầu Riêng',
-      image:
-        'https://images.pexels.com/photos/7525184/pexels-photo-7525184.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Hương vị độc đáo của sầu riêng kết hợp dừa',
-      price: 65000,
-    },
-    {
-      id: 'product-3',
-      name: 'Combo Mix 3 Vị',
-      image:
-        'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Combo 3 vị: truyền thống, cà phê và sầu riêng',
-      price: 125000,
-    },
-    {
-      id: 'product-4',
-      name: 'Hộp Quà Cao Cấp',
-      image:
-        'https://images.pexels.com/photos/6697264/pexels-photo-6697264.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Hộp quà sang trọng với 6 loại kẹo dừa đặc biệt',
-      price: 280000,
-    },
-    {
-      id: 'product-5',
-      name: 'Kẹo Dừa Cà Phê',
-      image:
-        'https://images.pexels.com/photos/8835098/pexels-photo-8835098.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Hương vị đậm đà của cà phê Arabica',
-      price: 55000,
-    },
-    {
-      id: 'product-6',
-      name: 'Giỏ Quà Bến Tre',
-      image:
-        'https://images.pexels.com/photos/1028637/pexels-photo-1028637.jpeg?auto=compress&cs=tinysrgb&w=300',
-      description: 'Giỏ quà đặc sản với nhiều sản phẩm từ dừa',
-      price: 350000,
-    },
-  ];
-};
-
 const CustomPage: React.FC = () => {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<'gift' | 'sticker'>('gift');
-  const [stickers, setStickers] = useState<Sticker[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loadingStickers, setLoadingStickers] = useState(false);
-  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [page, setPage] = useState(0);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('CANDY');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errors, setErrors] = useState({
+    name: '',
+    note: '',
+    items: '',
+    buyerName: '',
+    buyerPhone: '',
+    addressUrl: '',
+  });
+
+  const [buyerInfo, setBuyerInfo] = useState({
+    buyerName: '',
+    buyerPhone: '',
+    addressUrl: '',
+  });
+  const size = 6;
+  const { data: productsData, isLoading: productsLoading } = useProductSearch({
+    page,
+    size,
+    sortBy: 'name',
+    sortDirection: 'ASC',
+    categoryId: selectedCategoryId || undefined,
+  });
+  const { onCreateCombo, isLoading: isLoadingCreate } = useCreateCombo();
+
+  const products = productsData?.data?.content ?? [];
+  const totalPages = productsData?.data?.totalPages ?? 1;
+  const currentPage = productsData?.data?.number ?? 0;
 
   // Form data for each tab (preserved when switching)
   const [giftData, setGiftData] = useState({
@@ -166,35 +82,8 @@ const CustomPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [note, setNote] = useState('');
 
-  // Load data on component mount
-  useEffect(() => {
-    loadStickers();
-    loadProducts();
-  }, []);
-
-  const loadStickers = async () => {
-    setLoadingStickers(true);
-    try {
-      const data = await fetchStickers();
-      setStickers(data);
-    } catch (error) {
-      // Error loading stickers
-    } finally {
-      setLoadingStickers(false);
-    }
-  };
-
-  const loadProducts = async () => {
-    setLoadingProducts(true);
-    try {
-      const data = await fetchProducts();
-      setProducts(data);
-    } catch (error) {
-      // Error loading products
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
+  const { mutateAsync: doLogin } = useLogin();
+  const { mutateAsync: doRegister } = useRegister();
 
   const getCurrentData = () => (activeTab === 'gift' ? giftData : stickerData);
   const setCurrentData = (data: any) => {
@@ -222,13 +111,13 @@ const CustomPage: React.FC = () => {
         ...currentData,
         selectedStickers: [...currentData.selectedStickers, stickerId],
       });
-      const sticker = stickers.find((s) => s.id === stickerId);
+      const sticker = products?.find((s) => s.id === stickerId);
       if (sticker) {
         addToCart({
           id: sticker.id,
           type: 'sticker',
           name: sticker.name,
-          image: sticker.image,
+          image: sticker?.image ?? '',
           price: sticker.price,
           quantity: 1,
         });
@@ -259,7 +148,7 @@ const CustomPage: React.FC = () => {
           id: product.id,
           type: 'product',
           name: product.name,
-          image: product.image,
+          image: product?.images?.[0]?.imageUrl ?? '',
           price: product.price,
           quantity: 1,
         });
@@ -309,6 +198,248 @@ const CustomPage: React.FC = () => {
     }
   };
 
+  const handleOrder = () => {
+    const token = AuthUtils.getAccessToken();
+    // validate currentData.name, note, items
+    const currentData = getCurrentData();
+    // const totalItems = getTotalItems();
+    const newErrors: any = { name: '', note: '', items: '' };
+    let hasError = false;
+
+    if (!currentData.name.trim()) {
+      newErrors.name = t('error.nameCombo');
+      hasError = true;
+    }
+
+    if (!note.trim()) {
+      newErrors.note = t('error.noteCombo');
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!token) {
+      setAuthOpen(true);
+      return;
+    }
+
+    if (!hasError) {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleConfirm = async () => {
+    const currentData = getCurrentData();
+    const newErrors: any = { buyerName: '', buyerPhone: '', addressUrl: '' };
+    let hasError = false;
+
+    if (!buyerInfo.buyerName.trim()) {
+      newErrors.buyerName = t('error.buyerName');
+      hasError = true;
+    }
+
+    if (!buyerInfo.buyerPhone.trim()) {
+      newErrors.buyerPhone = t('error.buyerPhone');
+      hasError = true;
+    }
+
+    if (!buyerInfo.addressUrl.trim()) {
+      newErrors.addressUrl = t('error.addressUrl');
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!hasError) {
+      const body = {
+        items: cart.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+        buyerName: buyerInfo.buyerName,
+        buyerPhone: buyerInfo.buyerPhone,
+        addressUrl: buyerInfo.addressUrl,
+        customComboName: currentData.name,
+        note: note,
+        isCombo: true,
+        paymentMethod: 'COD',
+        sellerId: 'S9R2-005242',
+      };
+
+      try {
+        await onCreateCombo(body);
+
+        setBuyerInfo({
+          buyerName: '',
+          buyerPhone: '',
+          addressUrl: '',
+        });
+
+        // ✅ Reset current tab’s data
+        if (activeTab === 'gift') {
+          setGiftData({
+            name: '',
+            selectedStickers: [],
+            selectedProducts: [],
+          });
+        } else {
+          setStickerData({
+            name: '',
+            selectedStickers: [],
+            selectedProducts: [],
+          });
+        }
+
+        // ✅ Reset common form state
+        setNote('');
+        setCart([]);
+        setErrors({
+          name: '',
+          note: '',
+          items: '',
+          buyerName: '',
+          buyerPhone: '',
+          addressUrl: '',
+        });
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error creating combo:', error);
+      }
+    }
+  };
+
+  const handleSignIn = async (d: { email: string; password: string }) => {
+    try {
+      const res = (await doLogin(d)) as any;
+
+      if (res?.status === 200 && res?.data?.accessToken) {
+        AuthUtils.saveAuthData(res.data.accessToken, res.data.refreshToken);
+
+        // Save user info to sessionStorage for CartPage
+        if (res.data.info) {
+          sessionStorage.setItem('user_info', JSON.stringify(res.data.info));
+        }
+
+        const userName =
+          res.data.info?.name ||
+          `${res.data.info?.lastName || ''} ${
+            res.data.info?.firstName || ''
+          }`.trim();
+        if (userName) {
+          showToast({
+            type: 'success',
+            title: t('auth.loginSuccess'),
+            message: `${t('auth.welcome')} ${userName}!`,
+          });
+        } else {
+          showToast({
+            type: 'success',
+            title: t('auth.loginSuccess'),
+            message: t('auth.loginSuccessMessage'),
+          });
+        }
+
+        setAuthOpen(false);
+        // Reload page after successful login
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      } else if (res?.status && res?.status !== 200) {
+        // Show generic error message instead of backend details
+        showToast({
+          type: 'error',
+          title: t('auth.loginFailed'),
+          message: t('auth.genericError'),
+        });
+      } else {
+        showToast({
+          type: 'error',
+          title: t('auth.loginFailed'),
+          message: t('auth.genericError'),
+        });
+      }
+    } catch (e: any) {
+      // Show generic message to user
+      showToast({
+        type: 'error',
+        title: t('auth.loginFailed'),
+        message: t('auth.genericError'),
+      });
+    }
+  };
+  const handleSignUp = async (d: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) => {
+    try {
+      const registerData = {
+        ...d,
+        confirmPassword: d.password,
+      };
+      const res = (await doRegister(registerData)) as any;
+      if (res?.status === 200) {
+        setAuthMode('signin');
+        showToast({
+          type: 'success',
+          title: t('auth.registrationSuccess'),
+          message: t('auth.registrationSuccessMessage'),
+        });
+      } else if (res?.status && res?.status !== 200) {
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      } else {
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      }
+    } catch (e: any) {
+      if (isApiError(e)) {
+        const data: any = e.data;
+        const fieldErrors = data?.errors || data?.error?.fields;
+        if (fieldErrors && typeof fieldErrors === 'object') {
+          const firstKey = Object.keys(fieldErrors)[0];
+          if (firstKey) {
+            // Field validation error occurred
+            showToast({
+              type: 'error',
+              title: t('auth.registrationFailed'),
+              message: t('auth.genericError'),
+            });
+          } else {
+            showToast({
+              type: 'error',
+              title: t('auth.registrationFailed'),
+              message: t('auth.genericError'),
+            });
+          }
+          return;
+        }
+        const detail = data?.error?.detail || data?.message;
+        if (detail) {
+          // Error detail received
+        }
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      } else {
+        showToast({
+          type: 'error',
+          title: t('auth.registrationFailed'),
+          message: t('auth.genericError'),
+        });
+      }
+    }
+  };
+
   const getTotalItems = () =>
     cart.reduce((sum, item) => sum + item.quantity, 0);
   const getTotalPrice = () =>
@@ -323,28 +454,78 @@ const CustomPage: React.FC = () => {
 
   const renderDescription = () => {
     const isGift = activeTab === 'gift';
-    const title = isGift ? t('custom.giftTab') : t('custom.stickerTab');
-    const content = isGift
-      ? {
-          intro: t('custom.gift.intro'),
-          why: t('custom.gift.why'),
-          features: t('custom.gift.features'),
-          reason: t('custom.gift.reason'),
-        }
-      : {
-          intro: t('custom.sticker.intro'),
-          why: t('custom.sticker.why'),
-          features: t('custom.sticker.features'),
-          reason: t('custom.sticker.reason'),
-        };
+    const title = isGift ? t('personalize.heroSubtitle') : t('sticker.intro');
+    const subTitle = isGift ? t('personalize.intro') : t('sticker.introDes');
+
+    const whyItems = isGift
+      ? [
+          {
+            title: t('personalize.why.p1.title'),
+            desc: t('personalize.why.p1.desc'),
+          },
+          {
+            title: t('personalize.why.p2.title'),
+            desc: t('personalize.why.p2.desc'),
+          },
+          {
+            title: t('personalize.why.p3.title'),
+            desc: t('personalize.why.p3.desc'),
+          },
+        ]
+      : [
+          {
+            title: t('sticker.reasonCustomize'),
+            desc: t('sticker.reasonCustomizeDes'),
+          },
+          {
+            title: t('sticker.reasonMessage'),
+            desc: t('sticker.reasonMessageDes'),
+          },
+          {
+            title: t('sticker.reasonQuality'),
+            desc: t('sticker.reasonQualityDes'),
+          },
+        ];
+    const featuresItems = isGift
+      ? [
+          {
+            title: t('personalize.custom.p1.title'),
+            desc: t('personalize.custom.p1.desc'),
+          },
+          {
+            title: t('personalize.custom.p2.title'),
+            desc: t('personalize.custom.p2.desc'),
+          },
+          {
+            title: t('personalize.custom.p3.title'),
+            desc: t('personalize.custom.p3.desc'),
+          },
+        ]
+      : [
+          {
+            title: t('sticker.chooseDesign'),
+            desc: t('sticker.chooseDesignDes'),
+          },
+          {
+            title: t('sticker.addToGift'),
+            desc: t('sticker.addToGiftDes'),
+          },
+          {
+            title: t('sticker.addPersonalMessage'),
+            desc: t('sticker.addPersonalMessageDes'),
+          },
+        ];
 
     return (
       <div className="space-y-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-6">
             {title}
           </h2>
-          <div className="w-24 h-1 bg-primary-green mx-auto"></div>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+            {subTitle}
+          </p>
+          <div className="w-4/5 h-1 bg-primary-green mx-auto"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -355,7 +536,9 @@ const CustomPage: React.FC = () => {
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
               {t('custom.intro.title')}
             </h3>
-            <p className="text-gray-600 leading-relaxed">{content.intro}</p>
+            <p className="text-gray-600 leading-relaxed">
+              {isGift ? t('personalize.reasonsTitle') : t('sticker.finalTitle')}
+            </p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
@@ -363,9 +546,18 @@ const CustomPage: React.FC = () => {
               <Star className="h-6 w-6 text-accent-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.why.title')} {isGift ? t('custom.gifts') : t('custom.stickers')}
+              {t('custom.why.title')}
             </h3>
-            <p className="text-gray-600 leading-relaxed">{content.why}</p>
+            <div className="space-y-4">
+              {whyItems.map((item, index) => (
+                <div key={index}>
+                  <p className="font-semibold text-gray-800 mb-1">
+                    • {item.title}
+                  </p>
+                  <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
@@ -375,17 +567,54 @@ const CustomPage: React.FC = () => {
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
               {t('custom.features.title')}
             </h3>
-            <p className="text-gray-600 leading-relaxed">{content.features}</p>
+            <div className="space-y-4">
+              {featuresItems.map((item, index) => (
+                <div key={index}>
+                  <p className="font-semibold text-gray-800 mb-1">
+                    • {item.title}
+                  </p>
+                  <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-12 h-12 bg-warm-brown/10 rounded-xl flex items-center justify-center mb-4">
-              <Palette className="h-6 w-6 text-warm-brown" />
+            <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center mb-4">
+              <Heart className="h-6 w-6 text-primary-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
               {t('custom.reason.title')}
             </h3>
-            <p className="text-gray-600 leading-relaxed">{content.reason}</p>
+            <div className="space-y-4">
+              {activeTab === 'gift' ? (
+                <>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i}>
+                      <p className="font-semibold text-gray-800 mb-1">
+                        • {t(`personalize.reasons.p${i}.title`)}
+                      </p>
+                      <p className="text-gray-600 leading-relaxed">
+                        {t(`personalize.reasons.p${i}.desc`)}
+                      </p>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <div>
+                    <p className="text-gray-600 leading-relaxed">
+                      • {t('sticker.finalDes')}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 leading-relaxed">
+                      • {t('sticker.cta')}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -413,126 +642,185 @@ const CustomPage: React.FC = () => {
             } ${t('custom.name')}`}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-2">{errors.name}</p>
+          )}
         </div>
 
         {/* Stickers Selection */}
-        <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            {t('custom.selectSticker')} ({currentData.selectedStickers.length} {t('custom.selected')})
-          </h3>
+        {activeTab === 'sticker' && (
+          <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
+            <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
+              {t('custom.selectSticker')} ({currentData.selectedStickers.length} {t('custom.selected')})
+            </h3>
 
-          {loadingStickers ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {[...Array(6)].map((_, index) => (
-                <div
-                  key={index}
-                  className="aspect-square bg-gray-200 rounded-xl animate-pulse"
-                ></div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {stickers.map((sticker) => (
-                <div
-                  key={sticker.id}
-                  onClick={() => handleStickerSelect(sticker.id)}
-                  className={`relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                    currentData.selectedStickers.includes(sticker.id)
-                      ? 'ring-4 ring-primary-green shadow-lg'
-                      : 'hover:ring-2 hover:ring-primary-green/50'
-                  }`}
-                >
-                  <div className="aspect-square">
-                    <img
-                      src={sticker.image}
-                      alt={sticker.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                    <div className="p-3 text-white">
-                      <p className="font-semibold text-sm">{sticker.name}</p>
-                      <p className="text-xs opacity-90">
-                        {formatPrice(sticker.price)}
-                      </p>
-                    </div>
-                  </div>
-                  {currentData.selectedStickers.includes(sticker.id) && (
-                    <div className="absolute top-2 right-2 w-6 h-6 bg-primary-green rounded-full flex items-center justify-center">
-                      <Plus className="h-4 w-4 text-white" />
-                    </div>
-                  )}
+              {productsLoading ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {[...Array(6)].map((_, index) => (
+                    <div
+                      key={index}
+                      className="aspect-square bg-gray-200 rounded-xl animate-pulse"
+                    ></div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {products?.map((sticker) => (
+                    <div
+                      key={sticker.id}
+                      onClick={() => handleStickerSelect(sticker.id)}
+                      className={`relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+                        currentData.selectedStickers.includes(sticker.id)
+                          ? 'ring-4 ring-primary-green shadow-lg'
+                          : 'hover:ring-2 hover:ring-primary-green/50'
+                      }`}
+                    >
+                      <div className="aspect-square">
+                        <img
+                          src={sticker.images?.[0]?.imageUrl}
+                          alt={sticker.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div className="p-3 text-white">
+                          <p className="font-semibold text-sm">
+                            {sticker.name}
+                          </p>
+                          <p className="text-xs opacity-90">
+                            {formatPrice(sticker.price)}
+                          </p>
+                        </div>
+                      </div>
+                      {currentData.selectedStickers.includes(sticker.id) && (
+                        <div className="absolute top-2 right-2 w-6 h-6 bg-primary-green rounded-full flex items-center justify-center">
+                          <Plus className="h-4 w-4 text-white" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+        )}
 
         {/* Products Selection */}
-        <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            {t('custom.selectProduct')} ({currentData.selectedProducts.length} {t('custom.selected')})
-          </h3>
+        {activeTab === 'gift' && (
+          <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
+            <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
+              {t('custom.selectProduct')} ({currentData.selectedProducts.length} {t('custom.selected')})
+            </h3>
 
-          {loadingProducts ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[...Array(6)].map((_, index) => (
-                <div
-                  key={index}
-                  className="flex space-x-4 p-4 bg-gray-100 rounded-xl animate-pulse"
-                >
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            {productsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[...Array(6)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex space-x-4 p-4 bg-gray-100 rounded-xl animate-pulse"
+                  >
+                    <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-gray-200 rounded"></div>
+                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => handleProductSelect(product.id)}
-                  className={`flex space-x-4 p-4 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    currentData.selectedProducts.includes(product.id)
-                      ? 'bg-primary-green/10 ring-2 ring-primary-green shadow-lg'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {products?.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => handleProductSelect(product.id)}
+                    className={`flex space-x-4 p-4 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                      currentData.selectedProducts.includes(product.id)
+                        ? 'bg-primary-green/10 ring-2 ring-primary-green shadow-lg'
+                        : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
+                  >
+                    <img
+                      src={product.images?.[0]?.imageUrl}
+                      alt={product.name}
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-warm-brown mb-1">
+                        {product.name}
+                      </h4>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {product.description}
+                      </p>
+                      <p className="text-primary-green font-bold">
+                        {formatPrice(product.price)}
+                      </p>
+                    </div>
+                    {currentData.selectedProducts.includes(product.id) && (
+                      <div className="flex items-center">
+                        <div className="w-6 h-6 bg-primary-green rounded-full flex items-center justify-center">
+                          <Plus className="h-4 w-4 text-white" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {!productsLoading && products.length > 0 && (
+          <div className="flex justify-center items-center mt-6 space-x-4">
+            {/* Trang trước */}
+            <button
+              onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Trang trước
+            </button>
+
+            {/* Số trang */}
+            <div className="flex space-x-2">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i)}
+                  className={`px-3 py-1 rounded ${
+                    i === currentPage
+                      ? 'bg-primary-green text-white'
+                      : 'bg-gray-200 hover:bg-gray-300'
                   }`}
                 >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-20 h-20 object-cover rounded-lg"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-warm-brown mb-1">
-                      {product.name}
-                    </h4>
-                    <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                      {product.description}
-                    </p>
-                    <p className="text-primary-green font-bold">
-                      {formatPrice(product.price)}
-                    </p>
-                  </div>
-                  {currentData.selectedProducts.includes(product.id) && (
-                    <div className="flex items-center">
-                      <div className="w-6 h-6 bg-primary-green rounded-full flex items-center justify-center">
-                        <Plus className="h-4 w-4 text-white" />
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  {i + 1}
+                </button>
               ))}
             </div>
-          )}
-        </div>
+
+            {/* Trang sau */}
+            <button
+              onClick={() =>
+                setPage((prev) => Math.min(prev + 1, totalPages - 1))
+              }
+              disabled={currentPage >= totalPages - 1}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Trang sau
+            </button>
+          </div>
+        )}
       </div>
     );
   };
+
+  useEffect(() => {
+    if (activeTab && activeTab === 'gift') {
+      setPage(0);
+      setSelectedCategoryId('CANDY');
+    } else {
+      setPage(0);
+      setSelectedCategoryId('STICKER');
+    }
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-white py-8">
@@ -540,7 +828,9 @@ const CustomPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12  rounded-2xl p-8 shadow-sm">
           <h1 className="text-4xl md:text-5xl font-bold text-warm-brown font-playfair mb-4">
-            {t('custom.title')}
+            {activeTab === 'gift'
+              ? t('personalize.heroTitle')
+              : t('sticker.title')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             {t('custom.subtitle')}
@@ -595,7 +885,7 @@ const CustomPage: React.FC = () => {
 
           {/* Cart Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky top-20">
               <div className=" rounded-2xl shadow-xl p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-warm-brown font-playfair">
@@ -681,6 +971,9 @@ const CustomPage: React.FC = () => {
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent resize-none text-sm"
                   />
+                  {errors.note && (
+                    <p className="text-red-500 text-sm mt-2">{errors.note}</p>
+                  )}
                 </div>
 
                 {/* Total */}
@@ -696,6 +989,7 @@ const CustomPage: React.FC = () => {
 
                   <button
                     disabled={cart.length === 0}
+                    onClick={handleOrder}
                     className="w-full bg-primary-green text-white py-3 rounded-xl font-semibold hover:bg-primary-green/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
                     {t('custom.orderNow')}
@@ -707,6 +1001,102 @@ const CustomPage: React.FC = () => {
         </div>
       </div>
 
+      <AuthModal
+        open={authOpen}
+        mode={authMode}
+        onClose={() => setAuthOpen(false)}
+        onSwitch={(m) => setAuthMode(m)}
+        onSignIn={handleSignIn}
+        onSignUp={handleSignUp}
+        onSignUpFieldErrors={(errs) => {
+          // Field validation errors - show generic message to user
+          const firstKey = Object.keys(errs)[0] as
+            | keyof typeof errs
+            | undefined;
+          if (firstKey) {
+            // Field validation error occurred
+            showToast({
+              type: 'error',
+              title: t('auth.registrationFailed'),
+              message: t('auth.genericError'),
+            });
+          }
+        }}
+      />
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white w-11/12 max-w-md rounded-xl p-6 shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-center">
+              {t('orderInfo')}
+            </h2>
+
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder={t('buyerName')}
+                value={buyerInfo.buyerName}
+                onChange={(e) =>
+                  setBuyerInfo({ ...buyerInfo, buyerName: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
+              />
+              {errors.buyerName && (
+                <p className="text-red-500 text-sm mt-2">{errors.buyerName}</p>
+              )}
+              <input
+                type="text"
+                placeholder={t('buyerPhone')}
+                value={buyerInfo.buyerPhone}
+                onChange={(e) =>
+                  setBuyerInfo({ ...buyerInfo, buyerPhone: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
+              />
+              {errors.buyerPhone && (
+                <p className="text-red-500 text-sm mt-2">{errors.buyerPhone}</p>
+              )}
+              <input
+                type="text"
+                placeholder={t('addressUrl')}
+                value={buyerInfo.addressUrl}
+                onChange={(e) =>
+                  setBuyerInfo({ ...buyerInfo, addressUrl: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
+              />
+              {errors.addressUrl && (
+                <p className="text-red-500 text-sm mt-2">{errors.addressUrl}</p>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                disabled={isLoadingCreate}
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                {isLoadingCreate ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  t('cancel')
+                )}
+              </button>
+              <button
+                disabled={isLoadingCreate}
+                onClick={handleConfirm}
+                className="px-4 py-2 text-sm font-medium bg-primary-green text-white rounded-lg hover:bg-primary-green/90"
+              >
+                {isLoadingCreate ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  t('confirm')
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <style>{`
         @keyframes fadeIn {
           from {

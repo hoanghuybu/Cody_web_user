@@ -16,12 +16,30 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 type TranslationDict = Record<string, string>;
 const translations: Record<Language, TranslationDict> = {
   en: {
+    //Contact:
+    'contact.address.company':
+      '123 Dua Street, An Hoa Ward, \n Ben Tre City, Ben Tre Province',
+    'contact.working.1': 'Monday - Friday: 8:00 AM - 5:00 PM',
+    'contact.working.2': 'Saturday: 8:00 AM - 12:00 PM',
+    'contact.working.3': 'Sunday: Closed',
     // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.close': 'Close',
     'common.cancel': 'Cancel',
     'common.save': 'Save',
+    cart: 'Shopping cart',
+    noItem: 'There are no products.',
+    specialNotes: 'Special notes',
+    'placeholder.note': 'Enter your special request...',
+    'custom.name.gift': 'Name gift',
+    'custom.placeholder.gift': 'Enter your gift name...',
+    'custom.name.sticker': 'Name sticker',
+    'custom.selected.gift': 'Select Products',
+    'custom.selected.sticker': 'Select sticker',
+    'custom.placeholder.sticker': 'Enter your sticker name...',
+    'custom.selected': 'selected',
+    'custom.button.order': 'Order now',
     // Product Detail
     'productDetail.notFound': 'Product not found',
     'productDetail.backToList': 'Back to product list',
@@ -86,11 +104,14 @@ const translations: Record<Language, TranslationDict> = {
     'i.coconutJam': 'Coconut jam',
 
     'cultural.title': 'The Cultural Story of Ben Tre & Coconut Candy',
-  'cultural.p1': 'Known as the Land of Coconuts, Ben Tre is where generations have turned simple ingredients into timeless flavors. Coconut candy represents more than sweetness — it embodies the craftsmanship, warmth, and resilience of the people who make it.',
-  'cultural.p2': 'At CODY, we preserve that legacy while giving it a modern identity. Our candies celebrate the harmony between tradition and innovation, offering a taste that feels both nostalgic and refreshingly new.',
-  'cultural.p3': 'Through each piece of candy, we tell the story of creativity, culture, and connection — from Vietnam to the world.',
+    'cultural.p1':
+      'Known as the Land of Coconuts, Ben Tre is where generations have turned simple ingredients into timeless flavors. Coconut candy represents more than sweetness — it embodies the craftsmanship, warmth, and resilience of the people who make it.',
+    'cultural.p2':
+      'At CODY, we preserve that legacy while giving it a modern identity. Our candies celebrate the harmony between tradition and innovation, offering a taste that feels both nostalgic and refreshingly new.',
+    'cultural.p3':
+      'Through each piece of candy, we tell the story of creativity, culture, and connection — from Vietnam to the world.',
 
-        // The Mind Behind The CODY section
+    // The Mind Behind The CODY section
     'mind.title': 'The Mind Behind The CODY',
     'mind.subtitle': 'The story, values, and purpose behind our journey.',
     'mind.name': 'Le Bao Long',
@@ -200,16 +221,19 @@ const translations: Record<Language, TranslationDict> = {
       'Le Bao Long, a Vietnamese student studying in California, is driven by a mission to bridge cultures through entrepreneurship. From selling 1,200+ handmade products in Phase I to building scholarship programs for students in need, Long’s vision is to redefine what a “sweet” brand can mean — a symbol of culture, sustainability, and compassion.',
     'meet.quote':
       '“We want people to taste more than candy. We want them to taste the story of Vietnam — one that’s humble, hopeful, and beautifully human.”',
-    
 
-        'experience.title': 'Experience Ben Tre',
-  'experience.subtitle': 'We invite travelers and culture lovers to explore Ben Tre through the CODY Experience – a hands-on journey into the art of coconut.',
-  'experience.p1': 'Make your own coconut candy with local artisans and witness every stage – from melting sugar and stirring the mixture to cutting and wrapping by hand.',
-  'experience.p2': 'Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories.',
-  'experience.p3': 'Where human connection and the taste of home melt together in every bite.',
-  'auth.logout': 'LOGOUT',
+    'experience.title': 'Experience Ben Tre',
+    'experience.subtitle':
+      'We invite travelers and culture lovers to explore Ben Tre through the CODY Experience – a hands-on journey into the art of coconut.',
+    'experience.p1':
+      'Make your own coconut candy with local artisans and witness every stage – from melting sugar and stirring the mixture to cutting and wrapping by hand.',
+    'experience.p2':
+      'Let the sweet aroma of coconut, joyful laughter, and warm local stories bring you back to childhood memories.',
+    'experience.p3':
+      'Where human connection and the taste of home melt together in every bite.',
+    'auth.logout': 'LOGOUT',
 
-      // Cart
+    // Cart
     'cart.title': 'Your Cart',
     'cart.itemsCount': '{count} items in your cart',
     'cart.emptyTitle': 'Your cart is empty',
@@ -448,7 +472,6 @@ const translations: Record<Language, TranslationDict> = {
     'custom.enterName': 'Enter your',
     'custom.name': 'name...',
     'custom.selectSticker': 'Select Stickers',
-    'custom.selected': 'selected',
     'custom.selectProduct': 'Select Products',
     'custom.cart': 'Cart',
     'custom.noItems': 'No items yet',
@@ -486,37 +509,37 @@ const translations: Record<Language, TranslationDict> = {
     'personalize.intro':
       "We understand a gift is more than an item — it is the message and feeling you want to send. With Personalized Gift service, you can handcraft unique presents that carry your personal touch. Whether it's a birthday, holiday, or any special occasion, we are here to help you express care and thoughtfulness through every detail.",
     'personalize.whyTitle': 'Why Choose Personalized Gift?',
-    'personalize.why.p1.title': 'Freedom to create',
+    'personalize.why.p1.title': 'Freedom to Create a Gift of Your Choice',
     'personalize.why.p1.desc':
-      "Customize your gift set: choose products, packaging, and basket styles to match the recipient's taste.",
-    'personalize.why.p2.title': 'Add a personal touch',
+      "You can fully customize your gift set, from selecting the products in the set to choosing the packaging and gift basket style that best suits the recipient's preferences.",
+    'personalize.why.p2.title': 'Create a Personal Touch',
     'personalize.why.p2.desc':
-      'Each product can be personalized — from favorite candy flavors to add-on accessories like coconut-fiber cups and wooden utensils, showing care in every selection.',
+      ' Every product in the gift basket can be personalized, from selecting your favorite candy flavor to choosing accessories like coconut husk cups, coconut wood spoons and forks. Every detail shows the care and attention you put into choosing the perfect gift for the recipient.',
     'personalize.why.p3.title': 'Special meaning',
     'personalize.why.p3.desc':
-      'A thoughtfully designed, customized gift feels warm, intimate, and truly special to the recipient.',
-    'personalize.customTitle': 'Customize Your Gift',
+      'Gifts that are designed and selected just for you bring a sense of closeness, warmth, and uniqueness, making the recipient feel truly special.',
+    'personalize.customTitle': 'Customize Your Gift to Your Liking',
     'personalize.customIntro':
-      'With Personalized Gift, you can pick your favorite items to create a meaningful set. You can also request additional customizations such as:',
-    'personalize.custom.p1.title': 'Choose products in your combo',
+      'With the Personalized Gift service, you can select your favorite products to create a unique and meaningful gift set. You can also request adjustments to factors such as:',
+    'personalize.custom.p1.title': 'Selecting Products in a Gift Set',
     'personalize.custom.p1.desc':
-      "Swap flavors or add/remove accessory items in the basket to suit the recipient's preferences.",
-    'personalize.custom.p2.title': 'Customize packaging and baskets',
+      'You can change the candy flavors or add/remove accessories in the gift basket to better match the recipient’s preferences.',
+    'personalize.custom.p2.title': 'Customize Packaging and Gift Baskets',
     'personalize.custom.p2.desc':
-      'We offer a variety of baskets and boxes — request shape, material, and color to match your personal taste.',
-    'personalize.custom.p3.title': 'Include a personal message',
+      'We offer a variety of gift baskets and boxes, allowing you to request a gift basket tailored to your personal style, from the shape and material to the color.',
+    'personalize.custom.p3.title': 'Add a Personal Message',
     'personalize.custom.p3.desc':
-      'Attach a heartfelt note or message. We will present it elegantly to enhance the emotional value of your gift.',
-    'personalize.reasonsTitle': 'Why Choose Us?',
-    'personalize.reasons.p1.title': 'Quality assured',
+      'You can include a loving message or a special note to make the gift even more meaningful. We will help you convey this message in a delicate and beautiful wa.',
+    'personalize.reasonsTitle': 'Why Choose Personalized Gift from Us?',
+    'personalize.reasons.p1.title': 'Guaranteed Quality',
     'personalize.reasons.p1.desc':
-      'All gift products are made from natural ingredients and are quality-assured and safe.',
-    'personalize.reasons.p2.title': 'Professional service',
+      'All of our gift products are made from natural ingredients, ensuring quality and safety for health.',
+    'personalize.reasons.p2.title': 'Professional Service',
     'personalize.reasons.p2.desc':
-      'Our team is ready to support you in creating the perfect gift to your satisfaction.',
+      'Our team is always ready to support you in creating the gift of your dreams, ensuring total satisfaction for our customers.',
     'personalize.reasons.p3.title': 'Unique gifts',
     'personalize.reasons.p3.desc':
-      'Each customized gift is a unique item that creates strong surprise and impression.',
+      'With each personalized gift, you will create a product that bears a strong personal mark, leaving a lasting impression on the recipient.',
 
     // Custom Combo Modal
     'customCombo.errorNameRequired': 'Please enter a name for your combo',
@@ -608,14 +631,72 @@ const translations: Record<Language, TranslationDict> = {
     'common.currency': 'VND',
     'common.readMore': 'Read more',
     'common.learnMore': 'Learn more',
+
+    'sticker.title':
+      'CUSTOMIZE STICKERS – PERSONALIZE YOUR STICKERS WITH YOUR STYLE',
+    'sticker.intro': 'Add a Special Message Through Customized Stickers',
+    'sticker.introDes':
+      'We understand that every gift carries its own unique message, and sometimes, that message is best conveyed not just through words, but also through images. With our Customize Stickers service, you can create personalized stickers to accompany your gifts, delivering a special message of love, gratitude, or any personal note you wish to share with the recipient.',
+
+    'sticker.reasonTitle': 'Why Choose Customize Stickers?',
+    'sticker.reasonCustomize': 'Fully Customizable Stickers',
+    'sticker.reasonCustomizeDes':
+      'Choose from a range of available sticker designs or create your own with personalized images, colors, and messages. Each sticker can carry a meaningful and creative message that reflects your style and thoughtfulness.',
+    'sticker.reasonMessage': 'Unique Personal Messages',
+    'sticker.reasonMessageDes':
+      'In addition to the available sticker designs, you can add your own favorite quotes, congratulations, or any other personal message you want to send to the recipient. This is a wonderful way to make your gift truly unique and thoughtful.',
+    'sticker.reasonQuality': 'Premium Quality Stickers',
+    'sticker.reasonQualityDes':
+      'Our stickers are printed on high-quality material, ensuring vibrant colors that won’t fade over time, making your gift stand out and remain impressive.',
+
+    'sticker.customizationTitle': 'Easily Customize and Add to Your Gift',
+    'sticker.chooseDesign': 'Choose a Sticker Design',
+    'sticker.chooseDesignDes':
+      'You can pick from a wide variety of cute, lively, and diverse stickers we offer. Alternatively, if you have a specific design in mind, feel free to upload your own, and we will print it for you.',
+    'sticker.addToGift': 'Add Stickers to Your Gift',
+    'sticker.addToGiftDes':
+      'Once you’ve selected your stickers, you can easily add them to your gift basket or set. The stickers will be carefully packed and sent along with your gift to surprise and delight the recipient.',
+    'sticker.addPersonalMessage': 'Personalized Messages',
+    'sticker.addPersonalMessageDes':
+      'You can request us to print a personal message along with your stickers to make the gift even more meaningful. Whether it’s a congratulatory message, a thank-you note, or any special message, we will help convey it in an elegant and beautiful way.',
+
+    'sticker.finalTitle': 'Create a Unique Gift with Customized Stickers',
+    'sticker.finalDes':
+      'We believe that every gift is not just an item to be given but a way for you to express your feelings and care. Let Customize Stickers help you convey your message of love and create a truly meaningful gift.',
+    'sticker.cta':
+      'Start customizing your stickers today to add a special touch to your gifts, filled with love and creativity!',
+
+    'error.nameCombo': 'Please enter the combo name.',
+    'error.noteCombo': 'Please enter a note.',
+    'error.buyerName': "Please enter the buyer's name.",
+    'error.buyerPhone': 'Please enter the phone number.',
+    'error.addressUrl': 'Please enter the address.',
   },
   vn: {
+    //Contact:
+    'contact.address.company':
+      '123 Đường Dừa, Phường An Hòa \n TP. Bến Tre, Tỉnh Bến Tre',
+    'contact.working.1': 'Thứ 2 - Thứ 6: 8:00 - 17:00',
+    'contact.working.2': 'Thứ 7: 8:00 - 12:00',
+    'contact.working.3': 'Chủ nhật: Nghỉ',
     // Common
     'common.loading': 'Đang tải...',
     'common.error': 'Lỗi',
     'common.close': 'Đóng',
     'common.cancel': 'Hủy',
     'common.save': 'Lưu',
+    cart: 'Giỏ hàng',
+    noItem: 'Không có sản phẩm nào.',
+    specialNotes: 'Ghi chú đặc biệt',
+    'placeholder.note': 'Nhập yêu cầu đặc biệt của bạn...',
+    'custom.name.gift': 'Tên quà tặng',
+    'custom.placeholder.gift': 'Nhập tên quà tặng của bạn...',
+    'custom.name.sticker': 'Tên sticker',
+    'custom.selected.gift': 'Chọn Sản phẩm',
+    'custom.selected.sticker': 'Chọn sticker',
+    'custom.placeholder.sticker': 'Nhập tên sticker của bạn...',
+    'custom.selected': 'đã chọn',
+    'custom.button.order': 'Đặt hàng ngay',
     // Product Detail
     'productDetail.notFound': 'Không tìm thấy sản phẩm',
     'productDetail.backToList': 'Quay lại danh sách sản phẩm',
@@ -701,18 +782,25 @@ const translations: Record<Language, TranslationDict> = {
       'Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.',
     'products.createCombo': 'Tạo hộp quà',
 
-  'cultural.title': 'Câu Chuyện Văn Hóa Về Bến Tre & Kẹo Dừa',
-  'cultural.p1': 'Bến Tre – “xứ dừa” của Việt Nam – là nơi bao thế hệ đã biến những nguyên liệu giản dị thành hương vị vượt thời gian. Kẹo dừa không chỉ là vị ngọt mà còn là sự khéo léo, ấm áp và bền bỉ của những con người làm nên nó.',
-  'cultural.p2': 'Tại CODY, chúng tôi gìn giữ di sản ấy, đồng thời thổi vào đó hơi thở hiện đại. Mỗi viên kẹo là sự hòa quyện giữa truyền thống và sáng tạo, mang đến cảm giác vừa thân thuộc vừa mới mẻ.',
-  'cultural.p3': 'Qua từng viên kẹo, CODY kể câu chuyện về sáng tạo, văn hóa và sự gắn kết – từ Việt Nam vươn ra thế giới.',
-    
-      'experience.title': 'Trải Nghiệm Bến Tre',
-  'experience.subtitle': 'Chúng tôi mời bạn đến khám phá Bến Tre thông qua hành trình “CODY Experience” – một chuyến đi thực hành đầy cảm hứng về nghệ thuật kẹo dừa.',
-  'experience.p1': 'Tự tay làm kẹo dừa cùng nghệ nhân địa phương, tận mắt chứng kiến từng công đoạn – từ nấu đường, khuấy kẹo, đến cắt và gói bằng tay.',
-  'experience.p2': 'Hãy để hương dừa ngọt ngào, tiếng cười vui và những câu chuyện ấm áp đưa bạn trở lại ký ức tuổi thơ.',
-  'experience.p3': 'Nơi con người và hương vị quê hương hòa quyện trong từng viên kẹo.',
+    'cultural.title': 'Câu Chuyện Văn Hóa Về Bến Tre & Kẹo Dừa',
+    'cultural.p1':
+      'Bến Tre – “xứ dừa” của Việt Nam – là nơi bao thế hệ đã biến những nguyên liệu giản dị thành hương vị vượt thời gian. Kẹo dừa không chỉ là vị ngọt mà còn là sự khéo léo, ấm áp và bền bỉ của những con người làm nên nó.',
+    'cultural.p2':
+      'Tại CODY, chúng tôi gìn giữ di sản ấy, đồng thời thổi vào đó hơi thở hiện đại. Mỗi viên kẹo là sự hòa quyện giữa truyền thống và sáng tạo, mang đến cảm giác vừa thân thuộc vừa mới mẻ.',
+    'cultural.p3':
+      'Qua từng viên kẹo, CODY kể câu chuyện về sáng tạo, văn hóa và sự gắn kết – từ Việt Nam vươn ra thế giới.',
 
-  'auth.logout': 'ĐĂNG XUẤT',
+    'experience.title': 'Trải Nghiệm Bến Tre',
+    'experience.subtitle':
+      'Chúng tôi mời bạn đến khám phá Bến Tre thông qua hành trình “CODY Experience” – một chuyến đi thực hành đầy cảm hứng về nghệ thuật kẹo dừa.',
+    'experience.p1':
+      'Tự tay làm kẹo dừa cùng nghệ nhân địa phương, tận mắt chứng kiến từng công đoạn – từ nấu đường, khuấy kẹo, đến cắt và gói bằng tay.',
+    'experience.p2':
+      'Hãy để hương dừa ngọt ngào, tiếng cười vui và những câu chuyện ấm áp đưa bạn trở lại ký ức tuổi thơ.',
+    'experience.p3':
+      'Nơi con người và hương vị quê hương hòa quyện trong từng viên kẹo.',
+
+    'auth.logout': 'ĐĂNG XUẤT',
 
     // Category names
     'categories.traditional': 'Truyền thống',
@@ -1032,7 +1120,6 @@ const translations: Record<Language, TranslationDict> = {
     'custom.enterName': 'Nhập tên',
     'custom.name': 'của bạn...',
     'custom.selectSticker': 'Chọn Sticker',
-    'custom.selected': 'đã chọn',
     'custom.selectProduct': 'Chọn Sản phẩm',
     'custom.cart': 'Giỏ hàng',
     'custom.noItems': 'Chưa có sản phẩm nào',
@@ -1105,7 +1192,7 @@ const translations: Record<Language, TranslationDict> = {
     'customWhy.description':
       'Thiết kế món quà đẹp và ý nghĩa — chọn hương vị, sắp xếp set, và thêm lời nhắn cá nhân.',
 
-          // The Mind Behind The CODY section
+    // The Mind Behind The CODY section
     'mind.title': 'Tâm Hồn Đằng Sau CODY',
     'mind.subtitle': 'Câu chuyện, giá trị và mục đích của hành trình này.',
     'mind.name': 'Lê Bảo Long',
@@ -1200,8 +1287,6 @@ const translations: Record<Language, TranslationDict> = {
       'Theo dõi chúng tôi để cập nhật những sản phẩm mới và câu chuyện về hành trình bền vững từ Bến Tre.',
     'footer.copyright': '© 2025 CODY - KẸO DỪA. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.',
 
-
-    
     // Product Card
     'product.addToCart': 'THÊM VÀO GIỎ',
 
@@ -1209,6 +1294,47 @@ const translations: Record<Language, TranslationDict> = {
     'common.currency': 'VND',
     'common.readMore': 'Đọc tiếp',
     'common.learnMore': 'Tìm hiểu thêm',
+
+    'sticker.title':
+      'CUSTOMIZE STICKERS – THÊM CÁC MẪU STICKER THEO Ý THÍCH CỦA BẠN',
+    'sticker.intro': 'Thêm Lời Nhắn Đặc Biệt Qua Những Chiếc Sticker Tùy Chỉnh',
+    'sticker.introDes':
+      'Chúng tôi hiểu rằng mỗi món quà đều chứa đựng một thông điệp riêng biệt, và đôi khi, lời nhắn không chỉ cần truyền tải qua lời nói mà còn qua hình ảnh. Với dịch vụ Customize Stickers, bạn có thể tạo ra những chiếc sticker mang đậm dấu ấn cá nhân để gửi kèm quà, thể hiện thông điệp yêu thương, cảm ơn hoặc bất kỳ lời nhắn nào bạn muốn gửi đến người nhận.',
+
+    'sticker.reasonTitle': 'Lý Do Nên Chọn Customize Stickers?',
+    'sticker.reasonCustomize': 'Tùy Chỉnh Sticker Theo Ý Muốn',
+    'sticker.reasonCustomizeDes':
+      'Chọn từ các mẫu sticker có sẵn hoặc tự thiết kế sticker của riêng bạn với hình ảnh, màu sắc và thông điệp riêng biệt. Mỗi sticker có thể mang đến một thông điệp đầy ý nghĩa và sự sáng tạo cho người nhận.',
+    'sticker.reasonMessage': 'Lời Nhắn Độc Đáo',
+    'sticker.reasonMessageDes':
+      'Bên cạnh các mẫu sticker được thiết kế sẵn, bạn còn có thể thêm các câu nói yêu thích, lời chúc mừng, hay bất kỳ thông điệp nào bạn muốn gửi đến người nhận. Đây là cách tuyệt vời để tạo ra món quà cá nhân hóa thật sự ý nghĩa.',
+    'sticker.reasonQuality': 'Chất Lượng Sticker Cao Cấp',
+    'sticker.reasonQualityDes':
+      'Các mẫu sticker được in trên chất liệu cao cấp, bền đẹp, sắc nét, đảm bảo không bị phai màu theo thời gian, giúp món quà của bạn luôn tươi mới và ấn tượng.',
+
+    'sticker.customizationTitle': 'Dễ Dàng Tùy Chỉnh Và Thêm Vào Quà Tặng',
+    'sticker.chooseDesign': 'Chọn Mẫu Sticker',
+    'sticker.chooseDesignDes':
+      'Bạn có thể chọn từ nhiều mẫu sticker dễ thương, sinh động và phong phú mà chúng tôi cung cấp. Hoặc, nếu có ý tưởng riêng, bạn hoàn toàn có thể tải lên thiết kế của mình và chúng tôi sẽ in cho bạn.',
+    'sticker.addToGift': 'Thêm Sticker Vào Quà Tặng',
+    'sticker.addToGiftDes':
+      'Sau khi lựa chọn mẫu sticker, bạn có thể dễ dàng thêm chúng vào giỏ quà hoặc bộ quà tặng của mình. Sticker sẽ được gói cẩn thận và gửi kèm với món quà để tạo thêm sự bất ngờ và thú vị cho người nhận.',
+    'sticker.addPersonalMessage': 'Lời Nhắn Cá Nhân',
+    'sticker.addPersonalMessageDes':
+      'Bạn có thể yêu cầu chúng tôi in một lời nhắn cá nhân kèm theo sticker để tạo thêm sự đặc biệt. Lời nhắn này có thể là một câu chúc mừng, một lời cảm ơn hoặc bất kỳ thông điệp nào bạn muốn gửi gắm.',
+
+    'sticker.finalTitle':
+      'Tạo Ra Món Quà Đặc Biệt Với Những Chiếc Sticker Tùy Chỉnh',
+    'sticker.finalDes':
+      'Chúng tôi tin rằng mỗi món quà không chỉ là vật phẩm trao tặng mà còn là cách để bạn bày tỏ tình cảm và sự quan tâm. Hãy để những chiếc Customize Stickers giúp bạn truyền tải thông điệp yêu thương và tạo nên một món quà thật sự ý nghĩa.',
+    'sticker.cta':
+      'Hãy bắt đầu tùy chỉnh sticker ngay hôm nay để mang đến những món quà tuyệt vời, đầy ắp tình cảm và sự sáng tạo!',
+
+    'error.nameCombo': 'Vui lòng nhập tên combo.',
+    'error.noteCombo': 'Vui lòng nhập ghi chú',
+    'error.buyerName': 'Vui lòng nhập tên người mua.',
+    'error.buyerPhone': 'Vui lòng nhập số điện thoại.',
+    'error.addressUrl': 'Vui lòng nhập địa chỉ',
   },
 };
 

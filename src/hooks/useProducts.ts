@@ -5,6 +5,7 @@ import {
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query';
+import { useToast } from '../context/ToastContext';
 import { endpoints } from '../lib/endpoints';
 import { QueryKeys } from '../lib/queryKeys';
 import { rootApi } from '../lib/rootApi';
@@ -47,26 +48,46 @@ export const useProduct = (id: string, options?: UseQueryOptions<any>) => {
 };
 
 interface CreateComboRequest {
-  name: string;
-  productIds: string[];
-  tags?: string[];
-  message?: string;
+  items: Item[];
+  buyerName: string;
+  buyerPhone: string;
+  addressUrl: string;
+  customComboName: string;
+  note: string;
+  isCombo: boolean;
+  paymentMethod: string;
+  sellerId: string;
+}
+
+export interface Item {
+  productId: string;
+  quantity: number;
 }
 export const useCreateCombo = () => {
-  const { data, isPending } = useMutation({
+  const { showToast } = useToast();
+  const { data, isPending, mutateAsync } = useMutation({
     mutationFn: (body: CreateComboRequest) =>
       rootApi.post(endpoints.create_combo, body),
-    onSuccess: (data) => {
-      // Xử lý sau khi tạo combo thành công, ví dụ: hiển thị thông báo, cập nhật cache, v.v.
+    onSuccess: (data: any) => {
+      showToast({
+        type: 'success',
+        title: 'Thành công',
+        message: data.message ? data.message : 'Tạo combo thành công!',
+      });
     },
-    onError: (error) => {
-      // Xử lý lỗi nếu có
+    onError: (error: any) => {
+      showToast({
+        type: 'error',
+        title: 'Lỗi',
+        message: error.message ? error.message : 'Tạo combo thất bại!',
+      });
     },
   });
 
   return {
     data,
     isLoading: isPending,
+    onCreateCombo: mutateAsync,
   };
 };
 

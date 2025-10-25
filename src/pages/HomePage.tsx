@@ -6,6 +6,7 @@ import banner1 from '../assets/images/banner-1.jpg';
 import cusPrize from '../assets/images/custom-prize.png';
 import cusSticker from '../assets/images/custom-sticker.png';
 import lblImg from '../assets/images/lbl-img.jpg';
+
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useAllCategories } from '../hooks/useCategories';
@@ -25,7 +26,11 @@ const HomePage = () => {
     null
   );
 
-  const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useAllCategories();
+  const {
+    data: categoriesData,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useAllCategories();
   const rawCategories: Category[] = categoriesData?.data?.content || [];
 
   // Use all categories from API directly
@@ -249,7 +254,7 @@ const HomePage = () => {
 
             <Link
               to="/brand-story"
-              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-cream transition-colors"
+              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-colors"
             >
               {t('hero.journeyCta')}
             </Link>
@@ -462,7 +467,7 @@ const HomePage = () => {
             <div className="relative">
               <div className="bg-accent-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
                 <div className="p-1 mb-8 mx-auto">
-                  <h3 className="text-lg md:text-xl font-black tracking-wider px-4 py-2 whitespace-pre-line">
+                  <h3 className="text-lg md:text-2xl font-black tracking-wider px-4 py-2 whitespace-pre-line">
                     {t('workshop.title')}
                   </h3>
                 </div>
@@ -484,7 +489,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300"
                   >
                     {t('workshop.discover')}
                   </Link>
@@ -521,7 +526,7 @@ const HomePage = () => {
             <div className="order-1 lg:order-2 relative">
               <div className="bg-light-green text-white p-12 lg:p-16 h-full flex flex-col justify-center items-center text-center">
                 <div className="p-1 mb-8 mx-auto">
-                  <h3 className="text-lg md:text-xl font-black tracking-wider px-4 py-2 whitespace-pre-line">
+                  <h3 className="text-lg md:text-2xl font-black tracking-wider px-4 py-2 whitespace-pre-line">
                     {t('about.title')}
                   </h3>
                 </div>
@@ -532,7 +537,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
-                    className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider hover:bg-cream transition-all duration-300"
+                    className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300"
                   >
                     {t('about.getToKnow')}
                   </Link>
