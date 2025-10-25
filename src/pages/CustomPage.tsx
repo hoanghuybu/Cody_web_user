@@ -10,6 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 // Mock data types
 interface Sticker {
@@ -142,6 +143,7 @@ const fetchProducts = async (): Promise<Product[]> => {
 };
 
 const CustomPage: React.FC = () => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'gift' | 'sticker'>('gift');
   const [stickers, setStickers] = useState<Sticker[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -321,25 +323,19 @@ const CustomPage: React.FC = () => {
 
   const renderDescription = () => {
     const isGift = activeTab === 'gift';
-    const title = isGift ? 'PERSONALIZED GIFT' : 'CUSTOMIZE STICKERS';
+    const title = isGift ? t('custom.giftTab') : t('custom.stickerTab');
     const content = isGift
       ? {
-          intro:
-            'Tạo những món quà độc đáo và ý nghĩa với dịch vụ cá nhân hóa của CODY. Chúng tôi giúp bạn biến những ý tưởng sáng tạo thành hiện thực.',
-          why: 'Tại sao chọn quà tặng cá nhân hóa? Bởi vì mỗi người đều có câu chuyện riêng, và món quà tốt nhất là món quà mang dấu ấn cá nhân. Với CODY, bạn có thể tạo ra những món quà thật sự đặc biệt.',
-          features:
-            'Chúng tôi cung cấp dịch vụ thiết kế theo yêu cầu, in ấn chất lượng cao, và đóng gói sang trọng. Từ sticker cá nhân đến hộp quà hoàn chỉnh, mọi chi tiết đều được chăm chút tỉ mỉ.',
-          reason:
-            'Chọn CODY vì chúng tôi hiểu rằng món quà không chỉ là vật phẩm, mà là cách thể hiện tình cảm. Đội ngũ thiết kế chuyên nghiệp và quy trình sản xuất nghiêm ngặt đảm bảo sản phẩm hoàn hảo nhất.',
+          intro: t('custom.gift.intro'),
+          why: t('custom.gift.why'),
+          features: t('custom.gift.features'),
+          reason: t('custom.gift.reason'),
         }
       : {
-          intro:
-            'Thiết kế sticker độc đáo theo phong cách riêng của bạn. CODY mang đến dịch vụ tùy chỉnh sticker chất lượng cao với công nghệ in hiện đại.',
-          why: 'Tại sao chọn sticker tùy chỉnh? Sticker không chỉ là vật dụng trang trí, mà còn là cách thể hiện cá tính và thương hiệu. Với sticker tùy chỉnh, bạn có thể tạo ra những thiết kế độc nhất.',
-          features:
-            'Chúng tôi sử dụng chất liệu cao cấp, chống nước, bền màu và dễ dán. Hỗ trợ nhiều kích thước và hình dạng khác nhau. Công nghệ in UV hiện đại đảm bảo màu sắc sống động.',
-          reason:
-            'Chọn CODY vì chúng tôi có kinh nghiệm lâu năm trong ngành in ấn, đội ngũ thiết kế sáng tạo và cam kết chất lượng. Giá cả hợp lý, giao hàng nhanh chóng trên toàn quốc.',
+          intro: t('custom.sticker.intro'),
+          why: t('custom.sticker.why'),
+          features: t('custom.sticker.features'),
+          reason: t('custom.sticker.reason'),
         };
 
     return (
@@ -357,7 +353,7 @@ const CustomPage: React.FC = () => {
               <Heart className="h-6 w-6 text-primary-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              Lời mở đầu
+              {t('custom.intro.title')}
             </h3>
             <p className="text-gray-600 leading-relaxed">{content.intro}</p>
           </div>
@@ -367,7 +363,7 @@ const CustomPage: React.FC = () => {
               <Star className="h-6 w-6 text-accent-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              Tại sao chọn {isGift ? 'quà tặng' : 'sticker'} tùy chỉnh?
+              {t('custom.why.title')} {isGift ? t('custom.gifts') : t('custom.stickers')}
             </h3>
             <p className="text-gray-600 leading-relaxed">{content.why}</p>
           </div>
@@ -377,7 +373,7 @@ const CustomPage: React.FC = () => {
               <Package className="h-6 w-6 text-light-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              Tính năng nổi bật
+              {t('custom.features.title')}
             </h3>
             <p className="text-gray-600 leading-relaxed">{content.features}</p>
           </div>
@@ -387,7 +383,7 @@ const CustomPage: React.FC = () => {
               <Palette className="h-6 w-6 text-warm-brown" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              Tại sao chọn CODY?
+              {t('custom.reason.title')}
             </h3>
             <p className="text-gray-600 leading-relaxed">{content.reason}</p>
           </div>
@@ -404,7 +400,7 @@ const CustomPage: React.FC = () => {
         {/* Name Input */}
         <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            Tên {activeTab === 'gift' ? 'quà tặng' : 'sticker'}
+            {activeTab === 'gift' ? t('custom.giftName') : t('custom.stickerName')}
           </h3>
           <input
             type="text"
@@ -412,9 +408,9 @@ const CustomPage: React.FC = () => {
             onChange={(e) =>
               setCurrentData({ ...currentData, name: e.target.value })
             }
-            placeholder={`Nhập tên ${
-              activeTab === 'gift' ? 'quà tặng' : 'sticker'
-            } của bạn...`}
+            placeholder={`${t('custom.enterName')} ${
+              activeTab === 'gift' ? t('custom.gift') : t('custom.sticker')
+            } ${t('custom.name')}`}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
           />
         </div>
@@ -422,7 +418,7 @@ const CustomPage: React.FC = () => {
         {/* Stickers Selection */}
         <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            Chọn Sticker ({currentData.selectedStickers.length} đã chọn)
+            {t('custom.selectSticker')} ({currentData.selectedStickers.length} {t('custom.selected')})
           </h3>
 
           {loadingStickers ? (
@@ -475,7 +471,7 @@ const CustomPage: React.FC = () => {
         {/* Products Selection */}
         <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            Chọn Sản phẩm ({currentData.selectedProducts.length} đã chọn)
+            {t('custom.selectProduct')} ({currentData.selectedProducts.length} {t('custom.selected')})
           </h3>
 
           {loadingProducts ? (
@@ -544,11 +540,10 @@ const CustomPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12  rounded-2xl p-8 shadow-sm">
           <h1 className="text-4xl md:text-5xl font-bold text-warm-brown font-playfair mb-4">
-            Tùy Chỉnh Theo Ý Bạn
+            {t('custom.title')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Tạo ra những sản phẩm độc đáo và cá nhân hóa với dịch vụ tùy chỉnh
-            của CODY
+            {t('custom.subtitle')}
           </p>
         </div>
 
@@ -564,7 +559,7 @@ const CustomPage: React.FC = () => {
                     : 'text-warm-brown hover:bg-gray-50'
                 }`}
               >
-                PERSONALIZED GIFT
+                {t('custom.giftTab')}
               </button>
               <button
                 onClick={() => setActiveTab('sticker')}
@@ -574,7 +569,7 @@ const CustomPage: React.FC = () => {
                     : 'text-warm-brown hover:bg-gray-50'
                 }`}
               >
-                CUSTOMIZE STICKERS
+                {t('custom.stickerTab')}
               </button>
             </div>
           </div>
@@ -604,7 +599,7 @@ const CustomPage: React.FC = () => {
               <div className=" rounded-2xl shadow-xl p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-warm-brown font-playfair">
-                    Giỏ hàng
+                    {t('custom.cart')}
                   </h3>
                   <div className="flex items-center space-x-2">
                     <ShoppingCart className="h-5 w-5 text-primary-green" />
@@ -617,7 +612,7 @@ const CustomPage: React.FC = () => {
                 {cart.length === 0 ? (
                   <div className="text-center py-8">
                     <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">Chưa có sản phẩm nào</p>
+                    <p className="text-gray-500">{t('custom.noItems')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4 mb-6">
@@ -636,7 +631,7 @@ const CustomPage: React.FC = () => {
                             {item.name}
                           </p>
                           <p className="text-xs text-gray-500 capitalize">
-                            {item.type === 'sticker' ? 'Sticker' : 'Sản phẩm'}
+                            {item.type === 'sticker' ? t('custom.sticker') : t('custom.product')}
                           </p>
                           <p className="text-sm text-primary-green font-bold">
                             {formatPrice(item.price)}
@@ -677,12 +672,12 @@ const CustomPage: React.FC = () => {
                 {/* Note Input */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ghi chú đặc biệt
+                    {t('custom.specialNote')}
                   </label>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    placeholder="Nhập yêu cầu đặc biệt của bạn..."
+                    placeholder={t('custom.notePlaceholder')}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent resize-none text-sm"
                   />
@@ -692,7 +687,7 @@ const CustomPage: React.FC = () => {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-semibold text-warm-brown">
-                      Tổng cộng:
+                      {t('custom.total')}
                     </span>
                     <span className="text-xl font-bold text-primary-green">
                       {formatPrice(getTotalPrice())}
@@ -703,7 +698,7 @@ const CustomPage: React.FC = () => {
                     disabled={cart.length === 0}
                     className="w-full bg-primary-green text-white py-3 rounded-xl font-semibold hover:bg-primary-green/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
-                    Đặt hàng ngay
+                    {t('custom.orderNow')}
                   </button>
                 </div>
               </div>

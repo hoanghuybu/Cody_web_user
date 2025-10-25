@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { AuthUtils } from '../utils/auth';
 import Toast from '../components/Toast';
+import { useLanguage } from '../context/LanguageContext';
 
 interface OrderDetail {
   orderId: string;
@@ -44,7 +45,7 @@ interface OrderDetail {
 
 const OrderDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const navigate = useNavigate();
+  const { t } = useLanguage();
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,17 +112,17 @@ const OrderDetailPage = () => {
       });
 
       if (res.ok) {
-        showToast('success', 'Hủy đơn hàng thành công', 'Đơn hàng của bạn đã được hủy.');
+        showToast('success', t('orderDetail.cancelSuccess'), t('orderDetail.cancelSuccessMsg'));
         // Reload order data to get updated status
         setTimeout(() => {
           window.location.reload();
         }, 1500);
       } else {
         const data = await res.json();
-        showToast('error', 'Hủy đơn hàng thất bại', data?.message || 'Không thể hủy đơn hàng này.');
+        showToast('error', t('orderDetail.cancelFailed'), data?.message || t('orderDetail.cancelFailedMsg'));
       }
     } catch (err) {
-      showToast('error', 'Có lỗi xảy ra', 'Vui lòng thử lại sau.');
+      showToast('error', t('orderDetail.errorOccurred'), t('orderDetail.tryAgain'));
     } finally {
       setCancelling(false);
     }
@@ -139,17 +140,17 @@ const OrderDetailPage = () => {
     <div className="min-h-screen bg-cream py-8">
       <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-warm-brown mb-6 text-center font-playfair">
-          Chi tiết đơn hàng
+          {t('orderDetail.title')}
         </h1>
         
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green"></div>
-            <p className="mt-4 text-gray-600">Đang tải chi tiết đơn hàng...</p>
+            <p className="mt-4 text-gray-600">{t('orderDetail.loading')}</p>
           </div>
         ) : error ? (
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <p className="text-red-600 font-semibold">Có lỗi xảy ra</p>
+            <p className="text-red-600 font-semibold">{t('orderDetail.error')}</p>
             <p className="text-red-500 text-sm mt-2">{error}</p>
           </div>
         ) : order ? (
@@ -159,7 +160,7 @@ const OrderDetailPage = () => {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h2 className="text-lg font-semibold text-warm-brown">
-                    Mã đơn hàng: <span className="text-primary-green">{order.orderId}</span>
+                    {t('orderDetail.orderId')} <span className="text-primary-green">{order.orderId}</span>
                   </h2>
                 </div>
                 <div className="text-right">
@@ -186,8 +187,7 @@ const OrderDetailPage = () => {
                 <svg className="w-5 h-5 mr-2 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <span>Thông tin cá nhân</span>
-                <span className="text-gray-400 font-normal text-sm ml-2">/ Personal Information</span>
+                <span>{t('orderDetail.personalInfo')}</span>
               </h3>
               
               <div className="space-y-3">
@@ -197,7 +197,7 @@ const OrderDetailPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Tên khách hàng:</p>
+                    <p className="text-sm text-gray-500 mb-1">{t('orderDetail.customerName')}</p>
                     <p className="text-gray-900 font-medium">{order.buyer?.name || 'N/A'}</p>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ const OrderDetailPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Địa chỉ giao hàng:</p>
+                    <p className="text-sm text-gray-500 mb-1">{t('orderDetail.deliveryAddress')}</p>
                     <p className="text-gray-900">{order.addressUrl}</p>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ const OrderDetailPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Số điện thoại:</p>
+                    <p className="text-sm text-gray-500 mb-1">{t('orderDetail.phoneNumber')}</p>
                     <p className="text-gray-900 font-medium">{order.buyer?.buyerPhone || 'N/A'}</p>
                   </div>
                 </div>
@@ -234,7 +234,7 @@ const OrderDetailPage = () => {
                   <svg className="w-5 h-5 mr-2 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Ghi chú đơn hàng
+                  {t('orderDetail.orderNote')}
                 </h3>
                 <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
                   <p className="text-gray-700 italic">"{order.note}"</p>
@@ -248,7 +248,7 @@ const OrderDetailPage = () => {
                 <svg className="w-5 h-5 mr-2 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                Sản phẩm ({order.items.length})
+                {t('orderDetail.products')} ({order.items.length})
               </h3>
               
               <div className="space-y-4">
@@ -267,7 +267,7 @@ const OrderDetailPage = () => {
                       <div className="flex-1">
                         <h4 className="font-medium text-warm-brown">{item.product.name}</h4>
                         <p className="text-sm text-gray-500 mt-1">
-                          Số lượng: <span className="font-semibold text-gray-700">{item.quantity}</span>
+                          {t('orderDetail.quantity')} <span className="font-semibold text-gray-700">{item.quantity}</span>
                         </p>
                       </div>
                       
@@ -277,7 +277,7 @@ const OrderDetailPage = () => {
                           {item.price.toLocaleString('vi-VN')} đ
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
-                          Tổng: {(item.price * item.quantity).toLocaleString('vi-VN')} đ
+                          {t('orderDetail.total')} {(item.price * item.quantity).toLocaleString('vi-VN')} đ
                         </div>
                       </div>
                     </div>
@@ -288,7 +288,7 @@ const OrderDetailPage = () => {
               {/* Total */}
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-warm-brown">Tổng cộng:</span>
+                  <span className="text-lg font-semibold text-warm-brown">{t('orderDetail.grandTotal')}</span>
                   <span className="text-2xl font-bold text-amber-600">
                     {order.totalPrice.toLocaleString('vi-VN')} đ
                   </span>
@@ -307,7 +307,7 @@ const OrderDetailPage = () => {
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Quay lại danh sách
+            {t('orderDetail.backToList')}
           </Link>
 
           {order && canCancelOrder() && (
@@ -319,7 +319,7 @@ const OrderDetailPage = () => {
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              {cancelling ? 'Đang hủy...' : 'Hủy đơn hàng'}
+              {cancelling ? t('orderDetail.cancelling') : t('orderDetail.cancelOrder')}
             </button>
           )}
         </div>
@@ -335,24 +335,24 @@ const OrderDetailPage = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-bold text-warm-brown mb-2 font-playfair">
-                  Xác nhận hủy đơn hàng
+                  {t('orderDetail.confirmCancel')}
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Bạn có chắc chắn muốn hủy đơn hàng <span className="font-semibold text-primary-green">#{order?.orderId}</span>?
+                  {t('orderDetail.confirmCancelMessage')} <span className="font-semibold text-primary-green">#{order?.orderId}</span>?
                 </p>
                 <p className="text-red-600 text-sm mt-2 font-medium">
-                  Hành động này không thể hoàn tác!
+                  {t('orderDetail.cannotUndo')}
                 </p>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Tổng giá trị:</span>
+                  <span className="text-gray-600">{t('orderDetail.totalValue')}</span>
                   <span className="font-semibold text-amber-600">{order?.totalPrice.toLocaleString('vi-VN')} đ</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Số sản phẩm:</span>
-                  <span className="font-semibold">{order?.items.length} sản phẩm</span>
+                  <span className="text-gray-600">{t('orderDetail.itemCount')}</span>
+                  <span className="font-semibold">{order?.items.length} {t('orderDetail.items')}</span>
                 </div>
               </div>
 
@@ -361,13 +361,13 @@ const OrderDetailPage = () => {
                   onClick={() => setShowCancelModal(false)}
                   className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  Quay lại
+                  {t('orderDetail.goBack')}
                 </button>
                 <button
                   onClick={handleCancelOrder}
                   className="flex-1 px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
                 >
-                  Xác nhận hủy
+                  {t('orderDetail.confirmCancelBtn')}
                 </button>
               </div>
             </div>

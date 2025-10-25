@@ -2,8 +2,10 @@ import { ArrowRight, Calendar, Search, User } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { blogPosts, categories } from '../data/blogPosts';
+import { useLanguage } from '../context/LanguageContext';
 
 const BlogPage = () => {
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -25,11 +27,10 @@ const BlogPage = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-4">
-            Blog & Tin tức
+            {t('blog.title')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Khám phá những câu chuyện về môi trường, lối sống xanh và văn hóa ẩm
-            thực Việt Nam
+            {t('blog.subtitle')}
           </p>
         </div>
 
@@ -41,7 +42,7 @@ const BlogPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <input
                 type="text"
-                placeholder="Tìm kiếm bài viết..."
+                placeholder={t('blog.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
@@ -82,7 +83,7 @@ const BlogPage = () => {
                 <div className="md:w-1/2 p-8">
                   <div className="flex items-center space-x-4 mb-4">
                     <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      Nổi bật
+                      {t('blog.featured')}
                     </span>
                     <div className="flex items-center text-gray-500 text-sm">
                       <Calendar className="h-4 w-4 mr-1" />
@@ -111,7 +112,7 @@ const BlogPage = () => {
                       to={`/blog/${featuredPost.id}`}
                       className="inline-flex items-center text-primary-green hover:text-primary-green/80 font-semibold group"
                     >
-                      Đọc tiếp
+                      {t('blog.readMore')}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
@@ -181,7 +182,7 @@ const BlogPage = () => {
                     to={`/blog/${post.id}`}
                     className="inline-flex items-center text-primary-green hover:text-primary-green/80 font-semibold text-sm group/btn"
                   >
-                    Đọc tiếp
+                    {t('blog.readMore')}
                     <ArrowRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </div>
@@ -197,7 +198,7 @@ const BlogPage = () => {
               <Search className="h-12 w-12 text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              Không tìm thấy bài viết
+              {t('blog.notFound')}
             </h3>
             <p className="text-gray-500">
               Thử thay đổi từ khóa tìm kiếm hoặc danh mục

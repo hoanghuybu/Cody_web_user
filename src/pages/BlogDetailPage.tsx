@@ -4,8 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
 import { blogPosts, categories } from '../data/blogPosts';
+import { useLanguage } from '../context/LanguageContext';
 
 const BlogDetailPage = () => {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
@@ -41,10 +43,10 @@ const BlogDetailPage = () => {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-warm-brown mb-4">
-            Không tìm thấy bài viết
+            {t('blog.notFound')}
           </h2>
           <Link to="/blog" className="text-primary-green hover:underline">
-            Quay lại danh sách bài viết
+            {t('blog.backToList')}
           </Link>
         </div>
       </div>
@@ -59,7 +61,7 @@ const BlogDetailPage = () => {
   const handleCopyLink = () => {
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl).then(() => {
-      showToast('success', 'Đã sao chép!', 'Link bài viết đã được sao chép vào clipboard.');
+      showToast('success', t('blog.copied'), t('blog.copiedMessage'));
       setShareMenuOpen(false);
     });
   };
@@ -114,7 +116,7 @@ const BlogDetailPage = () => {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-2 text-sm text-white/90">
               <Link to="/" className="hover:text-white">
-                Trang chủ
+                {t('blog.home')}
               </Link>
               <span>/</span>
               <Link to="/blog" className="hover:text-white">
@@ -178,7 +180,7 @@ const BlogDetailPage = () => {
             className="inline-flex items-center text-primary-green hover:text-primary-green/80 group"
           >
             <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Quay lại Blog
+            {t('blog.backToBlog')}
           </button>
 
           {/* Share Button with Dropdown */}
@@ -188,7 +190,7 @@ const BlogDetailPage = () => {
               className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
             >
               <Share2 className="h-4 w-4 mr-2" />
-              Chia sẻ
+              {t('blog.share')}
             </button>
 
             {/* Share Dropdown Menu */}
@@ -199,7 +201,7 @@ const BlogDetailPage = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm text-warm-brown hover:bg-gray-50 transition-colors"
                 >
                   <LinkIcon className="h-5 w-5 text-gray-600" />
-                  <span>Sao chép link</span>
+                  <span>{t('blog.copyLink')}</span>
                 </button>
                 <div className="border-t border-gray-200 my-1"></div>
                 <button
@@ -207,7 +209,7 @@ const BlogDetailPage = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm text-warm-brown hover:bg-blue-50 transition-colors"
                 >
                   <Facebook className="h-5 w-5 text-blue-600" />
-                  <span>Chia sẻ lên Facebook</span>
+                  <span>{t('blog.shareOn')} Facebook</span>
                 </button>
               </div>
             )}
@@ -219,6 +221,31 @@ const BlogDetailPage = () => {
           <div className="text-xl text-gray-600 font-medium mb-8 leading-relaxed border-l-4 border-primary-green pl-6 italic">
             {post.excerpt}
           </div>
+
+          {/* Image Gallery */}
+          {post.images && post.images.length > 0 && (
+            <div className="my-12">
+              <h3 className="text-2xl font-bold text-warm-brown mb-6 font-playfair">
+                Hình ảnh hành trình
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {post.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className="relative aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow group cursor-pointer"
+                  >
+                    <img
+                      src={image}
+                      alt={`${post.title} - Hình ${index + 1}`}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="space-y-6 text-gray-700 leading-relaxed">
             {post.fullContent.map((paragraph, index) => (
@@ -252,7 +279,7 @@ const BlogDetailPage = () => {
         {relatedPosts.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold text-warm-brown font-playfair mb-8">
-              Bài viết liên quan
+              {t('blog.relatedPosts')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost) => (
