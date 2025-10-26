@@ -16,6 +16,16 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 type TranslationDict = Record<string, string>;
 const translations: Record<Language, TranslationDict> = {
   en: {
+    // Order Information
+    'order.info.title': 'Order Information',
+    'order.buyer.name': "Buyer's Name",
+    'order.buyer.name.placeholder': "Enter the buyer's full name",
+    'order.buyer.phone': 'Phone Number',
+    'order.buyer.phone.placeholder': "Enter the buyer's phone number",
+    'order.address.url': 'Delivery Address',
+    'order.address.url.placeholder': 'Enter the delivery address',
+
+    'common.confirm': 'Confirm',
     //Contact:
     'contact.address.company':
       '123 Dua Street, An Hoa Ward, \n Ben Tre City, Ben Tre Province',
@@ -276,7 +286,8 @@ const translations: Record<Language, TranslationDict> = {
     'cart.fullAddress': 'Full address:',
     'cart.confirmOrder': 'Confirm Order',
     'cart.confirmOrderTitle': 'Confirm Order',
-    'cart.confirmOrderMessage': 'Are you sure you want to place an order with total value',
+    'cart.confirmOrderMessage':
+      'Are you sure you want to place an order with total value',
     'cart.itemCount': 'Quantity:',
     'cart.products': 'products',
     'cart.receiver': 'Receiver:',
@@ -317,7 +328,8 @@ const translations: Record<Language, TranslationDict> = {
     'orderDetail.tryAgain': 'Please try again later.',
     // Blog
     'blog.title': 'Blog & News',
-    'blog.subtitle': 'Discover stories about environment, green lifestyle and Vietnamese culinary culture',
+    'blog.subtitle':
+      'Discover stories about environment, green lifestyle and Vietnamese culinary culture',
     'blog.search': 'Search articles...',
     'blog.featured': 'Featured',
     'blog.readMore': 'Read more',
@@ -464,7 +476,8 @@ const translations: Record<Language, TranslationDict> = {
     'custom.learnMore': 'learn more',
     // Custom Page
     'custom.title': 'Customize Your Way',
-    'custom.subtitle': 'Create unique and personalized products with CODY\'s customization service',
+    'custom.subtitle':
+      "Create unique and personalized products with CODY's customization service",
     'custom.giftTab': 'PERSONALIZED GIFT',
     'custom.stickerTab': 'CUSTOMIZE STICKERS',
     'custom.giftName': 'Gift name',
@@ -488,14 +501,22 @@ const translations: Record<Language, TranslationDict> = {
     'custom.gift': 'gift',
     'custom.gifts': 'gifts',
     'custom.stickers': 'stickers',
-    'custom.gift.intro': 'Create unique and meaningful gifts with CODY\'s personalization service. We help you turn creative ideas into reality.',
-    'custom.gift.why': 'Why choose personalized gifts? Because everyone has their own story, and the best gift is one that carries a personal touch. With CODY, you can create truly special gifts.',
-    'custom.gift.features': 'We provide custom design services, high-quality printing, and elegant packaging. From personal stickers to complete gift boxes, every detail is carefully crafted.',
-    'custom.gift.reason': 'Choose CODY because we understand that gifts are not just items, but ways to express emotions. Professional design team and strict production process ensure the perfect product.',
-    'custom.sticker.intro': 'Design unique stickers in your own style. CODY brings high-quality custom sticker service with modern printing technology.',
-    'custom.sticker.why': 'Why choose custom stickers? Stickers are not just decorative items, but also ways to express personality and brand. With custom stickers, you can create unique designs.',
-    'custom.sticker.features': 'We use premium materials, waterproof, fade-resistant, and easy to apply. Support various sizes and shapes. Modern UV printing technology ensures vibrant colors.',
-    'custom.sticker.reason': 'Choose CODY because we have extensive experience in the printing industry, creative design team and quality commitment. Reasonable prices, fast delivery nationwide.',
+    'custom.gift.intro':
+      "Create unique and meaningful gifts with CODY's personalization service. We help you turn creative ideas into reality.",
+    'custom.gift.why':
+      'Why choose personalized gifts? Because everyone has their own story, and the best gift is one that carries a personal touch. With CODY, you can create truly special gifts.',
+    'custom.gift.features':
+      'We provide custom design services, high-quality printing, and elegant packaging. From personal stickers to complete gift boxes, every detail is carefully crafted.',
+    'custom.gift.reason':
+      'Choose CODY because we understand that gifts are not just items, but ways to express emotions. Professional design team and strict production process ensure the perfect product.',
+    'custom.sticker.intro':
+      'Design unique stickers in your own style. CODY brings high-quality custom sticker service with modern printing technology.',
+    'custom.sticker.why':
+      'Why choose custom stickers? Stickers are not just decorative items, but also ways to express personality and brand. With custom stickers, you can create unique designs.',
+    'custom.sticker.features':
+      'We use premium materials, waterproof, fade-resistant, and easy to apply. Support various sizes and shapes. Modern UV printing technology ensures vibrant colors.',
+    'custom.sticker.reason':
+      'Choose CODY because we have extensive experience in the printing industry, creative design team and quality commitment. Reasonable prices, fast delivery nationwide.',
     // Personalize page additions
     'custom.personalizedSubtitle':
       'Create a meaningful gift by selecting items, adding a message, and choosing packaging.',
@@ -673,6 +694,16 @@ const translations: Record<Language, TranslationDict> = {
     'error.addressUrl': 'Please enter the address.',
   },
   vn: {
+    'order.info.title': 'Thông tin đơn hàng',
+    'order.buyer.name': 'Họ và tên người mua',
+    'order.buyer.name.placeholder': 'Nhập họ và tên người mua',
+    'order.buyer.phone': 'Số điện thoại',
+    'order.buyer.phone.placeholder': 'Nhập số điện thoại người mua',
+    'order.address.url': 'Địa chỉ nhận hàng',
+    'order.address.url.placeholder': 'Nhập địa chỉ nhận hàng',
+
+    // Hành động chung
+    'common.confirm': 'Xác nhận',
     //Contact:
     'contact.address.company':
       '123 Đường Dừa, Phường An Hòa \n TP. Bến Tre, Tỉnh Bến Tre',
@@ -923,7 +954,8 @@ const translations: Record<Language, TranslationDict> = {
     'cart.fullAddress': 'Địa chỉ đầy đủ:',
     'cart.confirmOrder': 'Xác nhận đặt hàng',
     'cart.confirmOrderTitle': 'Xác nhận đặt hàng',
-    'cart.confirmOrderMessage': 'Bạn có chắc chắn muốn đặt hàng với tổng giá trị',
+    'cart.confirmOrderMessage':
+      'Bạn có chắc chắn muốn đặt hàng với tổng giá trị',
     'cart.itemCount': 'Số lượng:',
     'cart.products': 'sản phẩm',
     'cart.receiver': 'Người nhận:',
@@ -964,7 +996,8 @@ const translations: Record<Language, TranslationDict> = {
     'orderDetail.tryAgain': 'Vui lòng thử lại sau.',
     // Blog
     'blog.title': 'Blog & Tin tức',
-    'blog.subtitle': 'Khám phá những câu chuyện về môi trường, lối sống xanh và văn hóa ẩm thực Việt Nam',
+    'blog.subtitle':
+      'Khám phá những câu chuyện về môi trường, lối sống xanh và văn hóa ẩm thực Việt Nam',
     'blog.search': 'Tìm kiếm bài viết...',
     'blog.featured': 'Nổi bật',
     'blog.readMore': 'Đọc tiếp',
@@ -1106,13 +1139,15 @@ const translations: Record<Language, TranslationDict> = {
 
     // Customization Section (Homepage)
     'custom.homepage.title': 'BẠN ĐANG KỶ NIỆM MỘT SỰ KIỆN ĐẶC BIỆT?',
-    'custom.homepage.subtitle': 'HÃY NÓI VỀ Ý TƯỞNG CỦA BẠN\nVÀ CHÚNG TÔI SẼ THỰC HIỆN',
+    'custom.homepage.subtitle':
+      'HÃY NÓI VỀ Ý TƯỞNG CỦA BẠN\nVÀ CHÚNG TÔI SẼ THỰC HIỆN',
     'custom.personalizedGift': 'Quà tặng cá nhân hóa',
     'custom.customizeStickers': 'tùy chỉnh nhãn dán',
     'custom.learnMore': 'tìm hiểu thêm',
     // Custom Page
     'custom.title': 'Tùy Chỉnh Theo Ý Bạn',
-    'custom.subtitle': 'Tạo ra những sản phẩm độc đáo và cá nhân hóa với dịch vụ tùy chỉnh của CODY',
+    'custom.subtitle':
+      'Tạo ra những sản phẩm độc đáo và cá nhân hóa với dịch vụ tùy chỉnh của CODY',
     'custom.giftTab': 'PERSONALIZED GIFT',
     'custom.stickerTab': 'CUSTOMIZE STICKERS',
     'custom.giftName': 'Tên quà tặng',
@@ -1136,14 +1171,22 @@ const translations: Record<Language, TranslationDict> = {
     'custom.gift': 'quà tặng',
     'custom.gifts': 'quà tặng',
     'custom.stickers': 'sticker',
-    'custom.gift.intro': 'Tạo những món quà độc đáo và ý nghĩa với dịch vụ cá nhân hóa của CODY. Chúng tôi giúp bạn biến những ý tưởng sáng tạo thành hiện thực.',
-    'custom.gift.why': 'Tại sao chọn quà tặng cá nhân hóa? Bởi vì mỗi người đều có câu chuyện riêng, và món quà tốt nhất là món quà mang dấu ấn cá nhân. Với CODY, bạn có thể tạo ra những món quà thật sự đặc biệt.',
-    'custom.gift.features': 'Chúng tôi cung cấp dịch vụ thiết kế theo yêu cầu, in ấn chất lượng cao, và đóng gói sang trọng. Từ sticker cá nhân đến hộp quà hoàn chỉnh, mọi chi tiết đều được chăm chút tỉ mỉ.',
-    'custom.gift.reason': 'Chọn CODY vì chúng tôi hiểu rằng món quà không chỉ là vật phẩm, mà là cách thể hiện tình cảm. Đội ngũ thiết kế chuyên nghiệp và quy trình sản xuất nghiêm ngặt đảm bảo sản phẩm hoàn hảo nhất.',
-    'custom.sticker.intro': 'Thiết kế sticker độc đáo theo phong cách riêng của bạn. CODY mang đến dịch vụ tùy chỉnh sticker chất lượng cao với công nghệ in hiện đại.',
-    'custom.sticker.why': 'Tại sao chọn sticker tùy chỉnh? Sticker không chỉ là vật dụng trang trí, mà còn là cách thể hiện cá tính và thương hiệu. Với sticker tùy chỉnh, bạn có thể tạo ra những thiết kế độc nhất.',
-    'custom.sticker.features': 'Chúng tôi sử dụng chất liệu cao cấp, chống nước, bền màu và dễ dán. Hỗ trợ nhiều kích thước và hình dạng khác nhau. Công nghệ in UV hiện đại đảm bảo màu sắc sống động.',
-    'custom.sticker.reason': 'Chọn CODY vì chúng tôi có kinh nghiệm lâu năm trong ngành in ấn, đội ngũ thiết kế sáng tạo và cam kết chất lượng. Giá cả hợp lý, giao hàng nhanh chóng trên toàn quốc.',
+    'custom.gift.intro':
+      'Tạo những món quà độc đáo và ý nghĩa với dịch vụ cá nhân hóa của CODY. Chúng tôi giúp bạn biến những ý tưởng sáng tạo thành hiện thực.',
+    'custom.gift.why':
+      'Tại sao chọn quà tặng cá nhân hóa? Bởi vì mỗi người đều có câu chuyện riêng, và món quà tốt nhất là món quà mang dấu ấn cá nhân. Với CODY, bạn có thể tạo ra những món quà thật sự đặc biệt.',
+    'custom.gift.features':
+      'Chúng tôi cung cấp dịch vụ thiết kế theo yêu cầu, in ấn chất lượng cao, và đóng gói sang trọng. Từ sticker cá nhân đến hộp quà hoàn chỉnh, mọi chi tiết đều được chăm chút tỉ mỉ.',
+    'custom.gift.reason':
+      'Chọn CODY vì chúng tôi hiểu rằng món quà không chỉ là vật phẩm, mà là cách thể hiện tình cảm. Đội ngũ thiết kế chuyên nghiệp và quy trình sản xuất nghiêm ngặt đảm bảo sản phẩm hoàn hảo nhất.',
+    'custom.sticker.intro':
+      'Thiết kế sticker độc đáo theo phong cách riêng của bạn. CODY mang đến dịch vụ tùy chỉnh sticker chất lượng cao với công nghệ in hiện đại.',
+    'custom.sticker.why':
+      'Tại sao chọn sticker tùy chỉnh? Sticker không chỉ là vật dụng trang trí, mà còn là cách thể hiện cá tính và thương hiệu. Với sticker tùy chỉnh, bạn có thể tạo ra những thiết kế độc nhất.',
+    'custom.sticker.features':
+      'Chúng tôi sử dụng chất liệu cao cấp, chống nước, bền màu và dễ dán. Hỗ trợ nhiều kích thước và hình dạng khác nhau. Công nghệ in UV hiện đại đảm bảo màu sắc sống động.',
+    'custom.sticker.reason':
+      'Chọn CODY vì chúng tôi có kinh nghiệm lâu năm trong ngành in ấn, đội ngũ thiết kế sáng tạo và cam kết chất lượng. Giá cả hợp lý, giao hàng nhanh chóng trên toàn quốc.',
     // Detailed personalize page content (VN)
     'personalize.heroTitle':
       'PERSONALIZED GIFT – TẠO DỰNG MÓN QUÀ THEO PHONG CÁCH CỦA BẠN',

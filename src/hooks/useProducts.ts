@@ -78,8 +78,10 @@ export const useCreateCombo = () => {
     onError: (error: any) => {
       showToast({
         type: 'error',
-        title: 'Lỗi',
-        message: error.message ? error.message : 'Tạo combo thất bại!',
+        title: 'Error',
+        message: error.data.error.detail
+          ? error.data.error.detail
+          : 'Tạo combo thất bại!',
       });
     },
   });

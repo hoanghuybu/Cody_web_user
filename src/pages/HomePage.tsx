@@ -1,12 +1,11 @@
-import { ChevronRight, Instagram } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { images } from '../assets/images';
 import banner1 from '../assets/images/banner-1.jpg';
 import cusPrize from '../assets/images/custom-prize.png';
 import cusSticker from '../assets/images/custom-sticker.png';
 import lblImg from '../assets/images/lbl-img.jpg';
-
+import story1 from '../assets/images/story-1.jpg';
+import time1 from '../assets/images/time-1.jpg';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useAllCategories } from '../hooks/useCategories';
@@ -21,7 +20,6 @@ const HomePage = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const [selectedPost, setSelectedPost] = useState<null | number>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
@@ -72,14 +70,6 @@ const HomePage = () => {
 
       setScrollProgress(progress);
     }
-  };
-
-  const openModal = (index: number) => {
-    setSelectedPost(index);
-  };
-
-  const closeModal = () => {
-    setSelectedPost(null);
   };
 
   useEffect(() => {
@@ -180,15 +170,47 @@ const HomePage = () => {
     }
   }, [isDragging]);
 
-  const instagramPosts = [
-    'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/11022492/pexels-photo-11022492.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/2872418/pexels-photo-2872418.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/11406167/pexels-photo-11406167.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/8964887/pexels-photo-8964887.jpeg?auto=compress&cs=tinysrgb&w=400',
+  const facebookPosts = [
+    {
+      link: 'https://www.facebook.com/share/v/1BVqsvjkXq/',
+      imgUrl: time1,
+    },
+    {
+      link: 'https://www.facebook.com/share/p/16Egw66vKJ/',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/565698891_122237208824084615_1629009953946577084_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=hjI6C49oY_kQ7kNvwFaG3lm&_nc_oc=AdngSz44qqYLJQ7ebn8SUJJgPeIGHKe-ZLan29GUvaYW7pce0BM564uP71CpVZ7pUvI&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=2tEhXWs8Ep-GgDMUbU0OCA&oh=00_AfeKoaR1YVv_Ms9G3Tg_u_tGo2nUfEviBr6eiHNFM6K69Q&oe=6903F12E',
+    },
+    {
+      link: 'https://www.facebook.com/share/p/1T7X4tobZz/',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/561871168_122237207948084615_8484963236554080371_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=F_01i3_yxcEQ7kNvwF5biB9&_nc_oc=Adm-ZSNHGIWffFQ6ZjhWn-kcKuSrU8zusZgsJm8evH8lHmmzw5vcRduLZ_A7kvh78aE&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=WHGSzEBhv_mMWyLY1kHTiQ&oh=00_AffQw_ZebjrAHtJ7mz0fsiH47rhAnVmxXVY3fcl_K0-vSA&oe=690404FA',
+    },
+    {
+      link: 'https://web.facebook.com/share/p/1BUmxE7KH4/',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/564522614_122237205944084615_5777391985360857015_n.jpg?stp=dst-jpg_p960x960_tt6&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=cu8_USnBHoIQ7kNvwFWHVg6&_nc_oc=Adk-cTxSplFuDUQ87U6SsjgKSgQ4vKTGYufM2PArv_Ekf24Kf60i6HgKa8P6T3n3KX4&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=Y4ShW-Nmm-GtAj6N3_Fvmg&oh=00_Afcbjy0F4OPPV6JGubHCpfzE1k789RnFNuGBdbTEojI1dg&oe=6903E496',
+    },
+    {
+      link: 'https://web.facebook.com/share/p/19aombsEDD/',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/565347036_122237201822084615_5858726072459073814_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=-1axYCyMXZEQ7kNvwET-MsS&_nc_oc=Adko4QDmw29LyMJJmOKEzwv1UmjWiy9OWGT4BbCRj8aK4MfEwhKh83WRTPQmubz2reg&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=stahZD-r25Gx0cwhL1UoXg&oh=00_AfcUnEeyAvKIn07w17-8AyEQovjzgNsSgEEFYQuoRYhUUA&oe=6904098A',
+    },
+    {
+      link: 'https://web.facebook.com/share/p/14V2SV5eRUN/',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/565159445_122237199842084615_8472914943162920057_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=OigyhNdpxIcQ7kNvwE0RaRk&_nc_oc=Admv7JFn4Bwn7ix24KSjyKq5zv9I8ahPJmkDNNuTG6WeL8OsX9jl_nyFMhnWnY_rll0&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=xFsCWK73acqzV1AIg-A8tw&oh=00_AfdG-i041vSWZjymKGJU_NFz_5AAIH6OW5mAopnR5b_-Lw&oe=6903F530',
+    },
+
+    {
+      link: 'https://web.facebook.com/share/p/1Gq2M3dZgN',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/561326841_122237054918084615_7218480736850266881_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=v84FSVGAFBQQ7kNvwF6jQTX&_nc_oc=AdkjfqGvhKbBDYcIfBKhcW4-hyCHzGb_iR2gLWru-2Ph3qQSGN66afwkh1JwccjENaI&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=a-8WVF3YMp31Y-4WmxIyZQ&oh=00_Aff7NBJUXfnFX4xp17y0P0akbYrgdm60PrVRWxu_3IBlDQ&oe=6903FEE5',
+    },
+    {
+      link: 'https://web.facebook.com/share/p/1AKW3kg4Dq/',
+      imgUrl:
+        'https://scontent.fsgn21-1.fna.fbcdn.net/v/t39.30808-6/561060046_122237053208084615_4498484208415462895_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=hNerj9TQEu8Q7kNvwGZ2Nhg&_nc_oc=AdmWqU-DZnH0dNG4qu0zlW7SbEkUXUxCeoa7PWzd6bHrmGnCQe8jkFgVeHDdPtIddPg&_nc_zt=23&_nc_ht=scontent.fsgn21-1.fna&_nc_gid=E80S7CFlkObyp3QdR_XU5Q&oh=00_AfdO3upQ9kwc8wj-AwKe4QgdYjhoHCxZ7kDNmQ-nMUXT3A&oe=69040212',
+    },
   ];
 
   useEffect(() => {
@@ -230,14 +252,15 @@ const HomePage = () => {
             {/* Responsive button */}
             <div className="flex justify-center gap-4 mt-4">
               <Link
-                to="/products"
+                to="/brand-story"
+                state={{ scrollTo: 'exploreSection' }}
                 className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300 group shadow-lg"
               >
                 {t('hero.explore')}
               </Link>
 
               <Link
-                to="/products"
+                to="/custom"
                 className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300 group shadow-lg"
               >
                 {t('hero.special')}
@@ -254,7 +277,7 @@ const HomePage = () => {
 
             <Link
               to="/brand-story"
-              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-colors"
+              className="inline-block bg-white text-primary-green px-6 sm:px-8 py-2 sm:py-3 font-semibold text-base sm:text-lg tracking-wider rounded-md border-2 border-transparent hover:border-primary-green hover:text-dark-green hover:font-extrabold transition-all"
             >
               {t('hero.journeyCta')}
             </Link>
@@ -419,7 +442,8 @@ const HomePage = () => {
                   </h3>
                   <Link
                     to="/custom"
-                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md  hover:bg-cream transition-colors inline-block"
+                    state={{ tab: 'gift' }}
+                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md border-2 border-transparent  hover:border-dark-green  hover:text-dark-green hover:font-extrabold  transition-all inline-block"
                   >
                     {t('custom.learnMore')}
                   </Link>
@@ -448,7 +472,8 @@ const HomePage = () => {
                   </h3>
                   <Link
                     to="/custom"
-                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md  hover:bg-cream transition-colors inline-block"
+                    state={{ tab: 'sticker' }}
+                    className="uppercase bg-white text-accent-green px-6 py-3 font-bold tracking-wider rounded-md border-2 border-transparent  hover:border-dark-green hover:text-dark-green hover:font-extrabold  transition-all inline-block"
                   >
                     {t('custom.learnMore')}
                   </Link>
@@ -489,6 +514,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
+                    state={{ scrollTo: 'gateSection' }}
                     className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300"
                   >
                     {t('workshop.discover')}
@@ -500,7 +526,7 @@ const HomePage = () => {
             {/* Image Section */}
             <div className="aspect-square lg:aspect-auto">
               <img
-                src={images.workshop}
+                src={story1}
                 alt="Workshop Experience"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -537,6 +563,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <Link
                     to="/brand-story"
+                    state={{ scrollTo: 'mindSection' }}
                     className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300"
                   >
                     {t('about.getToKnow')}
@@ -573,122 +600,25 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
-            {instagramPosts.map((image, index) => (
-              <div
+            {facebookPosts.map((image, index) => (
+              <Link
+                to={image.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 key={index}
                 className="aspect-square overflow-hidden group cursor-pointer"
-                onClick={() => openModal(index)}
               >
                 <img
-                  src={image}
+                  src={image.imgUrl}
                   alt={`Instagram post ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transform transition-transform duration-300 ease-in-out group-hover:scale-110"
                   loading="lazy"
                   width="800"
                   height="600"
                 />
-              </div>
+              </Link>
             ))}
           </div>
-
-          {/* Instagram Modal */}
-          {selectedPost !== null && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-0"
-              onClick={closeModal}
-            >
-              {/* Close button */}
-              <button
-                className="fixed top-3 sm:top-6 right-3 sm:right-6 z-[60] text-white hover:text-gray-300"
-                onClick={closeModal}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-
-              {/* Previous button */}
-              {selectedPost > 0 && (
-                <button
-                  className="fixed left-2 sm:left-6 top-1/2 -translate-y-1/2 z-[60] text-white opacity-75 hover:opacity-100"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedPost(selectedPost - 1);
-                  }}
-                >
-                  <ChevronRight className="w-8 sm:w-10 h-8 sm:h-10 transform rotate-180" />
-                </button>
-              )}
-
-              {/* Next button */}
-              {selectedPost < instagramPosts.length - 1 && (
-                <button
-                  className="fixed right-2 sm:right-6 top-1/2 -translate-y-1/2 z-[60] text-white opacity-75 hover:opacity-100"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedPost(selectedPost + 1);
-                  }}
-                >
-                  <ChevronRight className="w-8 sm:w-10 h-8 sm:h-10" />
-                </button>
-              )}
-
-              <div
-                className="relative max-w-6xl w-[95%] md:w-full max-h-[90vh] flex flex-col md:flex-row bg-white overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Left side - full width on mobile */}
-                <div className="w-full md:w-3/5 bg-black flex items-center justify-center relative">
-                  <img
-                    src={instagramPosts[selectedPost]}
-                    alt={`Instagram post ${selectedPost + 1}`}
-                    className="w-full h-auto max-h-[50vh] md:max-h-[90vh] object-contain"
-                    loading="lazy"
-                    width="800"
-                    height="800"
-                  />
-                </div>
-
-                {/* Right side*/}
-                <div className="w-full md:w-2/5 flex flex-col bg-white h-auto max-h-[40vh] md:h-[90vh] md:max-h-[90vh] overflow-y-auto">
-                  {/* Header */}
-                  <div className="flex items-center p-4 border-b">
-                    <div className="h-8 w-8 bg-gray-200 overflow-hidden mr-3">
-                      <Instagram
-                        href="#"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="font-semibold">CODY_COCONUT_CANDY</div>
-                  </div>
-
-                  {/* Caption */}
-                  <div className="p-4 flex-1 overflow-y-auto">
-                    <div className="flex mb-4">
-                      <div></div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="mt-4"></div>
-                  </div>
-                  <div className="text-gray-500 text-center text-xs p-4 border-t">
-                    September 25, 2025
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
     </div>

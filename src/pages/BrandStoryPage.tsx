@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import banner2 from '../assets/images/banner-2.jpg';
 import experience from '../assets/images/experience.jpg';
 import founder1 from '../assets/images/founder-1.jpg';
@@ -21,8 +22,13 @@ import { useLanguage } from '../context/LanguageContext';
 
 const BrandStoryPage = () => {
   const { t } = useLanguage();
+  const location = useLocation();
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
+
+  const mindSectionRef = useRef<HTMLDivElement | null>(null);
+  const gateSectionRef = useRef<HTMLDivElement | null>(null);
+  const exploreSectionRef = useRef<HTMLDivElement | null>(null);
 
   // 🎬 Auto alternate video playback
   useEffect(() => {
@@ -45,20 +51,32 @@ const BrandStoryPage = () => {
   const instagramPosts = [time1, time2, time3, time4];
   const instagramPosts2 = [time5, time6, time7, time8];
 
-  // useEffect(() => {
-  //   const img = new Image();
-  //   img.src = banner2;
-  // }, []);
+  useLayoutEffect(() => {
+    if (location.state?.scrollTo === 'mindSection') {
+      // delay nhỏ để đảm bảo DOM render xong
+      mindSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (location.state?.scrollTo === 'gateSection') {
+      // delay nhỏ để đảm bảo DOM render xong
+      gateSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (location.state?.scrollTo === 'exploreSection') {
+      // delay nhỏ để đảm bảo DOM render xong
+      exploreSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [location.state]);
 
   return (
     <div className="min-h-screen bg-cream">
       {/* 🌿 HERO SECTION: Explore Culture */}
       <section className="relative w-full h-fit flex items-center overflow-hidden">
-        <img
-          src={banner2}
-          alt="banner"
-          className=" w-full h-full object-contain"
-        />
+        <div className="w-screen aspect-[12500/4558] bg-gray-200 relative overflow-hidden">
+          <img
+            src={banner2}
+            alt="banner"
+            className="absolute inset-0 w-full h-full object-contain"
+          />
+        </div>
         {/* <div className="relative text-center px-6 max-w-5xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-playfair font-bold text-white mb-4">
             {t("brand.heroTitle")}
@@ -82,7 +100,7 @@ const BrandStoryPage = () => {
         </div>
       </section>
       {/* 🌴 CULTURAL STORY OF BEN TRE & COCONUT CANDY */}
-      <section className="py-24 bg-[#fffdea]">
+      <section ref={exploreSectionRef} className="py-24 bg-[#fffdea]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-6">
           {/* LEFT: Text */}
           <div className="text-left lg:pr-8">
@@ -110,7 +128,7 @@ const BrandStoryPage = () => {
       <section className="py-20 bg-primary-green">
         <div className="max-w-6xl mx-auto text-center px-6">
           <h2 className="text-4xl md:text-5xl font-playfair font-bold text-white mb-6">
-            {t('purpose.title').toUpperCase()}
+            {t('purpose.title')}
           </h2>
           <p className="text-xl text-white max-w-4xl mx-auto leading-relaxed mb-10">
             {t('purpose.des')}
@@ -153,15 +171,15 @@ const BrandStoryPage = () => {
         </div>
       </section>
       {/*  OUR TIMELINE */}
-      <section className="py-20  bg-[#fffdea]">
+      <section ref={gateSectionRef} className="py-20  bg-[#fffdea]">
         <div className="max-w-6xl mx-auto text-center px-6">
           <h2 className="text-4xl md:text-5xl font-playfair font-bold text-warm-brown mb-6">
-            {t('brand.timelineTitle').toUpperCase()}
+            {t('brand.timelineTitle')}
           </h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-10">
             {t('brand.timelineSubtitle')}
           </p>
-          <div className="text-left max-w-4xl mx-auto text-gray-600 text-lg space-y-5">
+          <div className="text-justify max-w-4xl mx-auto text-gray-600 text-lg space-y-5">
             <p>
               <b className="text-warm-brown">{t('brand.milestone1Title')}:</b>{' '}
               {t('brand.milestone1Desc')}
@@ -171,7 +189,8 @@ const BrandStoryPage = () => {
                 {instagramPosts.map((image, index) => (
                   <div
                     key={index}
-                    className="aspect-square overflow-hidden group cursor-pointer"
+                    className="aspect-square overflow-hidden group cursor-pointer bg-gray-200 w-auto"
+                    style={{ height: 215 }}
                     // onClick={() => openModal(index)}
                   >
                     <img
@@ -199,7 +218,8 @@ const BrandStoryPage = () => {
                 {instagramPosts2.map((image, index) => (
                   <div
                     key={index}
-                    className="aspect-square overflow-hidden group cursor-pointer"
+                    className="aspect-square overflow-hidden group cursor-pointer bg-gray-200 w-auto"
+                    style={{ height: 215 }}
                     // onClick={() => openModal(index)}
                   >
                     <img
@@ -257,7 +277,11 @@ const BrandStoryPage = () => {
       </section> */}
 
       {/* 💡 THE MIND BEHIND THE CODY */}
-      <section className="py-20 bg-white">
+      <section
+        ref={mindSectionRef}
+        className="py-20 bg-white"
+        // style={{ scrollMarginTop: '5rem' }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-warm-brown font-playfair mb-3">
@@ -312,11 +336,15 @@ const RightFounderPanel: React.FC = () => {
           {t('mind.name')}
         </h3>
         <p className="text-primary-green font-medium">{t('mind.role')}</p>
-        <p className="text-gray-700 leading-relaxed">{t('mind.story')}</p>
-        <blockquote className="border-l-4 border-primary-green pl-4 italic text-gray-600">
+        <p className="text-gray-700 leading-relaxed text-justify">
+          {t('mind.story')}
+        </p>
+        <blockquote className="border-l-4 border-primary-green pl-4 italic text-gray-600 text-justify">
           {t('mind.quote')}
         </blockquote>
-        <p className="text-gray-700 leading-relaxed">{t('mind.mission')}</p>
+        <p className="text-gray-700 leading-relaxed text-justify">
+          {t('mind.mission')}
+        </p>
       </div>
 
       {/* Gallery luôn nằm ở đáy */}

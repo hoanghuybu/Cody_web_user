@@ -3,14 +3,18 @@
 import {
   Heart,
   Loader2,
+  MapPin,
   Minus,
   Package,
+  Phone,
   Plus,
   ShoppingCart,
   Star,
+  User,
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import AuthModal from '../components/auth/AuthModal';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../context/ToastContext';
@@ -32,6 +36,8 @@ interface CartItem {
 const CustomPage: React.FC = () => {
   const { t } = useLanguage();
   const { showToast } = useToast();
+  const location = useLocation();
+  const state = location.state as { tab?: 'gift' | 'sticker' };
   const [activeTab, setActiveTab] = useState<'gift' | 'sticker'>('gift');
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -39,7 +45,7 @@ const CustomPage: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState('CANDY');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState({
-    name: '',
+    // name: '',
     note: '',
     items: '',
     buyerName: '',
@@ -68,13 +74,13 @@ const CustomPage: React.FC = () => {
 
   // Form data for each tab (preserved when switching)
   const [giftData, setGiftData] = useState({
-    name: '',
+    // name: '',
     selectedStickers: [] as string[],
     selectedProducts: [] as string[],
   });
 
   const [stickerData, setStickerData] = useState({
-    name: '',
+    // name: '',
     selectedStickers: [] as string[],
     selectedProducts: [] as string[],
   });
@@ -148,7 +154,9 @@ const CustomPage: React.FC = () => {
           id: product.id,
           type: 'product',
           name: product.name,
-          image: product?.images?.[0]?.imageUrl ?? '',
+          image: product.isCombo
+            ? product.comboImageUrl || ''
+            : product?.images?.[0]?.imageUrl || '',
           price: product.price,
           quantity: 1,
         });
@@ -205,14 +213,17 @@ const CustomPage: React.FC = () => {
     // const totalItems = getTotalItems();
     const newErrors: any = { name: '', note: '', items: '' };
     let hasError = false;
+    let errortext = '';
 
-    if (!currentData.name.trim()) {
-      newErrors.name = t('error.nameCombo');
-      hasError = true;
-    }
+    // if (!currentData.name.trim()) {
+    //   newErrors.name = t('error.nameCombo');
+    //   errortext += `${t('error.nameCombo')}\n`;
+    //   hasError = true;
+    // }
 
     if (!note.trim()) {
       newErrors.note = t('error.noteCombo');
+      errortext += `${t('error.noteCombo')}\n`;
       hasError = true;
     }
 
@@ -225,6 +236,12 @@ const CustomPage: React.FC = () => {
 
     if (!hasError) {
       setIsModalOpen(true);
+    } else {
+      showToast({
+        type: 'error',
+        title: t('common.error'),
+        message: errortext,
+      });
     }
   };
 
@@ -259,7 +276,7 @@ const CustomPage: React.FC = () => {
         buyerName: buyerInfo.buyerName,
         buyerPhone: buyerInfo.buyerPhone,
         addressUrl: buyerInfo.addressUrl,
-        customComboName: currentData.name,
+        customComboName: 'Combo custom order',
         note: note,
         isCombo: true,
         paymentMethod: 'COD',
@@ -278,13 +295,13 @@ const CustomPage: React.FC = () => {
         // ✅ Reset current tab’s data
         if (activeTab === 'gift') {
           setGiftData({
-            name: '',
+            // name: '',
             selectedStickers: [],
             selectedProducts: [],
           });
         } else {
           setStickerData({
-            name: '',
+            // name: '',
             selectedStickers: [],
             selectedProducts: [],
           });
@@ -294,7 +311,7 @@ const CustomPage: React.FC = () => {
         setNote('');
         setCart([]);
         setErrors({
-          name: '',
+          // name: '',
           note: '',
           items: '',
           buyerName: '',
@@ -456,6 +473,22 @@ const CustomPage: React.FC = () => {
     const isGift = activeTab === 'gift';
     const title = isGift ? t('personalize.heroSubtitle') : t('sticker.intro');
     const subTitle = isGift ? t('personalize.intro') : t('sticker.introDes');
+    const content = isGift
+      ? {
+          intro: t('personalize.reasonsTitle'),
+          introDes1: t('sticker.finalDes'),
+          introDes2: t('sticker.finalDes'),
+
+          features: t('personalize.customTitle'),
+          reason: t('personalize.whyTitle'),
+        }
+      : {
+          intro: t('sticker.finalTitle'),
+          introDes1: t('sticker.finalDes'),
+          introDes2: t('sticker.cta'),
+          features: t('sticker.customizationTitle'),
+          reason: t('sticker.reasonTitle'),
+        };
 
     const whyItems = isGift
       ? [
@@ -528,25 +561,14 @@ const CustomPage: React.FC = () => {
           <div className="w-4/5 h-1 bg-primary-green mx-auto"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center mb-4">
-              <Heart className="h-6 w-6 text-primary-green" />
-            </div>
-            <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.intro.title')}
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              {isGift ? t('personalize.reasonsTitle') : t('sticker.finalTitle')}
-            </p>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
+          {/* 1️⃣ WHY SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-accent-green/10 rounded-xl flex items-center justify-center mb-4">
               <Star className="h-6 w-6 text-accent-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.why.title')}
+              {content.reason}
             </h3>
             <div className="space-y-4">
               {whyItems.map((item, index) => (
@@ -560,12 +582,13 @@ const CustomPage: React.FC = () => {
             </div>
           </div>
 
+          {/* 2️⃣ FEATURES SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-light-green/10 rounded-xl flex items-center justify-center mb-4">
               <Package className="h-6 w-6 text-light-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.features.title')}
+              {content.features}
             </h3>
             <div className="space-y-4">
               {featuresItems.map((item, index) => (
@@ -579,12 +602,15 @@ const CustomPage: React.FC = () => {
             </div>
           </div>
 
+          {/* 3️⃣ FINAL / CTA SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center mb-4">
               <Heart className="h-6 w-6 text-primary-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.reason.title')}
+              {activeTab === 'gift'
+                ? t('personalize.reasonsTitle')
+                : t('sticker.finalTitle')}
             </h3>
             <div className="space-y-4">
               {activeTab === 'gift' ? (
@@ -627,9 +653,11 @@ const CustomPage: React.FC = () => {
     return (
       <div className="space-y-8">
         {/* Name Input */}
-        <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
+        {/* <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            {activeTab === 'gift' ? t('custom.giftName') : t('custom.stickerName')}
+            {activeTab === 'gift'
+              ? t('custom.name.gift')
+              : t('custom.name.sticker')}
           </h3>
           <input
             type="text"
@@ -637,22 +665,26 @@ const CustomPage: React.FC = () => {
             onChange={(e) =>
               setCurrentData({ ...currentData, name: e.target.value })
             }
-            placeholder={`${t('custom.enterName')} ${
-              activeTab === 'gift' ? t('custom.gift') : t('custom.sticker')
-            } ${t('custom.name')}`}
+            placeholder={`${
+              activeTab === 'gift'
+                ? t('custom.placeholder.gift')
+                : t('custom.placeholder.sticker')
+            } `}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
           />
           {errors.name && (
             <p className="text-red-500 text-sm mt-2">{errors.name}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Stickers Selection */}
         {activeTab === 'sticker' && (
-          <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-              {t('custom.selectSticker')} ({currentData.selectedStickers.length} {t('custom.selected')})
-            </h3>
+          <>
+            <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
+              <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
+                {t('custom.name.sticker')} (
+                {currentData.selectedStickers.length} {t('custom.selected')})
+              </h3>
 
               {productsLoading ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -702,13 +734,15 @@ const CustomPage: React.FC = () => {
                 </div>
               )}
             </div>
+          </>
         )}
 
         {/* Products Selection */}
         {activeTab === 'gift' && (
           <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
             <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-              {t('custom.selectProduct')} ({currentData.selectedProducts.length} {t('custom.selected')})
+              {t('custom.name.gift')} ({currentData.selectedProducts.length}{' '}
+              {t('custom.selected')})
             </h3>
 
             {productsLoading ? (
@@ -740,7 +774,11 @@ const CustomPage: React.FC = () => {
                     }`}
                   >
                     <img
-                      src={product.images?.[0]?.imageUrl}
+                      src={
+                        product.isCombo
+                          ? product.comboImageUrl
+                          : product.images?.[0]?.imageUrl
+                      }
                       alt={product.name}
                       className="w-20 h-20 object-cover rounded-lg"
                     />
@@ -822,6 +860,12 @@ const CustomPage: React.FC = () => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    if (state?.tab) {
+      setActiveTab(state.tab);
+    }
+  }, [state]);
+
   return (
     <div className="min-h-screen bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -832,9 +876,6 @@ const CustomPage: React.FC = () => {
               ? t('personalize.heroTitle')
               : t('sticker.title')}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {t('custom.subtitle')}
-          </p>
         </div>
 
         {/* Tabs */}
@@ -849,7 +890,7 @@ const CustomPage: React.FC = () => {
                     : 'text-warm-brown hover:bg-gray-50'
                 }`}
               >
-                {t('custom.giftTab')}
+                PERSONALIZED GIFT
               </button>
               <button
                 onClick={() => setActiveTab('sticker')}
@@ -859,7 +900,7 @@ const CustomPage: React.FC = () => {
                     : 'text-warm-brown hover:bg-gray-50'
                 }`}
               >
-                {t('custom.stickerTab')}
+                CUSTOMIZE STICKERS
               </button>
             </div>
           </div>
@@ -889,7 +930,7 @@ const CustomPage: React.FC = () => {
               <div className=" rounded-2xl shadow-xl p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-warm-brown font-playfair">
-                    {t('custom.cart')}
+                    {t('cart')}
                   </h3>
                   <div className="flex items-center space-x-2">
                     <ShoppingCart className="h-5 w-5 text-primary-green" />
@@ -902,7 +943,7 @@ const CustomPage: React.FC = () => {
                 {cart.length === 0 ? (
                   <div className="text-center py-8">
                     <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">{t('custom.noItems')}</p>
+                    <p className="text-gray-500">{t('noItem')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4 mb-6">
@@ -921,7 +962,7 @@ const CustomPage: React.FC = () => {
                             {item.name}
                           </p>
                           <p className="text-xs text-gray-500 capitalize">
-                            {item.type === 'sticker' ? t('custom.sticker') : t('custom.product')}
+                            {item.type === 'sticker' ? 'Sticker' : 'Sản phẩm'}
                           </p>
                           <p className="text-sm text-primary-green font-bold">
                             {formatPrice(item.price)}
@@ -962,12 +1003,12 @@ const CustomPage: React.FC = () => {
                 {/* Note Input */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('custom.specialNote')}
+                    {t('specialNotes')}
                   </label>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    placeholder={t('custom.notePlaceholder')}
+                    placeholder={t('placeholder.note')}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent resize-none text-sm"
                   />
@@ -980,7 +1021,7 @@ const CustomPage: React.FC = () => {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-semibold text-warm-brown">
-                      {t('custom.total')}
+                      {t('cart.total')}
                     </span>
                     <span className="text-xl font-bold text-primary-green">
                       {formatPrice(getTotalPrice())}
@@ -992,7 +1033,7 @@ const CustomPage: React.FC = () => {
                     onClick={handleOrder}
                     className="w-full bg-primary-green text-white py-3 rounded-xl font-semibold hover:bg-primary-green/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
-                    {t('custom.orderNow')}
+                    {t('custom.button.order')}
                   </button>
                 </div>
               </div>
@@ -1025,72 +1066,109 @@ const CustomPage: React.FC = () => {
       />
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white w-11/12 max-w-md rounded-xl p-6 shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center">
-              {t('orderInfo')}
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white w-11/12 max-w-md rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+              {t('order.info.title')}
             </h2>
 
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder={t('buyerName')}
-                value={buyerInfo.buyerName}
-                onChange={(e) =>
-                  setBuyerInfo({ ...buyerInfo, buyerName: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
-              />
-              {errors.buyerName && (
-                <p className="text-red-500 text-sm mt-2">{errors.buyerName}</p>
-              )}
-              <input
-                type="text"
-                placeholder={t('buyerPhone')}
-                value={buyerInfo.buyerPhone}
-                onChange={(e) =>
-                  setBuyerInfo({ ...buyerInfo, buyerPhone: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
-              />
-              {errors.buyerPhone && (
-                <p className="text-red-500 text-sm mt-2">{errors.buyerPhone}</p>
-              )}
-              <input
-                type="text"
-                placeholder={t('addressUrl')}
-                value={buyerInfo.addressUrl}
-                onChange={(e) =>
-                  setBuyerInfo({ ...buyerInfo, addressUrl: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
-              />
-              {errors.addressUrl && (
-                <p className="text-red-500 text-sm mt-2">{errors.addressUrl}</p>
-              )}
+            {/* Form fields */}
+            <div className="space-y-5">
+              {/* Họ tên */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('order.buyer.name')}
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={t('order.buyer.name.placeholder')}
+                    value={buyerInfo.buyerName}
+                    onChange={(e) =>
+                      setBuyerInfo({ ...buyerInfo, buyerName: e.target.value })
+                    }
+                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                </div>
+                {errors.buyerName && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.buyerName}
+                  </p>
+                )}
+              </div>
+
+              {/* Số điện thoại */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('order.buyer.phone')}
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={t('order.buyer.phone.placeholder')}
+                    value={buyerInfo.buyerPhone}
+                    onChange={(e) =>
+                      setBuyerInfo({ ...buyerInfo, buyerPhone: e.target.value })
+                    }
+                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                </div>
+                {errors.buyerPhone && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.buyerPhone}
+                  </p>
+                )}
+              </div>
+
+              {/* Địa chỉ nhận hàng */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('order.address.url')}
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={t('order.address.url.placeholder')}
+                    value={buyerInfo.addressUrl}
+                    onChange={(e) =>
+                      setBuyerInfo({ ...buyerInfo, addressUrl: e.target.value })
+                    }
+                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                </div>
+                {errors.addressUrl && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.addressUrl}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-6">
+            {/* Buttons */}
+            <div className="flex justify-end gap-3 mt-8">
               <button
                 disabled={isLoadingCreate}
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium bg-gray-200 rounded-lg hover:bg-gray-300"
+                className="px-5 py-2.5 text-sm font-medium bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors disabled:opacity-60"
               >
                 {isLoadingCreate ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  t('cancel')
+                  t('common.cancel')
                 )}
               </button>
               <button
                 disabled={isLoadingCreate}
                 onClick={handleConfirm}
-                className="px-4 py-2 text-sm font-medium bg-primary-green text-white rounded-lg hover:bg-primary-green/90"
+                className="px-5 py-2.5 text-sm font-medium bg-primary-green text-white rounded-xl hover:bg-primary-green/90 shadow-sm transition-all disabled:opacity-60"
               >
                 {isLoadingCreate ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  t('confirm')
+                  t('common.confirm')
                 )}
               </button>
             </div>

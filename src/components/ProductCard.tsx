@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Product } from '../types/product';
-import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
+import { Product } from '../types/product';
 import { ProductUtils } from '../utils/product';
 
 interface ProductCardProps {
@@ -10,7 +11,10 @@ interface ProductCardProps {
   hoverActionText?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, hoverActionText }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  hoverActionText,
+}) => {
   const { t } = useLanguage();
   const [qty, setQty] = useState<number>(1);
   const { addToCart, openCart } = useCart();
@@ -19,12 +23,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, hoverActionText }) =
 
   return (
     <div className="transition-all duration-300 rounded-md relative bg-transparent shadow-none">
-      <Link to={`/product/${product.id}`} className="block bg-transparent focus:outline-none">
+      <Link
+        to={`/product/${product.id}`}
+        className="block bg-transparent focus:outline-none"
+      >
         {/* Shared group: hovering image OR title will trigger group-hover effects */}
         <div className="group">
           <div className="relative overflow-hidden aspect-square bg-cream/30 rounded-md flex items-center justify-center">
             <img
-              src={product.image}
+              src={product.isCombo ? product.comboImageUrl : product.image}
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
@@ -35,14 +42,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, hoverActionText }) =
                 <div className="pointer-events-auto w-4/5 bg-white/95 rounded-md p-2 flex flex-col items-center shadow-md">
                   <div className="flex items-center gap-3 mb-2">
                     <button
-                      onClick={(e) => { e.preventDefault(); setQty(Math.max(1, qty - 1)); }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setQty(Math.max(1, qty - 1));
+                      }}
                       className="px-3 py-1 bg-gray-100 rounded-md"
                     >
                       -
                     </button>
                     <div className="px-4 py-1 font-semibold">{qty}</div>
                     <button
-                      onClick={(e) => { e.preventDefault(); setQty(qty + 1); }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setQty(qty + 1);
+                      }}
                       className="px-3 py-1 bg-gray-100 rounded-md"
                     >
                       +
