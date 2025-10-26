@@ -252,7 +252,7 @@ const HomePage = () => {
             {/* Responsive button */}
             <div className="flex justify-center gap-4 mt-4">
               <Link
-                to="/brand-story"
+                to="/brand-story?scrollTo=exploreSection"
                 state={{ scrollTo: 'exploreSection' }}
                 className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-green font-bold text-base sm:text-lg tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300 group shadow-lg"
               >
@@ -513,7 +513,7 @@ const HomePage = () => {
 
                 <div className="text-center">
                   <Link
-                    to="/brand-story"
+                    to="/brand-story?scrollTo=gateSection"
                     state={{ scrollTo: 'gateSection' }}
                     className="inline-block bg-white text-accent-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300"
                   >
@@ -562,7 +562,7 @@ const HomePage = () => {
 
                 <div className="text-center">
                   <Link
-                    to="/brand-story"
+                    to="/brand-story?scrollTo=mindSection"
                     state={{ scrollTo: 'mindSection' }}
                     className="inline-block bg-white text-light-green px-8 py-3 font-black tracking-wider rounded-md hover:bg-dark-green hover:text-white transition-all duration-300"
                   >
