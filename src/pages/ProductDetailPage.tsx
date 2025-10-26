@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Facebook } from '@mui/icons-material';
 import {
   ArrowLeft,
   Award,
   Heart,
+  LinkIcon,
   Share2,
   Shield,
   ShoppingCart,
   Truck,
-  Link as LinkIcon,
-  Facebook,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
@@ -36,7 +37,11 @@ const ProductDetailPage = () => {
 
   const { t } = useLanguage();
 
-  const showToast = (type: 'success' | 'error' | 'info', title: string, message: string) => {
+  const showToast = (
+    type: 'success' | 'error' | 'info',
+    title: string,
+    message: string
+  ) => {
     setToast({ open: true, type, title, message });
   };
 
@@ -73,6 +78,8 @@ const ProductDetailPage = () => {
   const product = productResponse?.data
     ? ProductUtils.toLegacyFormat(productResponse.data)
     : null;
+
+  console.log('product', product);
 
   // Get related products (filter out current product and limit to 4)
   const relatedProducts =
@@ -112,6 +119,8 @@ const ProductDetailPage = () => {
   // Get all gallery images from product
   const galleryImages = ProductUtils.getAllImages(product);
 
+  console.log('galleryImages', galleryImages);
+
   // Ensure we have at least one image (fallback to main image)
   const displayImages =
     galleryImages.length > 0
@@ -131,14 +140,20 @@ const ProductDetailPage = () => {
   const handleCopyLink = () => {
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl).then(() => {
-      showToast('success', 'Đã sao chép!', 'Link sản phẩm đã được sao chép vào clipboard.');
+      showToast(
+        'success',
+        'Đã sao chép!',
+        'Link sản phẩm đã được sao chép vào clipboard.'
+      );
       setShareMenuOpen(false);
     });
   };
 
   const handleShareFacebook = () => {
     const currentUrl = window.location.href;
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      currentUrl
+    )}`;
     window.open(facebookUrl, '_blank', 'width=600,height=400');
     setShareMenuOpen(false);
   };
@@ -159,28 +174,49 @@ const ProductDetailPage = () => {
     <div className="min-h-screen bg-white py-8">
       {/* Open Graph Meta Tags for Social Sharing */}
       <Helmet>
-        <title>{product.originalName || product.name} - Cody Coconut Candy</title>
+        <title>
+          {product.originalName || product.name} - Cody Coconut Candy
+        </title>
         <meta name="description" content={product.description} />
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="product" />
         <meta property="og:url" content={window.location.href} />
-        <meta property="og:title" content={`${product.originalName || product.name} - Cody Coconut Candy`} />
+        <meta
+          property="og:title"
+          content={`${
+            product.originalName || product.name
+          } - Cody Coconut Candy`}
+        />
         <meta property="og:description" content={product.description} />
-        <meta property="og:image" content={ProductUtils.getMainImage(product)} />
+        <meta
+          property="og:image"
+          content={ProductUtils.getMainImage(product)}
+        />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        
+
         {/* Product specific */}
-        <meta property="product:price:amount" content={product.price.toString()} />
+        <meta
+          property="product:price:amount"
+          content={product.price.toString()}
+        />
         <meta property="product:price:currency" content="VND" />
-        
+
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={window.location.href} />
-        <meta name="twitter:title" content={`${product.originalName || product.name} - Cody Coconut Candy`} />
+        <meta
+          name="twitter:title"
+          content={`${
+            product.originalName || product.name
+          } - Cody Coconut Candy`}
+        />
         <meta name="twitter:description" content={product.description} />
-        <meta name="twitter:image" content={ProductUtils.getMainImage(product)} />
+        <meta
+          name="twitter:image"
+          content={ProductUtils.getMainImage(product)}
+        />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -276,8 +312,8 @@ const ProductDetailPage = () => {
                   {t('productDetail.ingredients')}:
                 </h3>
                 <ul className="text-gray-600 space-y-1">
-                  {(product.ingredients || []).map((ingredient, index) => (
-                    <li key={index}>• {t(ingredient) || ingredient}</li>
+                  {(product.ingredients || []).map((ingredient: any, index) => (
+                    <li key={index}>• {ingredient.name}</li>
                   ))}
                 </ul>
               </div>
@@ -327,15 +363,23 @@ const ProductDetailPage = () => {
 
             {/* Action Buttons */}
             <div className="flex space-x-4">
-              <button 
+              <button
                 onClick={() => {
                   if (product) {
                     if (isInWishlist(product.id)) {
                       removeFromWishlist(product.id);
-                      showToast('success', t('wishlist.removed'), `${product.name} đã được xóa khỏi yêu thích.`);
+                      showToast(
+                        'success',
+                        t('wishlist.removed'),
+                        `${product.name} đã được xóa khỏi yêu thích.`
+                      );
                     } else {
                       addToWishlist(product);
-                      showToast('success', t('wishlist.added'), `${product.name} đã được thêm vào yêu thích.`);
+                      showToast(
+                        'success',
+                        t('wishlist.added'),
+                        `${product.name} đã được thêm vào yêu thích.`
+                      );
                     }
                   }
                 }}
@@ -345,17 +389,19 @@ const ProductDetailPage = () => {
                     : 'border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                <Heart 
+                <Heart
                   className={`h-4 w-4 mr-2 ${
                     product && isInWishlist(product.id) ? 'fill-red-500' : ''
-                  }`} 
+                  }`}
                 />
-                {product && isInWishlist(product.id) ? 'Đã yêu thích' : t('productDetail.favorite')}
+                {product && isInWishlist(product.id)
+                  ? 'Đã yêu thích'
+                  : t('productDetail.favorite')}
               </button>
-              
+
               {/* Share Button with Dropdown */}
               <div className="relative share-dropdown-container">
-                <button 
+                <button
                   onClick={() => setShareMenuOpen(!shareMenuOpen)}
                   className="flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
                 >
