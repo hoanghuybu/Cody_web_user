@@ -456,6 +456,22 @@ const CustomPage: React.FC = () => {
     const isGift = activeTab === 'gift';
     const title = isGift ? t('personalize.heroSubtitle') : t('sticker.intro');
     const subTitle = isGift ? t('personalize.intro') : t('sticker.introDes');
+    const content = isGift
+      ? {
+          intro: t('personalize.reasonsTitle'),
+          introDes1: t('sticker.finalDes'),
+          introDes2: t('sticker.finalDes'),
+
+          features: t('personalize.customTitle'),
+          reason: t('personalize.whyTitle'),
+        }
+      : {
+          intro: t('sticker.finalTitle'),
+          introDes1: t('sticker.finalDes'),
+          introDes2: t('sticker.cta'),
+          features: t('sticker.customizationTitle'),
+          reason: t('sticker.reasonTitle'),
+        };
 
     const whyItems = isGift
       ? [
@@ -528,25 +544,14 @@ const CustomPage: React.FC = () => {
           <div className="w-4/5 h-1 bg-primary-green mx-auto"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center mb-4">
-              <Heart className="h-6 w-6 text-primary-green" />
-            </div>
-            <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.intro.title')}
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              {isGift ? t('personalize.reasonsTitle') : t('sticker.finalTitle')}
-            </p>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
+          {/* 1️⃣ WHY SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-accent-green/10 rounded-xl flex items-center justify-center mb-4">
               <Star className="h-6 w-6 text-accent-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.why.title')}
+              {content.reason}
             </h3>
             <div className="space-y-4">
               {whyItems.map((item, index) => (
@@ -560,12 +565,13 @@ const CustomPage: React.FC = () => {
             </div>
           </div>
 
+          {/* 2️⃣ FEATURES SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-light-green/10 rounded-xl flex items-center justify-center mb-4">
               <Package className="h-6 w-6 text-light-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.features.title')}
+              {content.features}
             </h3>
             <div className="space-y-4">
               {featuresItems.map((item, index) => (
@@ -579,12 +585,15 @@ const CustomPage: React.FC = () => {
             </div>
           </div>
 
+          {/* 3️⃣ FINAL / CTA SECTION */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center mb-4">
               <Heart className="h-6 w-6 text-primary-green" />
             </div>
             <h3 className="text-xl font-bold text-warm-brown mb-3 font-playfair">
-              {t('custom.reason.title')}
+              {activeTab === 'gift'
+                ? t('personalize.reasonsTitle')
+                : t('sticker.finalTitle')}
             </h3>
             <div className="space-y-4">
               {activeTab === 'gift' ? (
@@ -629,7 +638,9 @@ const CustomPage: React.FC = () => {
         {/* Name Input */}
         <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-            {activeTab === 'gift' ? t('custom.giftName') : t('custom.stickerName')}
+            {activeTab === 'gift'
+              ? t('custom.name.gift')
+              : t('custom.name.sticker')}
           </h3>
           <input
             type="text"
@@ -637,9 +648,11 @@ const CustomPage: React.FC = () => {
             onChange={(e) =>
               setCurrentData({ ...currentData, name: e.target.value })
             }
-            placeholder={`${t('custom.enterName')} ${
-              activeTab === 'gift' ? t('custom.gift') : t('custom.sticker')
-            } ${t('custom.name')}`}
+            placeholder={`${
+              activeTab === 'gift'
+                ? t('custom.placeholder.gift')
+                : t('custom.placeholder.sticker')
+            } `}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
           />
           {errors.name && (
@@ -649,10 +662,12 @@ const CustomPage: React.FC = () => {
 
         {/* Stickers Selection */}
         {activeTab === 'sticker' && (
-          <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-              {t('custom.selectSticker')} ({currentData.selectedStickers.length} {t('custom.selected')})
-            </h3>
+          <>
+            <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
+              <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
+                {t('custom.name.sticker')} (
+                {currentData.selectedStickers.length} {t('custom.selected')})
+              </h3>
 
               {productsLoading ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -702,13 +717,15 @@ const CustomPage: React.FC = () => {
                 </div>
               )}
             </div>
+          </>
         )}
 
         {/* Products Selection */}
         {activeTab === 'gift' && (
           <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
             <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
-              {t('custom.selectProduct')} ({currentData.selectedProducts.length} {t('custom.selected')})
+              {t('custom.name.gift')} ({currentData.selectedProducts.length}{' '}
+              {t('custom.selected')})
             </h3>
 
             {productsLoading ? (
@@ -832,9 +849,6 @@ const CustomPage: React.FC = () => {
               ? t('personalize.heroTitle')
               : t('sticker.title')}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {t('custom.subtitle')}
-          </p>
         </div>
 
         {/* Tabs */}
@@ -849,7 +863,7 @@ const CustomPage: React.FC = () => {
                     : 'text-warm-brown hover:bg-gray-50'
                 }`}
               >
-                {t('custom.giftTab')}
+                PERSONALIZED GIFT
               </button>
               <button
                 onClick={() => setActiveTab('sticker')}
@@ -859,7 +873,7 @@ const CustomPage: React.FC = () => {
                     : 'text-warm-brown hover:bg-gray-50'
                 }`}
               >
-                {t('custom.stickerTab')}
+                CUSTOMIZE STICKERS
               </button>
             </div>
           </div>
@@ -889,7 +903,7 @@ const CustomPage: React.FC = () => {
               <div className=" rounded-2xl shadow-xl p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-warm-brown font-playfair">
-                    {t('custom.cart')}
+                    {t('cart')}
                   </h3>
                   <div className="flex items-center space-x-2">
                     <ShoppingCart className="h-5 w-5 text-primary-green" />
@@ -902,7 +916,7 @@ const CustomPage: React.FC = () => {
                 {cart.length === 0 ? (
                   <div className="text-center py-8">
                     <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">{t('custom.noItems')}</p>
+                    <p className="text-gray-500">{t('noItem')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4 mb-6">
@@ -921,7 +935,7 @@ const CustomPage: React.FC = () => {
                             {item.name}
                           </p>
                           <p className="text-xs text-gray-500 capitalize">
-                            {item.type === 'sticker' ? t('custom.sticker') : t('custom.product')}
+                            {item.type === 'sticker' ? 'Sticker' : 'Sản phẩm'}
                           </p>
                           <p className="text-sm text-primary-green font-bold">
                             {formatPrice(item.price)}
@@ -962,12 +976,12 @@ const CustomPage: React.FC = () => {
                 {/* Note Input */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('custom.specialNote')}
+                    {t('specialNotes')}
                   </label>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    placeholder={t('custom.notePlaceholder')}
+                    placeholder={t('placeholder.note')}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent resize-none text-sm"
                   />
@@ -980,7 +994,7 @@ const CustomPage: React.FC = () => {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-semibold text-warm-brown">
-                      {t('custom.total')}
+                      {t('cart.total')}
                     </span>
                     <span className="text-xl font-bold text-primary-green">
                       {formatPrice(getTotalPrice())}
@@ -992,7 +1006,7 @@ const CustomPage: React.FC = () => {
                     onClick={handleOrder}
                     className="w-full bg-primary-green text-white py-3 rounded-xl font-semibold hover:bg-primary-green/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
-                    {t('custom.orderNow')}
+                    {t('custom.button.order')}
                   </button>
                 </div>
               </div>
