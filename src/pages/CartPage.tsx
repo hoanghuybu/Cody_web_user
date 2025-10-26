@@ -469,7 +469,7 @@ const CartPage = () => {
   // 🛒 Empty cart view
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-cream py-8">
+      <div className="min-h-screen bg-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-16">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
@@ -494,7 +494,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream py-8 relative">
+    <div className="min-h-screen bg-white py-8 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
@@ -533,7 +533,7 @@ const CartPage = () => {
                 return (
                   <div
                     key={item.id}
-                    className="relative bg-white rounded-xl border border-gray-100 shadow-sm px-4 md:px-6 py-3 md:py-4"
+                    className="relative bg-white rounded-xl border border-gray-200 shadow-md px-4 md:px-6 py-3 md:py-4"
                   >
                     {/* Delete (mobile) */}
                     <button
@@ -671,7 +671,7 @@ const CartPage = () => {
             </div>
 
             {/* Summary */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
               <h3 className="text-lg font-semibold text-warm-brown mb-4">
                 {t('cart.deliveryInfo')}
               </h3>

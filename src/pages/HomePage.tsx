@@ -418,8 +418,8 @@ const HomePage = () => {
                     {t('custom.personalizedGift')}
                   </h3>
                   <Link
-                    to="/custom"
-                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md  hover:bg-cream transition-colors inline-block"
+                    to="/personalize-gift"
+                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md  hover:bg-dark-green hover:text-white transition-colors inline-block"
                   >
                     {t('custom.learnMore')}
                   </Link>
@@ -446,12 +446,9 @@ const HomePage = () => {
                   <h3 className="uppercase text-xl md:text-2xl font-black font-montserrat mb-4 tracking-tight">
                     {t('custom.customizeStickers')}
                   </h3>
-                  <Link
-                    to="/custom"
-                    className="uppercase bg-white text-primary-green px-6 py-3 font-bold tracking-wider rounded-md  hover:bg-cream transition-colors inline-block"
-                  >
+                  <button className="uppercase bg-white text-accent-green px-6 py-3 font-bold rounded-md tracking-wider hover:bg-dark-green hover:text-white transition-colors">
                     {t('custom.learnMore')}
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
