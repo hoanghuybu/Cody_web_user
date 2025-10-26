@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import banner2 from '../assets/images/banner-2.jpg';
 import experience from '../assets/images/experience.jpg';
 import founder1 from '../assets/images/founder-1.jpg';
@@ -22,7 +22,6 @@ import { useLanguage } from '../context/LanguageContext';
 
 const BrandStoryPage = () => {
   const { t } = useLanguage();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const scrollTo = searchParams.get('scrollTo');
   const video1Ref = useRef<HTMLVideoElement>(null);
