@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import banner2 from '../assets/images/banner-2.jpg';
 import experience from '../assets/images/experience.jpg';
@@ -52,19 +52,25 @@ const BrandStoryPage = () => {
   const instagramPosts = [time1, time2, time3, time4];
   const instagramPosts2 = [time5, time6, time7, time8];
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!scrollTo) return;
     if (scrollTo === 'mindSection') {
       // delay nhỏ để đảm bảo DOM render xong
-      mindSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        mindSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     }
+
     if (scrollTo === 'gateSection') {
-      // delay nhỏ để đảm bảo DOM render xong
-      gateSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        gateSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     }
+
     if (scrollTo === 'exploreSection') {
-      // delay nhỏ để đảm bảo DOM render xong
-      exploreSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        exploreSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     }
   }, [scrollTo]);
 
