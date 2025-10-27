@@ -3,14 +3,18 @@
 import {
   Heart,
   Loader2,
+  MapPin,
   Minus,
   Package,
+  Phone,
   Plus,
   ShoppingCart,
   Star,
+  User,
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import AuthModal from '../components/auth/AuthModal';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../context/ToastContext';
@@ -32,6 +36,8 @@ interface CartItem {
 const CustomPage: React.FC = () => {
   const { t } = useLanguage();
   const { showToast } = useToast();
+  const location = useLocation();
+  const state = location.state as { tab?: 'gift' | 'sticker' };
   const [activeTab, setActiveTab] = useState<'gift' | 'sticker'>('gift');
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -39,7 +45,7 @@ const CustomPage: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState('CANDY');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState({
-    name: '',
+    // name: '',
     note: '',
     items: '',
     buyerName: '',
@@ -68,13 +74,13 @@ const CustomPage: React.FC = () => {
 
   // Form data for each tab (preserved when switching)
   const [giftData, setGiftData] = useState({
-    name: '',
+    // name: '',
     selectedStickers: [] as string[],
     selectedProducts: [] as string[],
   });
 
   const [stickerData, setStickerData] = useState({
-    name: '',
+    // name: '',
     selectedStickers: [] as string[],
     selectedProducts: [] as string[],
   });
@@ -148,7 +154,9 @@ const CustomPage: React.FC = () => {
           id: product.id,
           type: 'product',
           name: product.name,
-          image: product?.images?.[0]?.imageUrl ?? '',
+          image: product.isCombo
+            ? product.comboImageUrl || ''
+            : product?.images?.[0]?.imageUrl || '',
           price: product.price,
           quantity: 1,
         });
@@ -205,14 +213,17 @@ const CustomPage: React.FC = () => {
     // const totalItems = getTotalItems();
     const newErrors: any = { name: '', note: '', items: '' };
     let hasError = false;
+    let errortext = '';
 
-    if (!currentData.name.trim()) {
-      newErrors.name = t('error.nameCombo');
-      hasError = true;
-    }
+    // if (!currentData.name.trim()) {
+    //   newErrors.name = t('error.nameCombo');
+    //   errortext += `${t('error.nameCombo')}\n`;
+    //   hasError = true;
+    // }
 
     if (!note.trim()) {
       newErrors.note = t('error.noteCombo');
+      errortext += `${t('error.noteCombo')}\n`;
       hasError = true;
     }
 
@@ -225,6 +236,12 @@ const CustomPage: React.FC = () => {
 
     if (!hasError) {
       setIsModalOpen(true);
+    } else {
+      showToast({
+        type: 'error',
+        title: t('common.error'),
+        message: errortext,
+      });
     }
   };
 
@@ -259,7 +276,7 @@ const CustomPage: React.FC = () => {
         buyerName: buyerInfo.buyerName,
         buyerPhone: buyerInfo.buyerPhone,
         addressUrl: buyerInfo.addressUrl,
-        customComboName: currentData.name,
+        customComboName: 'Combo custom order',
         note: note,
         isCombo: true,
         paymentMethod: 'COD',
@@ -278,13 +295,13 @@ const CustomPage: React.FC = () => {
         // ✅ Reset current tab’s data
         if (activeTab === 'gift') {
           setGiftData({
-            name: '',
+            // name: '',
             selectedStickers: [],
             selectedProducts: [],
           });
         } else {
           setStickerData({
-            name: '',
+            // name: '',
             selectedStickers: [],
             selectedProducts: [],
           });
@@ -294,7 +311,7 @@ const CustomPage: React.FC = () => {
         setNote('');
         setCart([]);
         setErrors({
-          name: '',
+          // name: '',
           note: '',
           items: '',
           buyerName: '',
@@ -636,7 +653,7 @@ const CustomPage: React.FC = () => {
     return (
       <div className="space-y-8">
         {/* Name Input */}
-        <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
+        {/* <div className=" rounded-2xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-xl font-bold text-warm-brown mb-4 font-playfair">
             {activeTab === 'gift'
               ? t('custom.name.gift')
@@ -658,7 +675,7 @@ const CustomPage: React.FC = () => {
           {errors.name && (
             <p className="text-red-500 text-sm mt-2">{errors.name}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Stickers Selection */}
         {activeTab === 'sticker' && (
@@ -757,7 +774,11 @@ const CustomPage: React.FC = () => {
                     }`}
                   >
                     <img
-                      src={product.images?.[0]?.imageUrl}
+                      src={
+                        product.isCombo
+                          ? product.comboImageUrl
+                          : product.images?.[0]?.imageUrl
+                      }
                       alt={product.name}
                       className="w-20 h-20 object-cover rounded-lg"
                     />
@@ -838,6 +859,12 @@ const CustomPage: React.FC = () => {
       setSelectedCategoryId('STICKER');
     }
   }, [activeTab]);
+
+  useEffect(() => {
+    if (state?.tab) {
+      setActiveTab(state.tab);
+    }
+  }, [state]);
 
   return (
     <div className="min-h-screen bg-white py-8">
@@ -1039,72 +1066,109 @@ const CustomPage: React.FC = () => {
       />
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white w-11/12 max-w-md rounded-xl p-6 shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center">
-              {t('orderInfo')}
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white w-11/12 max-w-md rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+              {t('order.info.title')}
             </h2>
 
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder={t('buyerName')}
-                value={buyerInfo.buyerName}
-                onChange={(e) =>
-                  setBuyerInfo({ ...buyerInfo, buyerName: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
-              />
-              {errors.buyerName && (
-                <p className="text-red-500 text-sm mt-2">{errors.buyerName}</p>
-              )}
-              <input
-                type="text"
-                placeholder={t('buyerPhone')}
-                value={buyerInfo.buyerPhone}
-                onChange={(e) =>
-                  setBuyerInfo({ ...buyerInfo, buyerPhone: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
-              />
-              {errors.buyerPhone && (
-                <p className="text-red-500 text-sm mt-2">{errors.buyerPhone}</p>
-              )}
-              <input
-                type="text"
-                placeholder={t('addressUrl')}
-                value={buyerInfo.addressUrl}
-                onChange={(e) =>
-                  setBuyerInfo({ ...buyerInfo, addressUrl: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-sm"
-              />
-              {errors.addressUrl && (
-                <p className="text-red-500 text-sm mt-2">{errors.addressUrl}</p>
-              )}
+            {/* Form fields */}
+            <div className="space-y-5">
+              {/* Họ tên */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('order.buyer.name')}
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={t('order.buyer.name.placeholder')}
+                    value={buyerInfo.buyerName}
+                    onChange={(e) =>
+                      setBuyerInfo({ ...buyerInfo, buyerName: e.target.value })
+                    }
+                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                </div>
+                {errors.buyerName && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.buyerName}
+                  </p>
+                )}
+              </div>
+
+              {/* Số điện thoại */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('order.buyer.phone')}
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={t('order.buyer.phone.placeholder')}
+                    value={buyerInfo.buyerPhone}
+                    onChange={(e) =>
+                      setBuyerInfo({ ...buyerInfo, buyerPhone: e.target.value })
+                    }
+                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                </div>
+                {errors.buyerPhone && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.buyerPhone}
+                  </p>
+                )}
+              </div>
+
+              {/* Địa chỉ nhận hàng */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('order.address.url')}
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={t('order.address.url.placeholder')}
+                    value={buyerInfo.addressUrl}
+                    onChange={(e) =>
+                      setBuyerInfo({ ...buyerInfo, addressUrl: e.target.value })
+                    }
+                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                </div>
+                {errors.addressUrl && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.addressUrl}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-6">
+            {/* Buttons */}
+            <div className="flex justify-end gap-3 mt-8">
               <button
                 disabled={isLoadingCreate}
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium bg-gray-200 rounded-lg hover:bg-gray-300"
+                className="px-5 py-2.5 text-sm font-medium bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors disabled:opacity-60"
               >
                 {isLoadingCreate ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  t('cancel')
+                  t('common.cancel')
                 )}
               </button>
               <button
                 disabled={isLoadingCreate}
                 onClick={handleConfirm}
-                className="px-4 py-2 text-sm font-medium bg-primary-green text-white rounded-lg hover:bg-primary-green/90"
+                className="px-5 py-2.5 text-sm font-medium bg-primary-green text-white rounded-xl hover:bg-primary-green/90 shadow-sm transition-all disabled:opacity-60"
               >
                 {isLoadingCreate ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  t('confirm')
+                  t('common.confirm')
                 )}
               </button>
             </div>

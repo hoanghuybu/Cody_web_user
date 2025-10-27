@@ -28,6 +28,8 @@ export interface Product {
   gallery?: string[];
   originalName?: string;
   originalDescription?: string;
+  isCombo?: boolean;
+  comboImageUrl?: string;
 }
 
 export interface ProductSearchResponse {

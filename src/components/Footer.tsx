@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { Facebook, Mail, MapPin, Phone } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import footerImg from '../assets/images/footer.jpg';
@@ -100,7 +100,8 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/contact"
+                    to="/brand-story"
+                    state={{ scrollTo: 'mindSection' }}
                     className="text-white/80 hover:text-white transition-colors text-sm tracking-wide"
                   >
                     {t('footer.mind')}
@@ -165,17 +166,19 @@ const Footer = () => {
               </h4>
               <div className="flex space-x-4 mb-6">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/profile.php?id=61552538454281"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white hover:text-primary-green transition-colors"
                 >
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a
-                  href="#"
+                {/* <a
+                  href="https://www.facebook.com/profile.php?id=61552538454281"
                   className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white hover:text-primary-green transition-colors"
                 >
                   <Instagram className="h-5 w-5" />
-                </a>
+                </a> */}
               </div>
               <p className="text-white/80 text-sm leading-relaxed">
                 {t('footer.followDescription')}

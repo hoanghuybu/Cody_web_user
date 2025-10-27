@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Filter, Gift, Grid, List, Search } from 'lucide-react';
+import { Filter, Grid, List, Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import CustomComboModal from '../components/CustomComboModal';
