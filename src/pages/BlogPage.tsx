@@ -72,13 +72,16 @@ const BlogPage = () => {
         {selectedCategory === 'all' && !searchTerm && (
           <div className="mb-12">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="md:flex">
+              <div className="md:flex md:h-[420px]">
                 <div className="md:w-1/2">
-                  <img
-                    src={featuredPost.image}
-                    alt={featuredPost.title}
-                    className="w-full h-64 md:h-full object-cover"
-                  />
+                  <div className="relative w-full h-64 md:h-full">
+                    <img
+                      src={featuredPost.image}
+                      alt={featuredPost.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+                  </div>
                 </div>
                 <div className="md:w-1/2 p-8">
                   <div className="flex items-center space-x-4 mb-4">
@@ -132,11 +135,11 @@ const BlogPage = () => {
               key={post.id}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
             >
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden aspect-[4/3]">
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-4 left-4">
                   <span
