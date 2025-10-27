@@ -14,9 +14,8 @@ const blog5Img1 = new URL('../assets/images/blogs-5/5_1.jpg', import.meta.url).h
 const blog5Img2 = new URL('../assets/images/blogs-5/5_2.jpg', import.meta.url).href;
 const blog5Img3 = new URL('../assets/images/blogs-5/5_3.jpg', import.meta.url).href;
 
-const blog2Img1 = new URL('../assets/images/blogs-2/scholarship1.jpg', import.meta.url).href;
-const blog2Img2 = new URL('../assets/images/blogs-2/scholarship2.jpg', import.meta.url).href;
-const blog2Img3 = new URL('../assets/images/blogs-2/scholarship3.jpg', import.meta.url).href;
+const blog2Img1 = new URL('../assets/images/blogs-2/IMG_5684.JPG', import.meta.url).href;
+const blog2Img2 = new URL('../assets/images/blogs-2/IMG_5685.JPG', import.meta.url).href;
 
 const blog1Img1 = new URL('../assets/images/blogs-1/worker1.jpg', import.meta.url).href;
 const blog1Img2 = new URL('../assets/images/blogs-1/worker2.jpg', import.meta.url).href;
@@ -122,7 +121,6 @@ export const blogPosts: BlogPost[] = [
     images: [
       blog2Img1,
       blog2Img2,
-      blog2Img3,
     ],
     readTime: '4 phút đọc',
   },
