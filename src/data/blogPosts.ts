@@ -14,6 +14,15 @@ const blog5Img1 = new URL('../assets/images/blogs-5/5_1.jpg', import.meta.url).h
 const blog5Img2 = new URL('../assets/images/blogs-5/5_2.jpg', import.meta.url).href;
 const blog5Img3 = new URL('../assets/images/blogs-5/5_3.jpg', import.meta.url).href;
 
+const blog2Img1 = new URL('../assets/images/blogs-2/scholarship1.jpg', import.meta.url).href;
+const blog2Img2 = new URL('../assets/images/blogs-2/scholarship2.jpg', import.meta.url).href;
+const blog2Img3 = new URL('../assets/images/blogs-2/scholarship3.jpg', import.meta.url).href;
+
+const blog1Img1 = new URL('../assets/images/blogs-1/worker1.jpg', import.meta.url).href;
+const blog1Img2 = new URL('../assets/images/blogs-1/worker2.jpg', import.meta.url).href;
+const blog1Img3 = new URL('../assets/images/blogs-1/worker3.jpg', import.meta.url).href;
+const blog1Img4 = new URL('../assets/images/blogs-1/worker4.jpg', import.meta.url).href;
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -63,8 +72,8 @@ export const blogPosts: BlogPost[] = [
     category: 'culture',
     author: 'CODY Team',
     date: '2024-05-01',
-    image: 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761551423/file.heic',
-  images: ['https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761551423/file.heic', 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761556705/file.heic', 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761556815/file.heic'],
+    image: blog1Img1,
+  images: [blog1Img1, blog1Img2, blog1Img3, blog1Img4],
     readTime: '3 phút đọc',
   },
   {
@@ -109,11 +118,11 @@ export const blogPosts: BlogPost[] = [
     author: 'CODY Team',
     date: '2024-03-15',
     image:
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560129/file.heic',
+      blog2Img1,
     images: [
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560063/file.jpg',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560181/file.jpg',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+      blog2Img1,
+      blog2Img2,
+      blog2Img3,
     ],
     readTime: '4 phút đọc',
   },
