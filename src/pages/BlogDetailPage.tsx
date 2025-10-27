@@ -225,9 +225,6 @@ const BlogDetailPage = () => {
           {/* Image Gallery */}
           {post.images && post.images.length > 0 && (
             <div className="my-12">
-              <h3 className="text-2xl font-bold text-warm-brown mb-6 font-playfair">
-                Hình ảnh hành trình
-              </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {post.images.map((image, index) => (
                   <div

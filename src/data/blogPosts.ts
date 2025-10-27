@@ -1,3 +1,5 @@
+// Images for post #1 are delivered via Cloudinary with format auto-conversion
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -15,47 +17,77 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     id: 1,
-    title: 'CODY | Gửi vị ngọt tri ân đến những đôi tay lao động Bến Tre',
+    title: 'CODY | Sharing Sweet Gratitude with the Working Hands of Ben Tre',
     excerpt:
-      'Ngày Quốc tế Lao động 1/5, CODY chọn cách quay về với những con người làm nên hương vị của đất này – những cô chú lao công, công nhân, người bán hàng rong…',
+      'On International Workers’ Day (May 1st), CODY chose to honor the people who shape the flavor of this land — sanitation workers, factory workers, and street vendors in Ben Tre. ',
     content:
-      'Ngày Quốc tế Lao động 1/5, thay vì khuyến mãi hay chiến dịch quảng bá, CODY chọn cách quay về với những con người làm nên hương vị của đất này...',
+      'On International Workers’ Day, instead of promotions, CODY returned to the people who bring this land to life, sharing small boxes of coconut candy with the note: “Thank you for adding sweetness to life.””',
     fullContent: [
+      '💚 CODY | Sharing Sweet Gratitude with the Working Hands of Ben Tre',
+      '📸 Insert image: Article 1/5',
+      'On International Workers’ Day (May 1st), instead of running sales promotions or marketing campaigns, CODY chose a simpler, more heartfelt path — returning to the people who bring the true flavor of this land to life: the street vendors, factory workers, and sanitation workers of Ben Tre.',
+      'They are the ones who quietly keep the world moving — with their smiles and calloused hands. 🌿',
+      'From early morning, the CODY team together with Founder Le Bao Long walked through the streets of Ben Tre, handing out small boxes of coconut candy along with a note that read:',
+      '“Thank you for adding sweetness to life.”',
+      'It wasn’t a grand gift — but it carried the sincere gratitude of a brand born from the land of coconuts, hoping to share appreciation with those who labor every day.',
+      '“At CODY, we’ve always believed:',
+      ' Every piece of coconut candy carries not only the sweetness of Ben Tre,',
+      ' but also the sweetness of humanity.” 💚',
+      '🎥 Coming soon, CODY will release a short video capturing the smiles, stories, and heartfelt moments from this special day — a tribute to the simple beauty of everyday work.',
+      '---------------------------------------------------------------------------------------------------------',
+      '💚 CODY | Gửi vị ngọt tri ân đến những đôi tay lao động Bến Tre',
       'Ngày Quốc tế Lao động 1/5, thay vì khuyến mãi hay chiến dịch quảng bá, CODY chọn cách quay về với những con người làm nên hương vị của đất này – những cô chú lao công, công nhân, người bán hàng rong…',
       'Họ là những người vẫn âm thầm giữ cho cuộc sống vận hành, bằng nụ cười và đôi tay chai sạn của mình. 🌿',
-      'Từ sáng sớm, team CODY cùng Long – Founder của thương hiệu đã đi qua từng con đường ở Bến Tre, gửi tận tay những hộp kẹo dừa nhỏ xinh cùng lời nhắn: "Cảm ơn cô chú vì đã làm nên vị ngọt của đời sống."',
+      'Từ sáng sớm, team CODY cùng Long – Founder của thương hiệu đã đi qua từng con đường ở Bến Tre, gửi tận tay những hộp kẹo dừa nhỏ xinh cùng lời nhắn:',
+      '“Cảm ơn cô chú vì đã làm nên vị ngọt của đời sống.”',
       'Không phải món quà lớn, nhưng là tấm lòng chân thành từ một thương hiệu sinh ra trên mảnh đất dừa, mong được lan tỏa sự biết ơn đến những người đang lao động mỗi ngày.',
-      'CODY luôn tin rằng: Mỗi viên kẹo dừa không chỉ mang vị ngọt của Bến Tre, mà còn là vị ngọt của tình người. 💚',
-      'Sắp tới, CODY sẽ chia sẻ video hành trình nhỏ này – ghi lại nụ cười, câu chuyện và những khoảnh khắc thật nhất trong ngày đặc biệt ấy.',
+      '“CODY luôn tin rằng:',
+      ' Mỗi viên kẹo dừa không chỉ mang vị ngọt của Bến Tre,',
+      ' mà còn là vị ngọt của tình người.” 💚',
+      '🎥 Sắp tới, CODY sẽ chia sẻ video hành trình nhỏ này – ghi lại nụ cười, câu chuyện và những khoảnh khắc thật nhất trong ngày đặc biệt ấy.',
     ],
     category: 'culture',
     author: 'CODY Team',
     date: '2024-05-01',
-    image: 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto/v1761392836/file.heic',
-    images: [
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761392836/file.heic',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761393317/file.heic',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761393503/file.heic',
-    ],
+    image: 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761551423/file.heic',
+  images: ['https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761551423/file.heic', 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761556705/file.heic', 'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761556815/file.heic'],
     readTime: '3 phút đọc',
   },
   {
     id: 2,
-    title: '🎓 CODY SCHOLARSHIP BOX — Lan tỏa yêu thương, tiếp sức hành trình học tập',
+    title: '🎓 CODY SCHOLARSHIP BOX — Spreading Love, Supporting the Journey of Learning',
     excerpt:
-      'Trên hành trình "mang vị ngọt từ Bến Tre đến mọi miền", CODY không chỉ mong muốn lan tỏa hương vị kẹo dừa Việt, mà còn muốn trao đi niềm tin và cơ hội học tập cho những em nhỏ đang nỗ lực từng ngày.',
+      'On the journey of “bringing the sweetness of Ben Tre to every corner of Vietnam,” CODY goes beyond sharing coconut candy — we share faith, hope, and learning opportunities. — Trên hành trình “mang vị ngọt từ Bến Tre đến mọi miền”, CODY lan tỏa niềm tin, hi vọng và cơ hội học tập cho các em nhỏ.',
     content:
-      'Trên hành trình "mang vị ngọt từ Bến Tre đến mọi miền", CODY không chỉ mong muốn lan tỏa hương vị kẹo dừa Việt, mà còn muốn trao đi niềm tin và cơ hội học tập cho những em nhỏ đang nỗ lực từng ngày. 🌱',
+      'Recently, the CODY Scholarship Box closed with many touching moments as we awarded scholarships to five schools in Ba Ria – Vung Tau. — Vừa qua, dự án CODY Scholarship Box khép lại đầy cảm xúc khi chúng tôi trao học bổng đến 5 trường tại Bà Rịa – Vũng Tàu.',
     fullContent: [
-      'Trên hành trình "mang vị ngọt từ Bến Tre đến mọi miền", CODY không chỉ mong muốn lan tỏa hương vị kẹo dừa Việt, mà còn muốn trao đi niềm tin và cơ hội học tập cho những em nhỏ đang nỗ lực từng ngày. 🌱',
-      'Vừa qua, dự án CODY Scholarship Box đã chính thức khép lại với thật nhiều cảm xúc. Chúng tôi đã có dịp đến thăm và trao học bổng cho 5 trường học tại khu vực Bà Rịa – Vũng Tàu:',
+      '🎓 CODY SCHOLARSHIP BOX — Spreading Love, Supporting the Journey of Learning',
+      '📸 Insert images: Scholarship Project',
+      'On the journey of “bringing the sweetness of Ben Tre to every corner of Vietnam,” CODY’s mission goes beyond sharing the flavor of traditional coconut candy — it’s about sharing faith, hope, and opportunities for education with children striving each day to build a brighter future. 🌱',
+      'Recently, the CODY Scholarship Box project came to a heartfelt close, leaving behind countless touching moments.',
+      'Our team had the honor of visiting and awarding scholarships to five schools across the Ba Ria – Vung Tau region:',
+      '🏫 Phuoc Hoi Primary School',
+      '🏫 Phuoc Hai 1 Primary School',
+      '🏫 Dat Do Secondary School',
+      '🏫 Vo Thi Sau High School',
+      '🏫 Long Hai – Phuoc Tinh High School',
+      'Each school received a scholarship package worth 8,500,000 VND, bringing the total scholarship fund to 42,500,000 VND — a sincere gift from CODY and Founder Le Bao Long, hoping to inspire students to keep pursuing their dreams with passion and perseverance.',
+      '“A scholarship is not just a reward — it’s a reminder that every effort is worth believing in. And within every CODY candy lies the sweetness of sharing and hope.” 💚',
+      'CODY extends our heartfelt thanks to all the teachers, students, and supporters who have accompanied us, making this journey of kindness more complete and meaningful.',
+      '📦 CODY Scholarship Box — Sharing Sweetness, Planting Hope!',
+      '---------------------------------------------------------------------------------------------------------',
+      '🎓 CODY SCHOLARSHIP BOX — Lan tỏa yêu thương, tiếp sức hành trình học tập',
+      'Chèn hình ảnh: Bài học bổng',
+      'Trên hành trình “mang vị ngọt từ Bến Tre đến mọi miền”, CODY không chỉ mong muốn lan tỏa hương vị kẹo dừa Việt, mà còn muốn trao đi niềm tin và cơ hội học tập cho những em nhỏ đang nỗ lực từng ngày. 🌱',
+      'Vừa qua, dự án CODY Scholarship Box đã chính thức khép lại với thật nhiều cảm xúc.',
+      'Chúng tôi đã có dịp đến thăm và trao học bổng cho 5 trường học tại khu vực Bà Rịa – Vũng Tàu:',
       '🏫 Trường Tiểu học Phước Hội',
       '🏫 Trường Tiểu học Phước Hải 1',
       '🏫 Trường THCS Đất Đỏ',
       '🏫 Trường THPT Võ Thị Sáu',
       '🏫 Trường THPT Long Hải – Phước Tỉnh',
       'Mỗi trường nhận suất học bổng trị giá 8.500.000 VNĐ, tổng giá trị quỹ học bổng lên đến 42.500.000 VNĐ — như một lời gửi gắm chân thành từ CODY và Founder Lê Bảo Long, mong rằng các em học sinh sẽ có thêm động lực để theo đuổi ước mơ của mình.',
-      '"Học bổng không chỉ là phần thưởng, mà còn là niềm tin rằng mọi nỗ lực đều đáng trân trọng. Và trong từng viên kẹo CODY, luôn có vị ngọt của sẻ chia và hi vọng." 💚',
+      '“Học bổng không chỉ là phần thưởng, mà còn là niềm tin rằng mọi nỗ lực đều đáng trân trọng. Và trong từng viên kẹo CODY, luôn có vị ngọt của sẻ chia và hi vọng.” 💚',
       'CODY xin cảm ơn các thầy cô, các em học sinh, và những người bạn đã đồng hành, giúp chúng tôi lan tỏa hành trình này trở nên trọn vẹn hơn.',
       '📦 CODY Scholarship Box — Trao vị ngọt, gieo hi vọng!',
     ],
@@ -63,7 +95,12 @@ export const blogPosts: BlogPost[] = [
     author: 'CODY Team',
     date: '2024-03-15',
     image:
-      'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=600',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560129/file.heic',
+    images: [
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560063/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560181/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+    ],
     readTime: '4 phút đọc',
   },
   {
@@ -93,11 +130,11 @@ export const blogPosts: BlogPost[] = [
     author: 'CODY Team',
     date: '2024-06-15',
     image:
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761393766/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
     images: [
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761393766/file.jpg',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761393888/file.jpg',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761393952/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
 
     ],
     readTime: '5 phút đọc',
@@ -129,10 +166,10 @@ export const blogPosts: BlogPost[] = [
     author: 'CODY Team',
     date: '2024-07-20',
     image:
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761394008/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
     images: [
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761394008/file.jpg',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/v1761394266/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
     ],
     readTime: '5 phút đọc',
   },
@@ -160,11 +197,12 @@ export const blogPosts: BlogPost[] = [
     author: 'CODY Team',
     date: '2024-08-10',
     image:
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto/v1761394433/file.png',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
     images: [
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761394433/file.png',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761394485/file.png',
-      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761394506/file.png',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761394506/file.png',      'https://res.cloudinary.com/dutzdkelx/image/upload/f_auto,q_auto,w_800/v1761560237/file.jpg',
+
     ],
     readTime: '6 phút đọc',
   },
