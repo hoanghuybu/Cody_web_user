@@ -68,7 +68,7 @@ export const blogPosts: BlogPost[] = [
       ' mà còn là vị ngọt của tình người.” 💚',
       '🎥 Sắp tới, CODY sẽ chia sẻ video hành trình nhỏ này – ghi lại nụ cười, câu chuyện và những khoảnh khắc thật nhất trong ngày đặc biệt ấy.',
     ],
-    category: 'culture',
+    category: 'community',
     author: 'CODY Team',
     date: '2025-10-04',
     image: blog1Img1,
@@ -113,7 +113,7 @@ export const blogPosts: BlogPost[] = [
       'CODY xin cảm ơn các thầy cô, các em học sinh, và những người bạn đã đồng hành, giúp chúng tôi lan tỏa hành trình này trở nên trọn vẹn hơn.',
       '📦 CODY Scholarship Box — Trao vị ngọt, gieo hi vọng!',
     ],
-    category: 'culture',
+    category: 'community',
     author: 'CODY Team',
     date: '2025-10-03',
     image:
@@ -166,7 +166,7 @@ export const blogPosts: BlogPost[] = [
       'CODY tin rằng mỗi hành trình trao đi yêu thương, dù nhỏ, đều là bước khởi đầu cho một tương lai bền vững hơn — nơi mọi người đều có thể cùng nhau sống xanh, sống tốt, và sống có ý nghĩa.',
       '📦 CODY – Không chỉ là kẹo, mà là câu chuyện của sẻ chia.'
     ],
-    category: 'culture',
+    category: 'community',
     author: 'CODY Team',
     date: '2024-09-15',
     image: blog3Img2,
@@ -215,7 +215,7 @@ export const blogPosts: BlogPost[] = [
       'Mỗi viên kẹo dừa CODY không chỉ mang hương vị quê hương, mà còn là thông điệp: “Ngọt ngào hôm nay, xanh lành cho mai sau.” 🌴',
       '📦 CODY – Sweet from the heart, green from the soul.'
     ],
-    category: 'culture',
+    category: 'community',
     author: 'CODY Team',
     date: '2025-08-20',
     image: blog4Img1,
@@ -259,7 +259,7 @@ export const blogPosts: BlogPost[] = [
       'Một viên kẹo dừa có thể nhỏ bé, nhưng nếu đủ nhiều bàn tay cùng sẻ chia, nó sẽ trở thành hương vị ngọt lành của cả một cộng đồng.',
       '👉 CODY – Ngọt lành từ Bến Tre, xanh từ trái tim người trẻ.'
     ],
-    category: 'culture',
+    category: 'community',
     author: 'CODY Team',
     date: '2025-07-10',
     image: blog5Img1,
@@ -300,7 +300,7 @@ export const blogPosts: BlogPost[] = [
       '🌿 Cảm ơn bạn, vì đã cùng chúng tôi xây nên một hành trình ngọt lành. CODY sẽ tiếp tục cố gắng – để mỗi viên kẹo không chỉ mang vị ngọt, mà còn mang theo niềm tin, tình yêu và tinh thần Bến Tre đến thật xa.',
       '“Be kind. Be local. Build something that lasts.” — CODY Team',
     ],
-    category: 'culture',
+    category: 'Stories',
     author: 'CODY Team',
     date: '2025-07-04',
     image: blog6Img1,
@@ -351,9 +351,8 @@ export const blogPosts: BlogPost[] = [
 ];
 
 export const categories = [
-  { id: 'all', name: 'Tất cả' },
-  { id: 'environment', name: 'Môi trường' },
-  { id: 'lifestyle', name: 'Lối sống xanh' },
-  { id: 'cuisine', name: 'Ẩm thực' },
-  { id: 'culture', name: 'Văn hóa' },
+  { id: 'all', name: 'All' },
+  { id: 'stories', name: 'Stories' },
+  { id: 'community', name: 'Community' },
+  { id: 'culture', name: 'Culture' },
 ];
