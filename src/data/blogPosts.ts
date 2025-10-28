@@ -122,7 +122,7 @@ export const blogPosts: BlogPost[] = [
       blog2Img1,
       blog2Img2,
     ],
-    readTime: '4 phút đọc',
+    readTime: '4 minutes read',
   },
 
   {
@@ -171,7 +171,7 @@ export const blogPosts: BlogPost[] = [
     date: '2024-09-15',
     image: blog3Img2,
     images: [blog3Img2, blog3Img3],
-    readTime: '5 phút đọc',
+    readTime: '5 minutes read',
   },
   {
     id: 4,
@@ -220,7 +220,7 @@ export const blogPosts: BlogPost[] = [
     date: '2025-08-20',
     image: blog4Img1,
     images: [blog4Img2, blog4Img3, blog4Img1],
-    readTime: '5 phút đọc',
+    readTime: '5 minutes read',
   },
   {
     id: 5,
@@ -268,7 +268,7 @@ export const blogPosts: BlogPost[] = [
       blog5Img2,
       blog5Img3,
     ],
-    readTime: '6 phút đọc',
+    readTime: '6 minutes read',
   },
     {
     id: 6,
@@ -346,7 +346,7 @@ export const blogPosts: BlogPost[] = [
     date: '2025-06-01',
     image: blog7Img1,
     images: [blog7Img1, blog7Img2, blog7Img3],
-    readTime: '5 phút đọc',
+    readTime: '5 minutes read',
   },
 ];
 
