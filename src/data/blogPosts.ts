@@ -73,7 +73,7 @@ export const blogPosts: BlogPost[] = [
     date: '2025-10-04',
     image: blog1Img1,
   images: [blog1Img1, blog1Img2, blog1Img3, blog1Img4],
-    readTime: '3 phút đọc',
+    readTime: '3 minutes read',
   },
   {
     id: 2,
