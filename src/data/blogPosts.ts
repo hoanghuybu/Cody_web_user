@@ -79,9 +79,9 @@ export const blogPosts: BlogPost[] = [
     id: 2,
     title: '🎓 CODY SCHOLARSHIP BOX — Spreading Love, Supporting the Journey of Learning',
     excerpt:
-      'On the journey of “bringing the sweetness of Ben Tre to every corner of Vietnam,” CODY goes beyond sharing coconut candy — we share faith, hope, and learning opportunities. — Trên hành trình “mang vị ngọt từ Bến Tre đến mọi miền”, CODY lan tỏa niềm tin, hi vọng và cơ hội học tập cho các em nhỏ.',
+      'On the journey of “bringing the sweetness of Ben Tre to every corner of Vietnam,” CODY goes beyond sharing coconut candy — we share faith, hope, and learning opportunities.',
     content:
-      'Recently, the CODY Scholarship Box closed with many touching moments as we awarded scholarships to five schools in Ba Ria – Vung Tau. — Vừa qua, dự án CODY Scholarship Box khép lại đầy cảm xúc khi chúng tôi trao học bổng đến 5 trường tại Bà Rịa – Vũng Tàu.',
+      'Recently, the CODY Scholarship Box closed with many touching moments as we awarded scholarships to five schools in Ba Ria – Vung Tau.',
     fullContent: [
       '🎓 CODY SCHOLARSHIP BOX — Spreading Love, Supporting the Journey of Learning',
       '📸 Insert images: Scholarship Project',
