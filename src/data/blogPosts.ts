@@ -300,7 +300,7 @@ export const blogPosts: BlogPost[] = [
       '🌿 Cảm ơn bạn, vì đã cùng chúng tôi xây nên một hành trình ngọt lành. CODY sẽ tiếp tục cố gắng – để mỗi viên kẹo không chỉ mang vị ngọt, mà còn mang theo niềm tin, tình yêu và tinh thần Bến Tre đến thật xa.',
       '“Be kind. Be local. Build something that lasts.” — CODY Team',
     ],
-    category: 'Stories',
+    category: 'stories',
     author: 'CODY Team',
     date: '2025-07-04',
     image: blog6Img1,
