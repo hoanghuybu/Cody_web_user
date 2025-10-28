@@ -2,18 +2,23 @@ import { Product } from '../types/product';
 
 export class ProductUtils {
   static getMainImage(product: Product): string {
-    const mainImage = product.images?.find(img => img.isMain);
-    return mainImage?.imageUrl || product.images?.[0]?.imageUrl || product.image || '/placeholder-product.jpg';
+    const mainImage = product.images?.find((img) => img.isMain);
+    return (
+      mainImage?.imageUrl ||
+      product.images?.[0]?.imageUrl ||
+      product.image ||
+      '/placeholder-product.jpg'
+    );
   }
 
   static getAllImages(product: Product): string[] {
     if (product.images && product.images.length > 0) {
-      return product.images.map(img => img.imageUrl).filter(Boolean);
+      return product.images.map((img) => img.imageUrl).filter(Boolean);
     }
-    
+
     const legacyImages = product.gallery || [];
     const mainImage = product.image ? [product.image] : [];
-    
+
     return [...legacyImages, ...mainImage].filter(Boolean);
   }
 
@@ -31,7 +36,7 @@ export class ProductUtils {
   static formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
-      currency: 'VND'
+      currency: 'VND',
     }).format(price);
   }
 
@@ -39,7 +44,9 @@ export class ProductUtils {
     if (!product.originalPrice || product.originalPrice <= product.price) {
       return null;
     }
-    return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+    return Math.round(
+      ((product.originalPrice - product.price) / product.originalPrice) * 100
+    );
   }
 
   static getProductUrl(product: Product): string {
@@ -59,24 +66,25 @@ export class ProductUtils {
       inStock: ProductUtils.isInStock(product),
       gallery: ProductUtils.getAllImages(product),
       ingredients: product.ingredients || [],
-      weight: product.weight || ''
+      weight: '225g',
     };
   }
 
   static searchProducts(products: Product[], searchTerm: string): Product[] {
     if (!searchTerm.trim()) return products;
-    
+
     const term = searchTerm.toLowerCase();
-    return products.filter(product => 
-      product.name.toLowerCase().includes(term) ||
-      product.description.toLowerCase().includes(term) ||
-      product.categories.some(cat => cat.name.toLowerCase().includes(term))
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        product.description.toLowerCase().includes(term) ||
+        product.categories.some((cat) => cat.name.toLowerCase().includes(term))
     );
   }
 
   static sortProducts(products: Product[], sortBy: string): Product[] {
     const sorted = [...products];
-    
+
     switch (sortBy) {
       case 'name':
         return sorted.sort((a, b) => a.name.localeCompare(b.name));
